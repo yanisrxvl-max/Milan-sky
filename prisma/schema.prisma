@@ -1,0 +1,195 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  passwordHash    String
+  name            String?
+  avatarUrl       String?
+  emailVerified   DateTime?
+  verifyToken     String?
+  resetToken      String?
+  resetTokenExpiry DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  subscription    Subscription?
+  skyCoinsBalance SkyCoinsBalance?
+  transactions    Transaction[]
+  purchases       Purchase[]
+  messages        Message[]
+  privateRequests PrivateRequest[]
+  sessions        Session[]
+
+  @@index([email])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Subscription {
+  id        String             @id @default(cuid())
+  userId    String             @unique
+  tier      SubscriptionTier
+  status    SubscriptionStatus @default(ACTIVE)
+  stripeSubscriptionId String? @unique
+  stripeCustomerId     String?
+  currentPeriodStart   DateTime @default(now())
+  currentPeriodEnd     DateTime
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([stripeSubscriptionId])
+}
+
+model SkyCoinsBalance {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  balance   Int      @default(0)
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Transaction {
+  id              String          @id @default(cuid())
+  userId          String
+  type            TransactionType
+  amount          Int             // SkyCoins amount
+  euroAmount      Float?          // EUR amount paid
+  stripePaymentId String?         @unique
+  description     String?
+  createdAt       DateTime        @default(now())
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model Purchase {
+  id        String   @id @default(cuid())
+  userId    String
+  contentId String
+  price     Int      // SkyCoins price
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content   Content  @relation(fields: [contentId], references: [id])
+
+  @@unique([userId, contentId])
+  @@index([userId])
+}
+
+model Content {
+  id          String      @id @default(cuid())
+  title       String
+  description String?
+  type        ContentType
+  tier        SubscriptionTier
+  price       Int         // SkyCoins price
+  imageUrl    String?
+  mediaUrl    String?
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  purchases   Purchase[]
+
+  @@index([type])
+  @@index([tier])
+}
+
+model Message {
+  id        String      @id @default(cuid())
+  userId    String
+  content   String
+  sender    MessageSender
+  createdAt DateTime    @default(now())
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model PrivateRequest {
+  id          String              @id @default(cuid())
+  userId      String
+  orderNumber String              @unique
+  type        PrivateRequestType
+  description String
+  budget      Float?
+  status      PrivateRequestStatus @default(PENDING)
+  adminNotes  String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  user        User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([orderNumber])
+}
+
+// Enums
+
+enum SubscriptionTier {
+  BASIC
+  ELITE
+  ICON
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  PAST_DUE
+  EXPIRED
+}
+
+enum TransactionType {
+  SKYCOINS_PURCHASE
+  SKYCOINS_SPEND
+  SUBSCRIPTION_PAYMENT
+  REFUND
+}
+
+enum ContentType {
+  VIDEO
+  PHOTO
+  SERIES
+  COLLABORATION
+}
+
+enum MessageSender {
+  USER
+  MILAN
+}
+
+enum PrivateRequestType {
+  VIDEO
+  PHOTO
+  CALL
+  CUSTOM
+}
+
+enum PrivateRequestStatus {
+  PENDING
+  VALIDATED
+  PAID
+  IN_PROGRESS
+  DELIVERED
+  CANCELLED
+}
