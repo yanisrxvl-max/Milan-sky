@@ -8,11 +8,7 @@ import { logger } from '@/lib/logger';
 export async function GET() {
     try {
         const session = await getServerSession(authOptions);
-        if (!session?.user?.id) {
-            return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
-        }
-
-        const userId = session.user.id;
+        const userId = session?.user?.id;
 
         // Get all active muses
         const muses = await prisma.muse.findMany({
@@ -20,19 +16,23 @@ export async function GET() {
             orderBy: { price: 'asc' },
         });
 
-        // Get user purchases
-        const purchases = await prisma.musePurchase.findMany({
-            where: { userId },
-            select: { museId: true },
-        });
+        const purchasedIds = new Set<string>();
+        let user = null;
 
-        const purchasedIds = new Set(purchases.map(p => p.museId));
+        if (userId) {
+            // Get user purchases
+            const purchases = await prisma.musePurchase.findMany({
+                where: { userId },
+                select: { museId: true },
+            });
+            purchases.forEach(p => purchasedIds.add(p.museId));
 
-        // Get user active states
-        const user = await prisma.user.findUnique({
-            where: { id: userId },
-            select: { activeMuseId: true, activeElixirId: true, activeMoodPackId: true, elixirExpiresAt: true }
-        });
+            // Get user active states
+            user = await prisma.user.findUnique({
+                where: { id: userId },
+                select: { activeMuseId: true, activeElixirId: true, activeMoodPackId: true, elixirExpiresAt: true }
+            });
+        }
 
         // Check if elixir is expired
         let activeElixirId = user?.activeElixirId;
@@ -47,8 +47,9 @@ export async function GET() {
             price: muse.price,
             category: muse.category,
             imageUrl: muse.imageUrl,
+            previewMessage: muse.previewMessage,
             isOwned: purchasedIds.has(muse.id),
-            isActive: muse.id === user?.activeMuseId || muse.id === activeElixirId || muse.id === user?.activeMoodPackId,
+            isActive: !!userId && (muse.id === user?.activeMuseId || muse.id === activeElixirId || muse.id === user?.activeMoodPackId),
             // Only reveal prompt if owned
             prompt: purchasedIds.has(muse.id) ? muse.prompt : undefined
         }));

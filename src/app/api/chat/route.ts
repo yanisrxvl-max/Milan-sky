@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import prisma from '@/lib/db';
+import { prisma } from '@/lib/db';
 import { chatMessageSchema } from '@/lib/validations';
 import { chatLimiter, getClientIp, rateLimitResponse } from '@/lib/rate-limit';
 import { sanitizeForDB } from '@/lib/sanitize';
@@ -9,9 +9,10 @@ import { logger } from '@/lib/logger';
 import { openai, MILAN_SYSTEM_PROMPT } from '@/lib/openai';
 
 const CHAT_LIMITS: Record<string, number> = {
-  BASIC: 10,
-  ELITE: 999,
-  ICON: 999,
+  VOYEUR: 10,
+  INITIE: 999,
+  PRIVILEGE: 999,
+  SKYCLUB: 999,
 };
 
 // Fallback replies if OpenAI is unavailable or API key not set
@@ -34,8 +35,18 @@ export async function GET() {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
+    let conversation = await prisma.conversation.findUnique({
+      where: { userId: session.user.id }
+    });
+
+    if (!conversation) {
+      conversation = await prisma.conversation.create({
+        data: { userId: session.user.id }
+      });
+    }
+
     const messages = await prisma.message.findMany({
-      where: { userId: session.user.id },
+      where: { conversationId: conversation.id },
       orderBy: { createdAt: 'asc' },
       take: 200,
     });
@@ -63,6 +74,7 @@ export async function GET() {
       todayCount,
       dailyLimit: limit,
       remaining: Math.max(0, limit - todayCount),
+      conversationId: conversation.id
     });
   } catch (error) {
     logger.error('Chat fetch error', { error: String(error) });
@@ -73,8 +85,6 @@ export async function GET() {
 // Send message
 export async function POST(request: NextRequest) {
   console.log('--- Chat Request Received ---');
-  console.log('OPENAI_API_KEY Present:', !!process.env.OPENAI_API_KEY);
-  console.log('OpenAI Object Initialized:', !!openai);
 
   try {
     const ip = getClientIp(request);
@@ -91,6 +101,16 @@ export async function POST(request: NextRequest) {
 
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.errors[0].message }, { status: 400 });
+    }
+
+    let conversation = await prisma.conversation.findUnique({
+      where: { userId: session.user.id }
+    });
+
+    if (!conversation) {
+      conversation = await prisma.conversation.create({
+        data: { userId: session.user.id }
+      });
     }
 
     // Check daily limit
@@ -122,9 +142,15 @@ export async function POST(request: NextRequest) {
     const userMessage = await prisma.message.create({
       data: {
         userId: session.user.id,
+        conversationId: conversation.id,
         content: sanitizeForDB(parsed.data.content),
         sender: 'USER',
       },
+    });
+
+    await prisma.conversation.update({
+      where: { id: conversation.id },
+      data: { lastMessageAt: new Date() }
     });
 
     // Generate Milan's reply
@@ -168,7 +194,7 @@ export async function POST(request: NextRequest) {
 
         // Fetch recent conversation history for context (last 20 messages)
         const recentMessages = await prisma.message.findMany({
-          where: { userId: session.user.id },
+          where: { conversationId: conversation.id },
           orderBy: { createdAt: 'desc' },
           take: 20,
         });
@@ -177,7 +203,7 @@ export async function POST(request: NextRequest) {
           .reverse()
           .map((msg) => ({
             role: msg.sender === 'USER' ? 'user' as const : 'assistant' as const,
-            content: msg.content,
+            content: msg.content || '',
           }));
 
         const completion = await openai.chat.completions.create({
@@ -207,9 +233,15 @@ export async function POST(request: NextRequest) {
     const milanMessage = await prisma.message.create({
       data: {
         userId: session.user.id,
+        conversationId: conversation.id,
         content: replyText,
         sender: 'MILAN',
       },
+    });
+
+    await prisma.conversation.update({
+      where: { id: conversation.id },
+      data: { lastMessageAt: new Date() }
     });
 
     return NextResponse.json({

@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import { v4 as uuid } from 'uuid';
 import prisma from '@/lib/db';
 import { registerSchema } from '@/lib/validations';
-import { sendVerificationEmail } from '@/lib/email';
+import { sendVerificationEmail, isEmailConfigured } from '@/lib/email';
 import { authLimiter, getClientIp, rateLimitResponse } from '@/lib/rate-limit';
 import { logger } from '@/lib/logger';
 
@@ -44,8 +44,8 @@ export async function POST(request: NextRequest) {
     const passwordHash = await bcrypt.hash(password, 12);
     const verifyToken = uuid();
 
-    // Check if SMTP is properly configured
-    const smtpConfigured = process.env.SMTP_USER && process.env.SMTP_USER !== 'your-email@gmail.com';
+    // Check if email sending is properly configured (Resend or SMTP)
+    const emailReady = isEmailConfigured();
 
     const user = await prisma.user.create({
       data: {
@@ -53,8 +53,8 @@ export async function POST(request: NextRequest) {
         passwordHash,
         role: assignedRole,
         name: name || null,
-        verifyToken: smtpConfigured ? verifyToken : null,
-        emailVerified: smtpConfigured ? null : new Date(), // Auto-verify if no SMTP
+        verifyToken: emailReady ? verifyToken : null,
+        emailVerified: emailReady ? null : new Date(), // Auto-verify if no SMTP
         skyCoinsBalance: {
           create: { balance: 0 },
         },
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Only send verification email if SMTP is configured
-    if (smtpConfigured) {
+    if (emailReady) {
       try {
         await sendVerificationEmail(normalizedEmail, verifyToken);
       } catch (emailError) {

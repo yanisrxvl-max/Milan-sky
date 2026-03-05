@@ -50,20 +50,22 @@ model User {
 // ... existing models ...
 
 model Muse {
-  id          String        @id @default(cuid())
-  title       String
-  description String
-  prompt      String
-  price       Int           // In SkyCoins
-  category    MuseCategory
-  isActive    Boolean       @default(true)
-  imageUrl    String?
+  id              String        @id @default(cuid())
+  title           String
+  description     String
+  prompt          String
+  price           Int           // In SkyCoins
+  category        MuseCategory
+  isActive        Boolean       @default(true)
+  imageUrl        String?
+  backgroundImage String?
   
   // Personification Fields
-  age         Int?
-  bio         String?
-  location    String?       @default("Milan, Italy")
-  traits      String[]
+  age            Int?
+  bio            String?
+  location       String?       @default("Milan, Italy")
+  traits         String[]
+  previewMessage String?       // Message preview shown on hover
   
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt

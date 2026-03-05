@@ -1,60 +1,42 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Zap, Ghost, Music, Crown, Lock, CheckCircle2, ShoppingCart, Info, X, Copy, User, MapPin, Play } from 'lucide-react';
+import { Lock, CheckCircle2, X, Copy, Info, MessageCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { PremiumButton } from '@/components/ui/PremiumButton';
-import AdUnlockModal from '@/components/modals/AdUnlockModal';
 
 interface Muse {
     id: string;
     title: string;
-    description: string; // Catchphrase
-    bio?: string;
-    age?: number;
-    location?: string;
-    traits?: string[];
+    description: string;
     price: number;
     category: 'MUSE' | 'ELIXIR' | 'RITUAL' | 'MOOD_PACK';
     isOwned: boolean;
     isActive: boolean;
     prompt?: string;
     imageUrl?: string;
+    previewMessage?: string;
 }
 
-const CATEGORY_ICONS = {
-    MUSE: <User className="w-5 h-5" />, // User icon for profiles
-    ELIXIR: <Zap className="w-5 h-5" />,
-    RITUAL: <Sparkles className="w-5 h-5" />,
-    MOOD_PACK: <Music className="w-5 h-5" />,
-};
-
-const CATEGORY_LABELS = {
-    MUSE: 'Profils — Agence Exclusive',
-    ELIXIR: 'Élixirs — Injections Tempo',
-    RITUAL: 'Rituels — Scénarios',
-    MOOD_PACK: 'Mood Packs — Immersion',
+const CATEGORY_MAP: Record<string, { label: string; filter: string[] }> = {
+    ALL: { label: 'Toutes', filter: [] },
+    PERSONNALITES: { label: 'Personnalités', filter: ['MUSE'] },
+    MOODS: { label: 'Moods', filter: ['MOOD_PACK'] },
+    EXPERIENCES: { label: 'Expériences', filter: ['RITUAL'] },
 };
 
 export default function MusesPage() {
     const { data: session } = useSession();
     const [muses, setMuses] = useState<Muse[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [selectedCategory, setSelectedCategory] = useState<Muse['category'] | 'ALL'>('ALL');
+    const [activeFilter, setActiveFilter] = useState('ALL');
     const [viewingPrompt, setViewingPrompt] = useState<Muse | null>(null);
-    const [adTarget, setAdTarget] = useState<Muse | null>(null);
+    const [hoveredId, setHoveredId] = useState<string | null>(null);
 
     useEffect(() => {
         fetchMuses();
     }, []);
-
-    const copyToClipboard = (text: string) => {
-        navigator.clipboard.writeText(text);
-        toast.success('Prompt copié !');
-    };
 
     async function fetchMuses() {
         try {
@@ -71,6 +53,10 @@ export default function MusesPage() {
     }
 
     async function handlePurchase(museId: string) {
+        if (!session) {
+            toast.error('Connectez-vous pour débloquer une Muse');
+            return;
+        }
         try {
             const res = await fetch('/api/muses', {
                 method: 'POST',
@@ -79,10 +65,10 @@ export default function MusesPage() {
             });
             const data = await res.json();
             if (res.ok) {
-                toast.success('Achat réussi !');
+                toast.success('Muse débloquée !');
                 fetchMuses();
             } else {
-                toast.error(data.error || 'Erreur lors de l\'achat');
+                toast.error(data.error || 'Erreur');
             }
         } catch {
             toast.error('Erreur réseau');
@@ -101,269 +87,279 @@ export default function MusesPage() {
                 }),
             });
             if (res.ok) {
-                toast.success(isActive ? 'Désactivé' : 'Activé !');
+                toast.success(isActive ? 'Muse désactivée' : 'Muse activée !');
                 fetchMuses();
             } else {
-                toast.error('Erreur lors de l\'activation');
+                toast.error('Erreur');
             }
         } catch {
             toast.error('Erreur réseau');
         }
     }
 
-    const filteredMuses = selectedCategory === 'ALL'
+    const copyToClipboard = (text: string) => {
+        navigator.clipboard.writeText(text);
+        toast.success('Prompt copié !');
+    };
+
+    const filteredMuses = activeFilter === 'ALL'
         ? muses
-        : muses.filter(m => m.category === selectedCategory);
+        : muses.filter(m => CATEGORY_MAP[activeFilter]?.filter.includes(m.category));
 
     return (
-        <div className="page-container pb-20 pt-24">
-            <div className="max-w-7xl mx-auto px-4">
-                {/* Header */}
-                <div className="text-center mb-16">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="inline-block px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] uppercase tracking-[0.3em] font-bold mb-6"
+        <div className="min-h-screen bg-dark-500 pb-32">
+
+            {/* ═══════════════════════════════════ */}
+            {/* HERO — Épuré et direct             */}
+            {/* ═══════════════════════════════════ */}
+            <section className="pt-36 pb-16 px-4 text-center relative">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(201,168,76,0.05),transparent_60%)] pointer-events-none" />
+                <div className="max-w-3xl mx-auto relative z-10">
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="text-gold text-[10px] uppercase tracking-[0.5em] font-bold mb-6"
                     >
-                        Boutique Digitale Exclusive
-                    </motion.div>
+                        Personnalités IA Exclusives
+                    </motion.p>
                     <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 15 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="text-5xl md:text-7xl font-serif mb-6"
+                        className="font-serif text-5xl md:text-7xl text-cream mb-5 tracking-tight"
                     >
-                        Les <span className="crimson-text italic">Muses</span>
+                        Choisissez votre <span className="italic gold-text">Milan</span>
                     </motion.h1>
                     <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
                         transition={{ delay: 0.2 }}
-                        className="text-white/40 max-w-2xl mx-auto leading-relaxed"
+                        className="text-white/40 text-sm md:text-base max-w-xl mx-auto leading-relaxed"
                     >
-                        Achetez des configurations de personnalité premium pour Milan.
-                        Modifiez son ton, son énergie et son intimité instantanément.
+                        Transformez Milan en différentes versions de lui-même.
+                        <br />
+                        Débloquez le prompt, injectez-le dans ChatGPT ou Claude.
                     </motion.p>
                 </div>
+            </section>
 
-                {/* Filters */}
-                <div className="flex flex-wrap justify-center gap-4 mb-12">
-                    {['ALL', 'MUSE', 'ELIXIR', 'RITUAL', 'MOOD_PACK'].map((cat) => (
+            {/* ═══════════════════════════════════ */}
+            {/* FILTRES — 3 catégories + Toutes     */}
+            {/* ═══════════════════════════════════ */}
+            <div className="max-w-4xl mx-auto px-4 mb-14">
+                <div className="flex justify-center gap-3">
+                    {Object.entries(CATEGORY_MAP).map(([key, { label }]) => (
                         <button
-                            key={cat}
-                            onClick={() => setSelectedCategory(cat as any)}
-                            className={`px-6 py-2.5 rounded-full text-[10px] uppercase tracking-widest transition-all duration-300 ${selectedCategory === cat
-                                ? 'bg-red-600 text-white shadow-[0_0_20px_rgba(220,38,38,0.4)]'
-                                : 'bg-white/5 text-white/40 hover:bg-white/10'
+                            key={key}
+                            onClick={() => setActiveFilter(key)}
+                            className={`px-6 py-2.5 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold transition-all duration-300 ${activeFilter === key
+                                    ? 'bg-gold text-dark'
+                                    : 'bg-white/[0.03] border border-white/[0.08] text-white/40 hover:text-white hover:border-white/20'
                                 }`}
                         >
-                            {cat === 'ALL' ? 'Tout voir' : cat}
+                            {label}
                         </button>
                     ))}
                 </div>
-
-                {/* Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <AnimatePresence mode="popLayout">
-                        {filteredMuses.map((muse, idx) => (
-                            <motion.div
-                                key={muse.id}
-                                layout
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.9 }}
-                                transition={{ delay: idx * 0.05 }}
-                                className={`group relative h-full bg-dark-200/40 backdrop-blur-md border rounded-[2rem] p-8 overflow-hidden transition-all duration-500 ${muse.isActive ? 'border-red-500/60 shadow-[0_0_40px_rgba(220,38,38,0.15)]' : 'border-white/[0.05] hover:border-red-500/20'
-                                    }`}
-                            >
-                                {/* Glow Effect */}
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-red-600/5 blur-[50px] rounded-full -mr-16 -mt-16 group-hover:bg-red-600/10 transition-colors" />
-
-                                <div className="relative mb-6">
-                                    <div className="flex items-center justify-between">
-                                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 ${muse.isActive ? 'bg-red-600 text-white shadow-[0_0_15px_rgba(220,38,38,0.5)]' : 'bg-white/5 text-red-500 group-hover:bg-red-500/10'}`}>
-                                            {CATEGORY_ICONS[muse.category]}
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="text-gold font-bold text-lg">{muse.price} SC</p>
-                                        </div>
-                                    </div>
-                                    <div className="mt-6">
-                                        <h3 className="text-3xl font-serif text-white tracking-widest uppercase mb-1">
-                                            {muse.title}
-                                            {muse.age && <span className="text-white/20 text-xl font-sans ml-3 font-light">, {muse.age}</span>}
-                                        </h3>
-                                        {muse.location && (
-                                            <p className="text-[10px] text-white/40 flex items-center gap-1 uppercase tracking-widest mb-4">
-                                                <MapPin size={10} className="text-red-500" /> {muse.location}
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-
-                                <div className="space-y-4 mb-8">
-                                    <p className="text-white/60 text-sm leading-relaxed italic font-light">
-                                        &quot;{muse.description}&quot;
-                                    </p>
-
-                                    {muse.traits && (
-                                        <div className="flex flex-wrap gap-2">
-                                            {muse.traits.map(trait => (
-                                                <span key={trait} className="px-3 py-1 rounded-full bg-white/5 border border-white/5 text-[8px] uppercase tracking-widest text-white/40">
-                                                    {trait}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-
-                                <div className="mt-auto flex flex-col gap-3">
-                                    {muse.isOwned ? (
-                                        <div className="flex gap-2">
-                                            <button
-                                                onClick={() => handleActivate(muse.id, muse.category, muse.isActive)}
-                                                className={`flex-1 py-4 rounded-xl text-[10px] uppercase tracking-[0.2em] font-bold transition-all duration-300 flex items-center justify-center gap-2 ${muse.isActive
-                                                    ? 'bg-red-600 text-white shadow-[0_0_20px_rgba(220,38,38,0.4)]'
-                                                    : 'bg-white/10 text-white hover:bg-white/20'
-                                                    }`}
-                                            >
-                                                {muse.isActive ? <CheckCircle2 size={14} /> : null}
-                                                {muse.isActive ? 'Active' : 'Activer'}
-                                            </button>
-                                            <button
-                                                onClick={() => setViewingPrompt(muse)}
-                                                className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all"
-                                                title="Voir le prompt"
-                                            >
-                                                <Info size={18} />
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <div className="flex flex-col gap-2">
-                                            <button
-                                                onClick={() => handlePurchase(muse.id)}
-                                                className="w-full py-4 rounded-xl bg-white text-black text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-gold hover:text-white transition-all duration-500 flex items-center justify-center gap-2"
-                                            >
-                                                <ShoppingCart size={14} /> Acquérir — {muse.price} SC
-                                            </button>
-                                            <button
-                                                onClick={() => setAdTarget(muse)}
-                                                className="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-[9px] text-white/40 uppercase tracking-[0.2em] font-bold hover:bg-white/10 hover:text-white transition-all duration-500 flex items-center justify-center gap-2"
-                                            >
-                                                <Play size={12} className="text-red-500" /> Débloquer via Pub
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Status Indicator */}
-                                {muse.isActive && (
-                                    <div className="absolute top-4 left-4">
-                                        <span className="flex h-2 w-2 relative">
-                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                                            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                                        </span>
-                                    </div>
-                                )}
-                            </motion.div>
-                        ))}
-                    </AnimatePresence>
-                </div>
             </div>
 
-            {/* PROMPT MODAL */}
+            {/* ═══════════════════════════════════ */}
+            {/* GRILLE DE MUSES                     */}
+            {/* ═══════════════════════════════════ */}
+            <div className="max-w-6xl mx-auto px-4">
+                {isLoading ? (
+                    <div className="flex justify-center py-20">
+                        <div className="animate-pulse text-gold/30 text-xs uppercase tracking-widest font-bold">Chargement…</div>
+                    </div>
+                ) : filteredMuses.length === 0 ? (
+                    <div className="text-center py-20">
+                        <p className="text-white/30 text-sm">Aucune Muse dans cette catégorie.</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <AnimatePresence mode="popLayout">
+                            {filteredMuses.map((muse, idx) => (
+                                <motion.div
+                                    key={muse.id}
+                                    layout
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    transition={{ delay: idx * 0.08, duration: 0.4 }}
+                                    onMouseEnter={() => setHoveredId(muse.id)}
+                                    onMouseLeave={() => setHoveredId(null)}
+                                    className={`group relative rounded-2xl border overflow-hidden transition-all duration-500 ${muse.isActive
+                                            ? 'border-gold/50 bg-dark-200/80 shadow-[0_0_30px_rgba(201,168,76,0.1)]'
+                                            : 'border-white/[0.06] bg-dark-200/40 hover:border-white/[0.12] hover:bg-dark-200/60'
+                                        }`}
+                                >
+                                    {/* ── Image Cover ── */}
+                                    <div className="relative h-52 overflow-hidden">
+                                        {muse.imageUrl ? (
+                                            <img
+                                                src={muse.imageUrl}
+                                                alt={muse.title}
+                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full bg-dark-400" />
+                                        )}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-dark-200 via-dark-200/30 to-transparent" />
+
+                                        {/* Prix — toujours en haut à droite */}
+                                        <div className="absolute top-4 right-4">
+                                            {muse.isOwned ? (
+                                                <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gold text-dark text-[10px] font-bold tracking-wider uppercase shadow-lg">
+                                                    <CheckCircle2 size={11} /> Débloqué
+                                                </span>
+                                            ) : (
+                                                <span className="px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white text-[11px] font-bold tracking-wider">
+                                                    {muse.price} SC
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        {/* Active indicator */}
+                                        {muse.isActive && (
+                                            <div className="absolute top-4 left-4">
+                                                <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-green-500/90 text-white text-[9px] font-bold uppercase tracking-wider shadow-lg">
+                                                    <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" /> Active
+                                                </span>
+                                            </div>
+                                        )}
+
+                                        {/* ── Preview Message (hover) ── */}
+                                        <AnimatePresence>
+                                            {hoveredId === muse.id && muse.previewMessage && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    exit={{ opacity: 0, y: 5 }}
+                                                    transition={{ duration: 0.25 }}
+                                                    className="absolute bottom-3 left-3 right-3"
+                                                >
+                                                    <div className="bg-black/80 backdrop-blur-xl rounded-xl px-4 py-3 border border-white/[0.08]">
+                                                        <div className="flex items-start gap-2.5">
+                                                            <MessageCircle size={14} className="text-gold shrink-0 mt-0.5" />
+                                                            <div>
+                                                                <p className="text-gold text-[10px] font-bold uppercase tracking-wider mb-1">Milan :</p>
+                                                                <p className="text-white/80 text-[13px] leading-relaxed italic">
+                                                                    &quot;{muse.previewMessage}&quot;
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
+
+                                    {/* ── Contenu carte ── */}
+                                    <div className="p-6 flex flex-col">
+                                        <h3 className="font-serif text-xl text-cream mb-2 tracking-wide">
+                                            {muse.title}
+                                        </h3>
+                                        <p className="text-white/40 text-[13px] leading-relaxed mb-6 line-clamp-2 min-h-[40px]">
+                                            {muse.description}
+                                        </p>
+
+                                        {/* ── Bouton — toujours en bas ── */}
+                                        {muse.isOwned ? (
+                                            <div className="flex gap-2 mt-auto">
+                                                <button
+                                                    onClick={() => handleActivate(muse.id, muse.category, muse.isActive)}
+                                                    className={`flex-1 py-3 rounded-xl text-[10px] uppercase tracking-[0.2em] font-bold transition-all duration-300 ${muse.isActive
+                                                            ? 'bg-gold text-dark'
+                                                            : 'bg-white/[0.04] border border-white/[0.08] text-white/50 hover:bg-white/[0.08] hover:text-white'
+                                                        }`}
+                                                >
+                                                    {muse.isActive ? 'Désactiver' : 'Activer'}
+                                                </button>
+                                                <button
+                                                    onClick={() => setViewingPrompt(muse)}
+                                                    className="w-12 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-gold hover:bg-gold/10 transition-all"
+                                                    title="Voir le Prompt"
+                                                >
+                                                    <Copy size={16} />
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <button
+                                                onClick={() => handlePurchase(muse.id)}
+                                                className="w-full py-3.5 rounded-xl bg-gold text-dark text-[10px] uppercase tracking-[0.2em] font-bold hover:shadow-[0_0_20px_rgba(201,168,76,0.25)] active:scale-[0.98] transition-all duration-300 mt-auto"
+                                            >
+                                                Débloquer la Muse
+                                            </button>
+                                        )}
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </AnimatePresence>
+                    </div>
+                )}
+            </div>
+
+            {/* ═══════════════════════════════════ */}
+            {/* MODALE PROMPT SYSTÈME               */}
+            {/* ═══════════════════════════════════ */}
             <AnimatePresence>
                 {viewingPrompt && (
-                    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6">
+                    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setViewingPrompt(null)}
-                            className="absolute inset-0 bg-black/80 backdrop-blur-md"
+                            className="absolute inset-0 bg-black/90 backdrop-blur-xl"
                         />
+
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            initial={{ opacity: 0, scale: 0.95, y: 10 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="relative w-full max-w-2xl bg-dark-200 border border-white/10 rounded-[2.5rem] overflow-hidden shadow-[0_25px_100px_rgba(0,0,0,0.8)]"
+                            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                            className="relative w-full max-w-2xl bg-dark-400 border border-white/[0.08] rounded-2xl overflow-hidden flex flex-col max-h-[85vh]"
                         >
-                            <div className="p-8 sm:p-12">
-                                <div className="flex items-center justify-between mb-8">
-                                    <div>
-                                        <h2 className="text-3xl font-serif text-white mb-1 uppercase tracking-wider">{viewingPrompt.title}</h2>
-                                        <p className="text-red-500 text-[10px] uppercase tracking-[0.3em] font-bold">System Prompt — Injection IA</p>
-                                    </div>
-                                    <button
-                                        onClick={() => setViewingPrompt(null)}
-                                        className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/40 hover:bg-white/10 hover:text-white transition-all"
-                                    >
-                                        <X size={20} />
-                                    </button>
-                                </div>
-
-                                <div className="bg-black/40 rounded-3xl p-6 border border-white/5 mb-8 group relative">
-                                    <p className="text-white/60 text-sm leading-relaxed italic">
-                                        &quot;{viewingPrompt.prompt}&quot;
+                            {/* Header */}
+                            <div className="p-6 border-b border-white/[0.05] flex items-center justify-between shrink-0">
+                                <div>
+                                    <p className="text-gold text-[9px] uppercase tracking-[0.4em] font-bold mb-1 flex items-center gap-1.5">
+                                        <Lock size={10} /> Prompt Déverrouillé
                                     </p>
-                                    <button
-                                        onClick={() => viewingPrompt.prompt && copyToClipboard(viewingPrompt.prompt)}
-                                        className="absolute top-4 right-4 w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center shadow-lg shadow-red-600/20 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0"
-                                        title="Copier le prompt"
-                                    >
-                                        <Copy size={16} />
-                                    </button>
+                                    <h2 className="font-serif text-2xl text-cream">{viewingPrompt.title}</h2>
                                 </div>
+                                <button
+                                    onClick={() => setViewingPrompt(null)}
+                                    className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-white/30 hover:bg-white/10 hover:text-white transition-all"
+                                >
+                                    <X size={16} />
+                                </button>
+                            </div>
 
-                                <div className="flex flex-col sm:flex-row gap-4">
-                                    <button
-                                        onClick={() => viewingPrompt.prompt && copyToClipboard(viewingPrompt.prompt)}
-                                        className="flex-1 btn-gold !py-4 flex items-center justify-center gap-3"
-                                    >
-                                        <Copy size={18} /> Copier pour ChatGPT / Claude
-                                    </button>
-                                    <button
-                                        onClick={() => setViewingPrompt(null)}
-                                        className="px-8 py-4 rounded-xl border border-white/10 text-white/40 hover:text-white hover:border-white/20 transition-all"
-                                    >
-                                        Fermer
-                                    </button>
+                            {/* Prompt Content */}
+                            <div className="p-6 overflow-y-auto flex-1">
+                                <div className="bg-black/50 rounded-xl p-5 border border-white/[0.04]">
+                                    <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-white/60">
+                                        {viewingPrompt.prompt}
+                                    </pre>
                                 </div>
+                            </div>
 
-                                <p className="mt-8 text-center text-[10px] text-white/20 uppercase tracking-widest">
-                                    Utilisez ce prompt pour recréer l&apos;intimité de Milan ailleurs.
+                            {/* Footer */}
+                            <div className="p-6 border-t border-white/[0.05] shrink-0">
+                                <button
+                                    onClick={() => viewingPrompt.prompt && copyToClipboard(viewingPrompt.prompt)}
+                                    className="w-full py-4 rounded-xl bg-gold text-dark text-[10px] uppercase tracking-[0.2em] font-bold hover:shadow-[0_0_20px_rgba(201,168,76,0.3)] transition-all flex items-center justify-center gap-2"
+                                >
+                                    <Copy size={14} /> Copier pour ChatGPT ou Claude
+                                </button>
+                                <p className="mt-3 text-center text-[9px] text-white/20 uppercase tracking-[0.15em] flex items-center justify-center gap-1.5">
+                                    <Info size={10} /> Collez ce prompt au début d&apos;une nouvelle conversation IA
                                 </p>
                             </div>
                         </motion.div>
                     </div>
                 )}
             </AnimatePresence>
-
-            <AdUnlockModal
-                isOpen={!!adTarget}
-                onClose={() => setAdTarget(null)}
-                onComplete={async () => {
-                    if (adTarget) {
-                        try {
-                            const res = await fetch('/api/muses', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ museId: adTarget.id, paymentMethod: 'AD' }), // Special payment method
-                            });
-
-                            if (res.ok) {
-                                toast.success(`${adTarget.title} débloqué avec succès !`);
-                                fetchMuses();
-                            } else {
-                                toast.error('Une erreur est survenue.');
-                            }
-                        } catch (error) {
-                            toast.error('Erreur de connexion.');
-                        }
-                    }
-                }}
-                itemName={adTarget?.title || ''}
-            />
         </div>
     );
 }

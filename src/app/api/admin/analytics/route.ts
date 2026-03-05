@@ -38,7 +38,7 @@ export async function GET() {
             .slice(0, 5);
 
         // 4. Muse Sales
-        const musePurchases = await prisma.MusePurchase.findMany({
+        const musePurchases = await prisma.musePurchase.findMany({
             include: { muse: true }
         });
         const museSales = musePurchases.reduce((acc: number, p: any) => acc + p.muse.price, 0);

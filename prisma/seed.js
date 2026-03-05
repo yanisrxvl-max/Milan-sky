@@ -9,12 +9,13 @@ async function main() {
     const hashedPassword = await bcrypt.hash('MilanSky2024!', 10);
     await prisma.user.upsert({
         where: { email: 'admin@milansky.com' },
-        update: {},
+        update: { emailVerified: new Date(), role: 'ADMIN' },
         create: {
             email: 'admin@milansky.com',
             name: 'Milan Admin',
             passwordHash: hashedPassword,
             role: 'ADMIN',
+            emailVerified: new Date(),
         },
     });
     console.log('Admin user seeded: admin@milansky.com / MilanSky2024!');

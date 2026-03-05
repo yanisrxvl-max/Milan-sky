@@ -33,6 +33,7 @@
     "react-dom": "^18.3.0",
     "react-hook-form": "^7.52.0",
     "react-hot-toast": "^2.4.0",
+    "resend": "^6.9.3",
     "sanitize-html": "^2.13.0",
     "sharp": "^0.33.0",
     "stripe": "^16.0.0",

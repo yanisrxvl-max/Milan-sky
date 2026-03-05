@@ -4,7 +4,7 @@ import { Suspense, useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Upload, MessageSquare, Video, Settings, Users, Plus, X, Image as ImageIcon, CheckCircle2, AlertCircle, Info, CreditCard, ExternalLink } from 'lucide-react';
+import { Upload, MessageSquare, Video, Settings, Users, Plus, X, Image as ImageIcon, CheckCircle2, AlertCircle, Info, CreditCard, ExternalLink, Sparkles } from 'lucide-react';
 import { PremiumButton } from '@/components/ui/PremiumButton';
 import { ContentType, SubscriptionTier } from '@prisma/client';
 import toast from 'react-hot-toast';
@@ -167,6 +167,7 @@ function AdminContent() {
     const tabs = [
         { id: 'analytics', label: 'Analytiques', icon: <Info size={18} /> },
         { id: 'content', label: 'Bibliothèque', icon: <Video size={18} /> },
+        { id: 'muses', label: 'Muses IA', icon: <Sparkles size={18} />, href: '/admin/muses' },
         { id: 'quotidirty', label: 'Le Quotidirty', icon: <AlertCircle size={18} /> },
         { id: 'requests', label: 'Demandes V.I.P', icon: <MessageSquare size={18} /> },
         { id: 'payments', label: 'Paiements', icon: <CreditCard size={18} /> },
@@ -212,7 +213,7 @@ function AdminContent() {
                     {tabs.map((tab) => (
                         <button
                             key={tab.id}
-                            onClick={() => { setActiveTab(tab.id as AdminTab); setShowUploadForm(false); }}
+                            onClick={() => { if ((tab as any).href) { router.push((tab as any).href); } else { setActiveTab(tab.id as AdminTab); setShowUploadForm(false); } }}
                             className={`w-full flex items-center justify-between px-6 py-4 rounded-2xl transition-all duration-500 group ${activeTab === tab.id
                                 ? 'bg-gold/10 text-gold border border-gold/20 shadow-[0_0_20px_rgba(201,168,76,0.05)]'
                                 : 'text-white/30 hover:bg-white/[0.03] hover:text-cream border border-transparent'
