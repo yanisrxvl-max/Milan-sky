@@ -1,0 +1,55 @@
+'use client';
+
+import Link from 'next/link';
+import { MILAN_NAME } from '@/lib/constants';
+
+export default function Footer() {
+    const currentYear = new Date().getFullYear();
+
+    const links = [
+        { label: 'Mentions Légales', href: '/legal/mentions-legales' },
+        { label: 'CGU', href: '/legal/cgu' },
+        { label: 'CGV', href: '/legal/cgv' },
+        { label: 'Confidentialité', href: '/legal/confidentialite' },
+        { label: 'Cookies', href: '/legal/cookies' },
+    ];
+
+    return (
+        <footer className="relative z-10 py-12 px-4 border-t border-gold/5 bg-dark">
+            <div className="max-w-7xl mx-auto flex flex-col items-center">
+                {/* Logo / Brand */}
+                <div className="flex flex-col items-center mb-10 overflow-visible pb-4">
+                    <div className="w-12 h-[1px] bg-gold/40 mb-3" />
+                    <Link href="/" className="group flex flex-col items-center overflow-visible">
+                        <span className="font-serif text-3xl text-white tracking-[0.2em] group-hover:gold-text-glow transition-all duration-500">MILAN</span>
+                        <span className="text-[10px] uppercase tracking-[0.6em] gold-text mt-1 font-bold italic ml-[0.6em]">SKY</span>
+                    </Link>
+                </div>
+
+                {/* Legal Links */}
+                <nav className="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-10">
+                    {links.map((link) => (
+                        <Link
+                            key={link.href}
+                            href={link.href}
+                            className="text-[11px] uppercase tracking-widest text-white/30 hover:text-gold transition-colors duration-300"
+                        >
+                            {link.label}
+                        </Link>
+                    ))}
+                </nav>
+
+                {/* Disclaimer / Copyright */}
+                <div className="text-center space-y-3">
+                    <p className="text-[10px] text-white/20 tracking-wide max-w-lg leading-relaxed uppercase">
+                        Plateforme réservée aux adultes (18+). Tous droits réservés.
+                        Toute reproduction ou redistribution de contenu est strictement interdite.
+                    </p>
+                    <p className="text-[9px] text-white/10 tracking-[0.2em] font-light">
+                        © {currentYear} {MILAN_NAME} SKY — LUXURY DIGITAL EXPERIENCE
+                    </p>
+                </div>
+            </div>
+        </footer>
+    );
+}

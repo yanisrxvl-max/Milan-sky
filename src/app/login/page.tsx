@@ -5,10 +5,12 @@ import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import { motion } from 'framer-motion';
+import { Lock, Eye, EyeOff, Sparkles } from 'lucide-react';
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="page-container flex items-center justify-center min-h-screen"><div className="animate-pulse text-white/30">Chargement...</div></div>}>
+    <Suspense fallback={<div className="page-container flex items-center justify-center min-h-screen"><div className="animate-pulse text-gold/50">Chargement...</div></div>}>
       <LoginContent />
     </Suspense>
   );
@@ -20,6 +22,7 @@ function LoginContent() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const verified = searchParams.get('verified');
   const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
@@ -38,7 +41,7 @@ function LoginContent() {
       if (result?.error) {
         toast.error(result.error);
       } else {
-        toast.success('Connexion réussie');
+        toast.success('Bienvenue dans le cercle 👑');
         router.push(callbackUrl);
         router.refresh();
       }
@@ -50,68 +53,129 @@ function LoginContent() {
   }
 
   return (
-    <div className="page-container flex items-center justify-center min-h-screen px-4">
-      <div className="w-full max-w-md">
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Background Effect */}
+      <div className="absolute inset-0 bg-dark-500" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(201,168,76,0.08)_0%,transparent_60%)]" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-gold/5 rounded-full blur-[120px]" />
+
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="relative z-10 w-full max-w-md px-6"
+      >
+        {/* Logo */}
         <div className="text-center mb-10">
-          <h1 className="font-serif text-4xl md:text-5xl gold-text mb-3">Connexion</h1>
-          <p className="text-white/40">Accédez à votre univers exclusif</p>
+          <Link href="/">
+            <span className="font-serif text-3xl text-white tracking-widest">MILAN <span className="gold-text italic">SKY</span></span>
+          </Link>
         </div>
 
-        {verified && (
-          <div className="mb-6 p-4 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-sm text-center">
-            Email vérifié avec succès ! Vous pouvez maintenant vous connecter.
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block text-sm text-white/50 mb-2">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input-field"
-              placeholder="votre@email.com"
-              required
-              autoComplete="email"
-            />
+        {/* Card */}
+        <div className="bg-dark-200/60 backdrop-blur-xl border border-white/[0.06] rounded-3xl p-8 shadow-2xl shadow-black/40">
+          <div className="text-center mb-8">
+            <div className="w-14 h-14 mx-auto rounded-full bg-gradient-to-br from-gold/20 to-gold/5 border border-gold/20 flex items-center justify-center mb-4">
+              <Lock size={22} className="text-gold" />
+            </div>
+            <h1 className="font-serif text-2xl text-cream tracking-wide mb-2">Accès Privé</h1>
+            <p className="text-white/30 text-sm">Entrez dans votre univers exclusif</p>
           </div>
 
-          <div>
-            <label className="block text-sm text-white/50 mb-2">Mot de passe</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="input-field"
-              placeholder="••••••••"
-              required
-              autoComplete="current-password"
-            />
-          </div>
+          {verified && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="mb-6 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm text-center"
+            >
+              ✅ Email vérifié ! Connectez-vous maintenant.
+            </motion.div>
+          )}
 
-          <div className="text-right">
-            <Link href="/reset-password" className="text-sm text-gold/60 hover:text-gold transition-colors">
-              Mot de passe oublié ?
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="block text-xs text-white/40 mb-2 tracking-wide uppercase">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="input-field"
+                placeholder="votre@email.com"
+                required
+                autoComplete="email"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs text-white/40 mb-2 tracking-wide uppercase">Mot de passe</label>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="input-field !pr-12"
+                  placeholder="••••••••"
+                  required
+                  autoComplete="current-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/50 transition-colors"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+
+            <div className="text-right">
+              <Link href="/reset-password" className="text-xs text-gold/40 hover:text-gold transition-colors">
+                Mot de passe oublié ?
+              </Link>
+            </div>
+
+            <motion.button
+              type="submit"
+              disabled={loading}
+              whileTap={{ scale: 0.98 }}
+              className="relative w-full py-4 rounded-xl font-medium tracking-wide overflow-hidden group"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-gold via-yellow-200 to-gold opacity-90 group-hover:opacity-100 transition-opacity" />
+              <span className="relative text-dark-500 flex items-center justify-center gap-2">
+                {loading ? (
+                  <div className="w-5 h-5 border-2 border-dark-300 border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <Lock size={16} />
+                    Entrer
+                  </>
+                )}
+              </span>
+            </motion.button>
+          </form>
+        </div>
+
+        {/* Bottom Links */}
+        <div className="text-center mt-8 space-y-4">
+          <p className="text-white/20 text-sm">
+            Pas encore dans le cercle ?{' '}
+            <Link href="/register" className="text-gold hover:text-gold-light transition-colors font-medium">
+              Demander l&apos;accès
             </Link>
-          </div>
+          </p>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="btn-gold w-full text-center"
+          {/* Social Proof */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.5 }}
+            className="flex items-center justify-center gap-2 text-white/15 text-xs"
           >
-            {loading ? 'Connexion...' : 'Se connecter'}
-          </button>
-        </form>
-
-        <p className="text-center mt-8 text-white/30 text-sm">
-          Pas encore de compte ?{' '}
-          <Link href="/register" className="text-gold hover:text-gold-light transition-colors">
-            Créer un compte
-          </Link>
-        </p>
-      </div>
+            <Sparkles size={12} className="text-gold/30" />
+            <span>2,847 membres dans le cercle privé</span>
+          </motion.div>
+        </div>
+      </motion.div>
     </div>
   );
 }

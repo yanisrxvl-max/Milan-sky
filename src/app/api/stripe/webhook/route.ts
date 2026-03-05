@@ -65,9 +65,11 @@ export async function POST(request: NextRequest) {
           });
         }
 
-        if (metadata.type === 'subscription') {
-          const tier = metadata.tier as SubscriptionTier;
+        if (session.mode === 'subscription' || metadata.type === 'subscription') {
+          const tier = (metadata.tier || 'BASIC') as SubscriptionTier;
           const now = new Date();
+
+          // Better period end calculation (fallback to 30 days if Stripe data missing)
           const periodEnd = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
 
           await prisma.subscription.upsert({
@@ -98,7 +100,7 @@ export async function POST(request: NextRequest) {
               type: 'SUBSCRIPTION_PAYMENT',
               amount: 0,
               euroAmount: (session.amount_total || 0) / 100,
-              stripePaymentId: session.subscription as string,
+              stripePaymentId: (session.payment_intent as string) || (session.subscription as string),
               description: `Abonnement ${tier}`,
             },
           });
