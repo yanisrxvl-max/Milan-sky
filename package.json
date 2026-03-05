@@ -14,6 +14,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@ducanh2912/next-pwa": "^10.2.9",
     "@hookform/resolvers": "^3.9.0",
     "@prisma/client": "^5.15.0",
     "@stripe/stripe-js": "^4.0.0",
@@ -35,7 +36,7 @@
     "react-hot-toast": "^2.4.0",
     "resend": "^6.9.3",
     "sanitize-html": "^2.13.0",
-    "sharp": "^0.33.0",
+    "sharp": "^0.33.5",
     "stripe": "^16.0.0",
     "uuid": "^10.0.0",
     "winston": "^3.13.0",

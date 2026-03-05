@@ -13,14 +13,24 @@ import Navbar from '@/components/Navbar';
 import BottomNav from '@/components/BottomNav';
 import Footer from '@/components/Footer';
 import AgeVerificationOverlay from '@/components/AgeVerificationOverlay';
+import InstallBanner from '@/components/pwa/InstallBanner';
 
 export const metadata: Metadata = {
   title: 'Milan Sky — L\'accès ultime à l\'exclusivité',
-  description: 'L\'accès ultime à l\'interdit, là où l\'exclusivité n\'a plus de limites.',
   openGraph: {
     title: 'Milan Sky',
     description: 'L\'accès ultime à l\'interdit, là où l\'exclusivité n\'a plus de limites.',
     type: 'website',
+  },
+  manifest: '/manifest.json',
+  icons: {
+    icon: '/images/milan_icon.png',
+    apple: '/apple-touch-icon.png',
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Milan Sky',
   },
 };
 
@@ -40,6 +50,7 @@ export default function RootLayout({
     <html lang="fr" className={`dark ${inter.variable} ${playfair.variable}`}>
       <body className="min-h-screen bg-dark font-sans">
         <Providers>
+          <InstallBanner />
           <AgeVerificationOverlay />
           <Navbar />
           <main className="min-h-[80vh]">

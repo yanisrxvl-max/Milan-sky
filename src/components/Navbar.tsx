@@ -109,7 +109,7 @@ export default function Navbar() {
 
                 <Link
                   href="/dashboard"
-                  className={`btn-gold text-[9px] uppercase tracking-[0.2em] relative group overflow-hidden ${isScrolled ? '!py-2 !px-4' : '!py-2.5 !px-6'}`}
+                  className={`btn-gold text-[9px] uppercase tracking-[0.2em] relative group overflow-hidden touch-manipulation ${isScrolled ? '!py-2 !px-4' : '!py-3 !px-6'}`}
                 >
                   <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                   <span className="relative z-10">Profil</span>
@@ -119,11 +119,11 @@ export default function Navbar() {
               <div className="flex items-center gap-3">
                 <Link
                   href="/login"
-                  className="text-[10px] uppercase font-bold tracking-[0.2em] text-white/40 hover:text-white transition-colors px-4 py-2"
+                  className="text-[10px] uppercase font-bold tracking-[0.2em] text-white/40 hover:text-white transition-colors px-4 py-3 min-h-[44px] flex items-center justify-center touch-manipulation"
                 >
                   Connexion
                 </Link>
-                <Link href="/register" className={`btn-gold text-[10px] uppercase font-bold tracking-[0.2em] ${isScrolled ? '!py-2 !px-5' : '!py-2.5 !px-6'}`}>
+                <Link href="/register" className={`btn-gold text-[10px] uppercase font-bold tracking-[0.2em] touch-manipulation ${isScrolled ? '!py-2 !px-5' : '!py-3 !px-6'}`}>
                   Rejoindre
                 </Link>
               </div>

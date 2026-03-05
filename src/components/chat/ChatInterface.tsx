@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
-import { Sparkles, MessageSquare, ChevronRight, Lock, Image as ImageIcon, Video, Send, Heart, DollarSign } from 'lucide-react';
+import { Sparkles, MessageSquare, ChevronRight, ChevronLeft, Lock, Image as ImageIcon, Video, Send, Heart, DollarSign } from 'lucide-react';
 import { MILAN_NAME, MILAN_AVATARS } from '@/lib/constants';
 
 interface Message {
@@ -160,9 +160,12 @@ export default function ChatInterface() {
     };
 
     return (
-        <div className="flex flex-col h-[calc(100dvh-5rem)] max-w-2xl mx-auto bg-dark-200/50 backdrop-blur-xl rounded-2xl border border-white/5 shadow-2xl overflow-hidden mt-20">
+        <div className="flex flex-col h-[100dvh] md:h-[calc(100dvh-5rem)] w-full md:max-w-2xl mx-auto bg-dark-500 md:bg-dark-200/50 md:backdrop-blur-xl md:rounded-2xl md:border md:border-white/5 shadow-2xl overflow-hidden fixed md:relative inset-0 md:mt-20 z-[150] md:z-auto pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] md:pb-0">
             {/* Header */}
-            <div className="flex items-center gap-4 p-4 border-b border-gold/10 bg-dark-300/40">
+            <div className="flex items-center gap-3 md:gap-4 p-4 border-b border-gold/10 bg-dark-300/40 shrink-0">
+                <Link href="/" className="md:hidden w-10 h-10 min-h-[44px] min-w-[44px] rounded-full bg-white/5 flex items-center justify-center text-white/60 touch-manipulation active:scale-95 shrink-0">
+                    <ChevronLeft size={20} />
+                </Link>
                 <div className="relative w-12 h-12">
                     <img src={mAvatar} alt={MILAN_NAME} className="w-full h-full rounded-full object-cover border border-gold/30" />
                     <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-dark-300" />
@@ -190,8 +193,8 @@ export default function ChatInterface() {
                     >
                         <div className={`flex flex-col max-w-[85%] ${msg.sender === 'USER' ? 'items-end' : 'items-start'}`}>
                             <div className={`relative px-4 py-3 rounded-2xl group ${msg.sender === 'USER'
-                                    ? 'bg-gradient-to-br from-gold/30 to-gold/10 text-cream rounded-tr-none border border-gold/20'
-                                    : 'glass text-white/90 rounded-tl-none border border-white/5'
+                                ? 'bg-gradient-to-br from-gold/30 to-gold/10 text-cream rounded-tr-none border border-gold/20'
+                                : 'glass text-white/90 rounded-tl-none border border-white/5'
                                 }`}>
                                 {/* Message Content */}
                                 {msg.messageType === 'TEXT' && <div>{msg.content}</div>}
@@ -281,7 +284,7 @@ export default function ChatInterface() {
                     <button
                         onClick={() => sendMessage()}
                         disabled={!input.trim() || sending}
-                        className="w-10 h-10 rounded-xl bg-gold flex items-center justify-center text-dark-400 disabled:opacity-30 transition-all"
+                        className="w-10 h-10 min-h-[44px] min-w-[44px] rounded-xl bg-gold flex items-center justify-center text-dark-400 disabled:opacity-30 transition-all touch-manipulation active:scale-95"
                     >
                         <Send size={18} />
                     </button>

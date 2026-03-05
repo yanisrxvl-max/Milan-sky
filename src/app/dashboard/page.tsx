@@ -249,12 +249,12 @@ function DashboardContent() {
 
           {/* Quick Actions */}
           <div className="flex flex-col gap-3 shrink-0 w-full md:w-auto">
-            <Link href="/skycoins" className="w-full btn-gold !py-3 !px-6 text-[10px]">
+            <Link href="/skycoins" className="w-full btn-gold justify-center !py-3 !px-6 text-[10px] min-h-[44px] touch-manipulation active:scale-95">
               Alimenter le Compte
             </Link>
             <button
               onClick={() => signOut({ callbackUrl: '/' })}
-              className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-red-500/20 text-red-500/70 hover:bg-red-500/10 hover:text-red-500 text-[10px] uppercase font-bold tracking-widest transition-all"
+              className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-red-500/20 text-red-500/70 hover:bg-red-500/10 hover:text-red-500 text-[10px] uppercase font-bold tracking-widest transition-all min-h-[44px] touch-manipulation active:scale-95"
             >
               <LogOut size={14} /> Déconnexion
             </button>
@@ -273,7 +273,7 @@ function DashboardContent() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`relative px-6 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all whitespace-nowrap flex items-center gap-2 ${activeTab === tab.id
+            className={`relative px-6 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all whitespace-nowrap flex items-center gap-2 min-h-[44px] touch-manipulation active:scale-95 ${activeTab === tab.id
               ? 'text-gold'
               : 'text-white/40 hover:text-white hover:bg-white/5'
               }`}
@@ -312,14 +312,14 @@ function DashboardContent() {
                         type="text"
                         value={editName}
                         onChange={(e) => setEditName(e.target.value)}
-                        className="input-field flex-1 !py-3"
+                        className="input-field flex-1 !py-3 min-h-[44px]"
                         placeholder="Votre nom"
                         maxLength={50}
                       />
                       <button
                         onClick={updateName}
                         disabled={saving || !editName.trim() || editName === profile.name}
-                        className="btn-outline !py-3 !px-6 bg-dark-400"
+                        className="btn-outline !py-3 !px-6 bg-dark-400 min-h-[44px] touch-manipulation active:scale-95 transition-all"
                       >
                         {saving ? '...' : 'Valider'}
                       </button>
@@ -360,7 +360,7 @@ function DashboardContent() {
                       <Shield size={24} />
                     </div>
                     <p className="text-white/40 text-sm mb-6">Vous ne possédez aucun badge d'accès.</p>
-                    <Link href="/subscriptions" className="btn-gold !py-3">
+                    <Link href="/subscriptions" className="btn-gold !py-3 min-h-[44px] touch-manipulation active:scale-95 justify-center">
                       Accéder au Cercle
                     </Link>
                   </div>
@@ -378,7 +378,7 @@ function DashboardContent() {
                   </div>
                   <h3 className="font-serif text-2xl text-cream mb-2">Le Vault est vide</h3>
                   <p className="text-white/40 mb-8 max-w-sm">Aucun fragment d'intimité n'a encore été débloqué.</p>
-                  <Link href="/library" className="btn-outline !py-3 bg-dark-400">
+                  <Link href="/library" className="btn-outline !py-3 bg-dark-400 min-h-[44px] touch-manipulation active:scale-95 justify-center">
                     Explorer la Bibliothèque
                   </Link>
                 </div>
@@ -410,7 +410,7 @@ function DashboardContent() {
           {activeTab === 'orders' && (
             <div className="space-y-4">
               <div className="flex justify-end mb-6">
-                <Link href="/private-requests" className="btn-gold !py-3 text-[10px]">
+                <Link href="/private-requests" className="btn-gold !py-3 text-[10px] min-h-[44px] touch-manipulation active:scale-95 justify-center">
                   <Send size={14} className="mr-2" /> Soumettre une demande
                 </Link>
               </div>

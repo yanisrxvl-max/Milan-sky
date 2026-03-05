@@ -30,7 +30,7 @@ export default function BottomNav() {
     : navItems;
 
   return (
-    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] w-full max-w-fit px-4 pointer-events-none">
+    <div className="fixed bottom-0 left-0 right-0 z-[100] w-full pb-[calc(1rem+env(safe-area-inset-bottom))] px-4 pointer-events-none flex justify-center">
       <motion.nav
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -44,7 +44,7 @@ export default function BottomNav() {
             <Link
               key={item.href}
               href={item.href}
-              className="relative group p-3 rounded-2xl transition-all duration-300"
+              className="relative group p-3 rounded-2xl transition-all duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation"
             >
               <div className={`relative z-10 transition-colors duration-300 ${isActive ? 'text-gold' : 'text-white/30 group-hover:text-white/60'}`}>
                 <Icon size={20} strokeWidth={isActive ? 2 : 1.5} />

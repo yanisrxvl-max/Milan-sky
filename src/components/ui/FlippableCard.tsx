@@ -28,7 +28,7 @@ export default function FlippableCard({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: index * 0.12, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="relative perspective-1000 h-[380px] w-full cursor-pointer group"
+            className="relative perspective-1000 h-[380px] w-full cursor-pointer group touch-manipulation"
             onClick={() => setIsFlipped(!isFlipped)}
         >
             <motion.div

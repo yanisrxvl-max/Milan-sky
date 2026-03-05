@@ -206,6 +206,27 @@
     background-size: 200% 100%;
     animation: shimmer 2.5s linear infinite;
   }
+
+  /* ── Utilitaires PWA & Mobile ── */
+  .safe-pb {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-pt {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .min-touch-target {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
 }
 
 /* ── Keyframes globales ── */

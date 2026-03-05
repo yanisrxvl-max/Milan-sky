@@ -147,14 +147,14 @@ export default function MusesPage() {
             {/* FILTRES — 3 catégories + Toutes     */}
             {/* ═══════════════════════════════════ */}
             <div className="max-w-4xl mx-auto px-4 mb-14">
-                <div className="flex justify-center gap-3">
+                <div className="flex flex-wrap justify-center gap-2 md:gap-3">
                     {Object.entries(CATEGORY_MAP).map(([key, { label }]) => (
                         <button
                             key={key}
                             onClick={() => setActiveFilter(key)}
-                            className={`px-6 py-2.5 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold transition-all duration-300 ${activeFilter === key
-                                    ? 'bg-gold text-dark'
-                                    : 'bg-white/[0.03] border border-white/[0.08] text-white/40 hover:text-white hover:border-white/20'
+                            className={`px-4 md:px-6 py-2.5 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold transition-all duration-300 touch-manipulation min-h-[44px] active:scale-95 ${activeFilter === key
+                                ? 'bg-gold text-dark shadow-[0_0_15px_rgba(201,168,76,0.2)]'
+                                : 'bg-white/[0.03] border border-white/[0.08] text-white/40 hover:text-white hover:border-white/20'
                                 }`}
                         >
                             {label}
@@ -189,8 +189,8 @@ export default function MusesPage() {
                                     onMouseEnter={() => setHoveredId(muse.id)}
                                     onMouseLeave={() => setHoveredId(null)}
                                     className={`group relative rounded-2xl border overflow-hidden transition-all duration-500 ${muse.isActive
-                                            ? 'border-gold/50 bg-dark-200/80 shadow-[0_0_30px_rgba(201,168,76,0.1)]'
-                                            : 'border-white/[0.06] bg-dark-200/40 hover:border-white/[0.12] hover:bg-dark-200/60'
+                                        ? 'border-gold/50 bg-dark-200/80 shadow-[0_0_30px_rgba(201,168,76,0.1)]'
+                                        : 'border-white/[0.06] bg-dark-200/40 hover:border-white/[0.12] hover:bg-dark-200/60'
                                         }`}
                                 >
                                     {/* ── Image Cover ── */}
@@ -268,16 +268,16 @@ export default function MusesPage() {
                                             <div className="flex gap-2 mt-auto">
                                                 <button
                                                     onClick={() => handleActivate(muse.id, muse.category, muse.isActive)}
-                                                    className={`flex-1 py-3 rounded-xl text-[10px] uppercase tracking-[0.2em] font-bold transition-all duration-300 ${muse.isActive
-                                                            ? 'bg-gold text-dark'
-                                                            : 'bg-white/[0.04] border border-white/[0.08] text-white/50 hover:bg-white/[0.08] hover:text-white'
+                                                    className={`flex-1 py-3 rounded-xl text-[10px] uppercase tracking-[0.2em] font-bold transition-all duration-300 touch-manipulation min-h-[44px] active:scale-95 ${muse.isActive
+                                                        ? 'bg-gold text-dark shadow-[0_0_15px_rgba(201,168,76,0.2)]'
+                                                        : 'bg-white/[0.04] border border-white/[0.08] text-white/50 hover:bg-white/[0.08] hover:text-white'
                                                         }`}
                                                 >
                                                     {muse.isActive ? 'Désactiver' : 'Activer'}
                                                 </button>
                                                 <button
                                                     onClick={() => setViewingPrompt(muse)}
-                                                    className="w-12 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-gold hover:bg-gold/10 transition-all"
+                                                    className="w-12 min-h-[44px] rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-gold hover:bg-gold/10 transition-all touch-manipulation active:scale-95"
                                                     title="Voir le Prompt"
                                                 >
                                                     <Copy size={16} />
@@ -286,7 +286,7 @@ export default function MusesPage() {
                                         ) : (
                                             <button
                                                 onClick={() => handlePurchase(muse.id)}
-                                                className="w-full py-3.5 rounded-xl bg-gold text-dark text-[10px] uppercase tracking-[0.2em] font-bold hover:shadow-[0_0_20px_rgba(201,168,76,0.25)] active:scale-[0.98] transition-all duration-300 mt-auto"
+                                                className="w-full py-3.5 rounded-xl bg-gold text-dark text-[10px] uppercase tracking-[0.2em] font-bold hover:shadow-[0_0_20px_rgba(201,168,76,0.25)] active:scale-[0.96] transition-all duration-300 mt-auto touch-manipulation min-h-[44px]"
                                             >
                                                 Débloquer la Muse
                                             </button>
@@ -348,7 +348,7 @@ export default function MusesPage() {
                             <div className="p-6 border-t border-white/[0.05] shrink-0">
                                 <button
                                     onClick={() => viewingPrompt.prompt && copyToClipboard(viewingPrompt.prompt)}
-                                    className="w-full py-4 rounded-xl bg-gold text-dark text-[10px] uppercase tracking-[0.2em] font-bold hover:shadow-[0_0_20px_rgba(201,168,76,0.3)] transition-all flex items-center justify-center gap-2"
+                                    className="w-full py-4 rounded-xl bg-gold text-dark text-[10px] uppercase tracking-[0.2em] font-bold hover:shadow-[0_0_20px_rgba(201,168,76,0.3)] min-h-[44px] active:scale-95 touch-manipulation transition-all flex items-center justify-center gap-2"
                                 >
                                     <Copy size={14} /> Copier pour ChatGPT ou Claude
                                 </button>

@@ -100,7 +100,7 @@ export function PaymentBridgeModal({ isOpen, onClose, tierName, price, type }: P
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                <div className="fixed inset-0 z-[200] flex items-end md:items-center justify-center md:p-4">
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -110,11 +110,23 @@ export function PaymentBridgeModal({ isOpen, onClose, tierName, price, type }: P
                     />
 
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                        initial={{ opacity: 0, scale: 0.95, y: '100%' }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                        className="relative w-full max-w-2xl bg-dark-400 border border-white/10 rounded-[32px] overflow-hidden shadow-2xl"
+                        exit={{ opacity: 0, scale: 0.95, y: '100%' }}
+                        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                        drag="y"
+                        dragConstraints={{ top: 0, bottom: 0 }}
+                        dragElastic={0.2}
+                        onDragEnd={(_, info) => {
+                            if (info.offset.y > 100) onClose();
+                        }}
+                        className="relative w-full md:max-w-2xl bg-dark-400 border border-white/10 rounded-t-[32px] md:rounded-[32px] overflow-hidden shadow-2xl flex flex-col max-h-[95vh] mt-auto md:mt-0 pb-[env(safe-area-inset-bottom)]"
                     >
+                        {/* Drag Handle (Mobile) */}
+                        <div className="w-full flex justify-center pt-4 pb-2 md:hidden cursor-grab active:cursor-grabbing shrink-0">
+                            <div className="w-12 h-1.5 bg-white/20 rounded-full" />
+                        </div>
+
                         {/* Header */}
                         <div className="p-8 pb-4 flex items-center justify-between border-b border-white/5">
                             <div>
@@ -127,7 +139,7 @@ export function PaymentBridgeModal({ isOpen, onClose, tierName, price, type }: P
                             </div>
                             <button
                                 onClick={onClose}
-                                className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors"
+                                className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors touch-manipulation min-h-[44px]"
                             >
                                 <X size={20} className="text-white/60" />
                             </button>

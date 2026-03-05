@@ -34,8 +34,8 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="min-h-screen bg-dark-400 pb-20 md:pb-0">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-[100dvh] bg-dark-400">
+      <div className="max-w-7xl mx-auto px-0 md:px-6 lg:px-8">
         <ChatInterface />
       </div>
     </div>

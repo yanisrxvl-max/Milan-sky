@@ -164,13 +164,13 @@ export default function Home() {
             className="flex flex-col sm:flex-row items-center gap-5 w-full sm:w-auto"
           >
             <Link href="/subscriptions" className="w-full sm:w-auto">
-              <button className="w-full sm:w-auto group relative px-12 py-5 bg-gold rounded-full text-black font-bold tracking-widest uppercase text-[11px] hover:scale-105 transition-all duration-500 outline-none gold-glow flex items-center justify-center gap-3">
+              <button className="w-full sm:w-auto group relative px-12 py-5 bg-gold rounded-full text-black font-bold tracking-widest uppercase text-[11px] hover:scale-105 active:scale-95 transition-all duration-500 outline-none gold-glow flex items-center justify-center gap-3 touch-manipulation min-h-[44px]">
                 S&apos;abonner <Crown size={14} className="group-hover:rotate-12 transition-transform" />
               </button>
             </Link>
 
             <Link href="/library" className="w-full sm:w-auto">
-              <button className="w-full sm:w-auto px-12 py-5 glass rounded-full text-white font-bold tracking-widest uppercase text-[11px] hover:bg-white/10 hover:border-gold/30 transition-all duration-500 flex items-center justify-center gap-3 group">
+              <button className="w-full sm:w-auto px-12 py-5 glass rounded-full text-white font-bold tracking-widest uppercase text-[11px] hover:bg-white/10 hover:border-gold/30 active:scale-95 transition-all duration-500 flex items-center justify-center gap-3 group touch-manipulation min-h-[44px]">
                 Le Vault <Play size={12} className="text-gold group-hover:translate-x-1 transition-transform" />
               </button>
             </Link>
@@ -259,7 +259,7 @@ export default function Home() {
                   </div>
                   <div>
                     <p className="text-cream text-sm font-bold">{t.name}</p>
-                    <p className="text-gold/40 text-[9px] font-bold uppercase tracking-widest">{t.tier}</p>
+                    <p className="text-gold/40 text-[9px] font-bold uppercase tracking-widest leading-normal">{t.tier}</p>
                   </div>
                 </div>
               </motion.div>
@@ -318,7 +318,7 @@ export default function Home() {
                 </div>
 
                 <Link href="/subscriptions" className="w-full">
-                  <button className={`w-full py-4 rounded-xl text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 ${i === 1 ? 'bg-gold text-dark hover:shadow-[0_0_20px_rgba(201,168,76,0.3)] hover:scale-[1.02]' : 'bg-white/5 border border-white/10 text-white/60 hover:border-gold/30 hover:text-gold'}`}>
+                  <button className={`w-full py-4 rounded-xl text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 touch-manipulation min-h-[44px] active:scale-95 ${i === 1 ? 'bg-gold text-dark hover:shadow-[0_0_20px_rgba(201,168,76,0.3)] hover:scale-[1.02]' : 'bg-white/5 border border-white/10 text-white/60 hover:border-gold/30 hover:text-gold'}`}>
                     Sélectionner
                   </button>
                 </Link>
@@ -340,9 +340,9 @@ export default function Home() {
             Prêt à franchir <span className="gold-text italic block mt-2">la limite</span> ?
           </h2>
           <p className="text-white/40 mb-12 text-sm uppercase tracking-widest font-bold">L'accès n'est autorisé qu'aux membres validés.</p>
-          <Link href="/register" className="inline-block relative">
-            <div className="absolute -inset-1 bg-gold rounded-full opacity-30 blur-xl transition duration-500 hover:opacity-100" />
-            <button className="relative px-16 py-6 bg-dark border border-gold/40 text-gold rounded-full font-bold tracking-[0.3em] uppercase text-[11px] hover:bg-gold hover:text-dark transition-all duration-500 flex items-center gap-3 shadow-[0_0_40px_rgba(201,168,76,0.2)]">
+          <Link href="/register" className="inline-block relative w-full sm:w-auto px-4 sm:px-0">
+            <div className="absolute -inset-1 bg-gold rounded-full opacity-30 blur-xl transition duration-500 hover:opacity-100 hidden sm:block" />
+            <button className="relative px-12 sm:px-16 py-5 sm:py-6 bg-dark border border-gold/40 text-gold rounded-full font-bold tracking-[0.3em] uppercase text-[10px] sm:text-[11px] hover:bg-gold hover:text-dark active:scale-95 transition-all duration-500 flex items-center justify-center gap-3 shadow-[0_0_40px_rgba(201,168,76,0.2)] touch-manipulation min-h-[44px] w-full">
               <Crown size={16} /> Rejoindre le Cercle
             </button>
           </Link>
