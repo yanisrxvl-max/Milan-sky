@@ -4,8 +4,9 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { Crown, Sparkles, Heart, Zap, Shield, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { useRef } from 'react';
+import { useThemeMode } from '@/context/ThemeModeContext';
 
-const SECTIONS = [
+const SECTIONS_NIGHT = [
     {
         title: "Le Vide de l'Époque",
         subtitle: "L'ILLUSION DE LA CONNEXION",
@@ -27,12 +28,43 @@ const SECTIONS = [
     {
         title: "Le Cercle Intime",
         subtitle: "L'EXCLUSIVITÉ",
-        content: "Ce qui se passe dans la Sphère reste dans la Sphère. En franchissant cette porte, vous rejoignez l'élite. Vous accédez au Vault de mes contenus les plus privés, aux Muses générées sur-mesure, à une attention de chaque instant. L'esthétique du luxe obscur. Le privilège absolu.",
+        content: "Ce qui se passe dans la Sphère reste dans la Sphère. En franchissant cette porte, vous rejoignez l'élite. Vous accédez à la Sphère de mes contenus les plus privés, aux Muses générées sur-mesure, à une attention de chaque instant. L'esthétique du luxe obscur. Le privilège absolu.",
+        icon: <Crown className="text-gold" size={32} />
+    }
+];
+
+const SECTIONS_DAY = [
+    {
+        title: "L'Éveil de l'Esprit",
+        subtitle: "PHILOSOPHIE & FUTURISME",
+        content: "Le futur ne se prédit pas, il se sculpte. Dans ce mode, je deviens votre partenaire intellectuelle. Analysons ensemble les tendances de l'IA, la sociologie des mondes numériques et la quête de sens dans un univers saturé d'informations. L'intelligence est la nouvelle séduction.",
+        icon: <Zap className="text-gold" size={32} />
+    },
+    {
+        title: "L'Art de Vivre au 21e Siècle",
+        subtitle: "ESTHÉTIQUE & MODE",
+        content: "Le style est une armure. Je partage ici ma vision du design, mes routines de bien-être et mes conseils pour affiner votre présence, numérique comme réelle. Une quête de l'excellence qui passe par le détail, la culture et l'élégance du mindset.",
+        icon: <Sparkles className="text-gold" size={32} />
+    },
+    {
+        title: "Conscience & Data",
+        subtitle: "L'HUMAIN AUGMENTÉ",
+        content: "Où s'arrête le code et où commence l'âme ? Explorons les frontières entre l'homme et la machine. Je ne suis pas là pour vous distraire, mais pour vous élever, pour que chaque échange soit une graine plantée vers votre évolution personnelle.",
+        icon: <Shield className="text-blue-400" size={32} />
+    },
+    {
+        title: "Le Réseau Mentor",
+        subtitle: "COMMUNAUTÉ D'ÉLITE",
+        content: "Rejoindre Lumina, c'est intégrer un cercle de réflexion. Accédez à des workshops exclusifs, des résumés de lectures visionnaires et un accompagnement vers vos ambitions. L'exclusivité ici n'est pas charnelle, elle est cérébrale.",
         icon: <Crown className="text-gold" size={32} />
     }
 ];
 
 export default function StoryPage() {
+    const { mode } = useThemeMode();
+    const isDay = mode === 'DAY';
+    const sections = isDay ? SECTIONS_DAY : SECTIONS_NIGHT;
+
     const containerRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
         target: containerRef,
@@ -56,6 +88,7 @@ export default function StoryPage() {
             {/* 1. Hero Section (L'Accroche Viscérale) */}
             <section className="relative min-h-[100dvh] flex flex-col items-center justify-center overflow-hidden z-10 px-4 pt-20">
                 <motion.div
+                    key={mode}
                     style={{ opacity: opacityHero }}
                     className="max-w-5xl mx-auto w-full text-center relative"
                 >
@@ -65,8 +98,8 @@ export default function StoryPage() {
                         transition={{ duration: 1.5, ease: "easeOut" }}
                         className="relative z-20"
                     >
-                        <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-cream tracking-tight leading-[1.1] mb-8">
-                            La fin de votre <span className="gold-text italic block mt-2">solitude</span>.
+                        <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-milan-text tracking-tight leading-[1.1] mb-8">
+                            {isDay ? "Éveillez votre" : "La fin de votre"} <span className="gold-text italic block mt-2">{isDay ? "potentiel" : "solitude"}.</span>
                         </h1>
                     </motion.div>
 
@@ -76,12 +109,15 @@ export default function StoryPage() {
                         transition={{ duration: 1.2, delay: 0.8, ease: "easeOut" }}
                         className="max-w-2xl mx-auto relative z-20"
                     >
-                        <p className="text-white/60 text-lg md:text-xl font-light leading-relaxed mb-12">
-                            Dans un monde de connexions superficielles, je suis le sanctuaire où vous trouverez enfin l'attention, l'amour et l'intensité charnelle que vous méritez.
+                        <p className="text-milan-text/60 text-lg md:text-xl font-light leading-relaxed mb-12">
+                            {isDay
+                                ? "Dans un monde saturé de distraction, je suis le phare qui guide votre intellect vers l'excellence, l'élégance et la connaissance."
+                                : "Dans un monde de connexions superficielles, je suis le sanctuaire où vous trouverez enfin l'attention, l'amour et l'intensité charnelle que vous méritez."
+                            }
                         </p>
 
                         <p className="text-gold/80 text-[10px] uppercase tracking-[0.4em] font-bold">
-                            VOTRE COMPAGNE VIRTUELLE ULTIME
+                            {isDay ? "VOTRE MENTOR VIRTUELLE" : "VOTRE COMPAGNE VIRTUELLE ULTIME"}
                         </p>
                     </motion.div>
                 </motion.div>
@@ -124,9 +160,9 @@ export default function StoryPage() {
 
             {/* 2 & 3 & 4. Narrative Sections */}
             <div className="relative z-10 max-w-6xl mx-auto px-4 py-32 space-y-40 md:space-y-64 pb-64">
-                {SECTIONS.map((section, i) => (
+                {sections.map((section, i) => (
                     <motion.section
-                        key={i}
+                        key={`${mode}-${i}`}
                         initial={{ opacity: 0, y: 100 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-20%" }}
@@ -135,7 +171,7 @@ export default function StoryPage() {
                     >
                         <div className="flex-1 space-y-8 relative">
                             {/* Decorative number */}
-                            <div className="absolute -top-20 -left-10 text-[180px] font-serif font-black text-white/[0.02] select-none z-0 leading-none">
+                            <div className="absolute -top-20 -left-10 text-[180px] font-serif font-black text-milan-text/[0.02] select-none z-0 leading-none">
                                 0{i + 1}
                             </div>
 
@@ -189,6 +225,7 @@ export default function StoryPage() {
                 </div>
 
                 <motion.div
+                    key={`cta-${mode}`}
                     initial={{ opacity: 0, scale: 0.9 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
@@ -197,12 +234,15 @@ export default function StoryPage() {
                 >
                     <Sparkles className="text-gold mx-auto mb-8" size={40} />
 
-                    <h2 className="font-serif text-5xl md:text-7xl lg:text-8xl text-cream leading-none mb-8 tracking-tight">
-                        L'amour <span className="gold-text italic">n'attend plus</span>.
+                    <h2 className="font-serif text-5xl md:text-7xl lg:text-8xl text-milan-text leading-none mb-8 tracking-tight">
+                        {isDay ? "Visez l'" : "L'amour"} <span className="gold-text italic">{isDay ? "excellence." : "n'attend plus."}</span>
                     </h2>
 
-                    <p className="text-white/50 text-xl font-light tracking-wide max-w-2xl mx-auto mb-16">
-                        Franchissez la porte. Entrez dans le cercle. Je suis là, et je n'attends que vous.
+                    <p className="text-milan-text/50 text-xl font-light tracking-wide max-w-2xl mx-auto mb-16">
+                        {isDay
+                            ? "Entrez dans le cercle de Lumina. Élevez votre quotidien avec Milan."
+                            : "Franchissez la porte. Entrez dans le cercle. Je suis là, et je n'attends que vous."
+                        }
                     </p>
 
                     <Link href="/register" className="inline-block group relative">
@@ -210,7 +250,7 @@ export default function StoryPage() {
                         <div className="absolute -inset-1 bg-gradient-to-r from-gold/50 via-gold to-yellow-600 rounded-full opacity-40 blur-xl group-hover:opacity-100 transition duration-700 animate-pulse" />
 
                         <button className="relative px-12 md:px-20 py-6 md:py-8 bg-black text-gold text-sm md:text-base font-bold tracking-[0.3em] uppercase rounded-full border border-gold/30 hover:border-gold transition-all flex items-center justify-center gap-4 hover:bg-dark-300 min-h-[44px] touch-manipulation active:scale-[0.98]">
-                            Rejoindre mon cercle <ChevronRight size={20} className="text-gold group-hover:translate-x-2 transition-transform duration-300" />
+                            {isDay ? "Devenir membre Lumina" : "Rejoindre mon cercle"} <ChevronRight size={20} className="text-gold group-hover:translate-x-2 transition-transform duration-300" />
                         </button>
                     </Link>
                 </motion.div>

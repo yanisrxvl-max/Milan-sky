@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import prisma from '@/lib/db';
+import { prisma } from '@/lib/db';
+import { MessageType } from '@prisma/client';
+
 import { chatMessageSchema } from '@/lib/validations';
 import { sanitizeForDB } from '@/lib/sanitize';
 import { logger } from '@/lib/logger';
-import { openai, MILAN_SYSTEM_PROMPT } from '@/lib/openai';
+import { openai, MILAN_LUMINA_PROMPT, MILAN_NOCTUA_PROMPT } from '@/lib/openai';
 
 const CHAT_LIMITS: Record<string, number> = {
     VOYEUR: 10,
@@ -84,7 +86,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: parsed.error.errors[0].message }, { status: 400 });
         }
 
-        const { content, messageType = 'TEXT', mediaUrl } = body;
+        const { content, messageType = 'TEXT', mediaUrl, mode = 'NIGHT' } = body;
 
         // 1. Get or Create Conversation
         let conversation = await prisma.conversation.findUnique({
@@ -130,10 +132,10 @@ export async function POST(request: NextRequest) {
             data: {
                 userId: session.user.id,
                 conversationId: conversation.id,
-                content: content ? sanitizeForDB(content) : null,
+                content: (content as string) || "",
                 sender: 'USER',
-                messageType: messageType,
-                mediaUrl: mediaUrl,
+                messageType: messageType as MessageType,
+                mediaUrl: mediaUrl as string | null,
                 isAI: false,
             },
         });
@@ -152,10 +154,11 @@ export async function POST(request: NextRequest) {
 
         if (openai && messageType === 'TEXT') {
             try {
+                const systemPrompt = mode === 'DAY' ? MILAN_LUMINA_PROMPT : MILAN_NOCTUA_PROMPT;
                 const completion = await openai.chat.completions.create({
                     model: 'gpt-4o-mini',
                     messages: [
-                        { role: 'system', content: MILAN_SYSTEM_PROMPT },
+                        { role: 'system', content: systemPrompt },
                         { role: 'user', content: content },
                     ],
                     max_tokens: 200,

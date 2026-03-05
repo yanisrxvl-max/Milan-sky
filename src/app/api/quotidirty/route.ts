@@ -1,17 +1,20 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
     try {
+        const { searchParams } = new URL(request.url);
+        const mode = searchParams.get('mode') || 'NOCTUA';
         const session = await getServerSession(authOptions);
         const now = new Date();
 
-        // Find the active Quotidirty drop
+        // Find the active Quotidirty drop for the current mode
         const activeDrop = await prisma.quotidirty.findFirst({
             where: {
                 isActive: true,
+                mode: mode as any,
                 releaseTime: { lte: now },
                 expireTime: { gte: now },
             },

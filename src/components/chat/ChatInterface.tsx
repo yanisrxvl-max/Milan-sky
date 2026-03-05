@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import Link from 'next/link';
 import { Sparkles, MessageSquare, ChevronRight, ChevronLeft, Lock, Image as ImageIcon, Video, Send, Heart, DollarSign } from 'lucide-react';
 import { MILAN_NAME, MILAN_AVATARS } from '@/lib/constants';
+import { useThemeMode } from '@/context/ThemeModeContext';
 
 interface Message {
     id: string;
@@ -22,6 +23,9 @@ interface Message {
 
 export default function ChatInterface() {
     const { data: session } = useSession();
+    const { mode } = useThemeMode();
+    const isDay = mode === 'DAY';
+
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [sending, setSending] = useState(false);
@@ -94,7 +98,7 @@ export default function ChatInterface() {
             const res = await fetch('/api/chat/messages', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content }),
+                body: JSON.stringify({ content, mode }),
             });
 
             const data = await res.json();
@@ -171,8 +175,12 @@ export default function ChatInterface() {
                     <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-dark-300" />
                 </div>
                 <div className="flex-1">
-                    <h2 className="font-serif text-cream text-lg leading-tight">{MILAN_NAME}</h2>
-                    <p className="text-white/40 text-[10px] uppercase tracking-[0.2em]">Iconic Creator</p>
+                    <h2 className="font-serif text-cream text-lg leading-tight">
+                        {isDay ? "Milan Lumina" : "Milan Sky"}
+                    </h2>
+                    <p className="text-white/40 text-[10px] uppercase tracking-[0.2em]">
+                        {isDay ? "Mentor & Visionnaire" : "Iconic Creator"}
+                    </p>
                 </div>
                 <div className="text-right">
                     <p className="text-gold/60 text-[10px] uppercase tracking-widest leading-none mb-1">
@@ -183,7 +191,7 @@ export default function ChatInterface() {
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-6 scrollbar-hide">
+            <div className="flex-1 overflow-y-auto p-6 space-y-8 scrollbar-hide">
                 {messages.map((msg, idx) => (
                     <motion.div
                         key={msg.id}
@@ -192,7 +200,7 @@ export default function ChatInterface() {
                         className={`flex ${msg.sender === 'USER' ? 'justify-end' : 'justify-start'}`}
                     >
                         <div className={`flex flex-col max-w-[85%] ${msg.sender === 'USER' ? 'items-end' : 'items-start'}`}>
-                            <div className={`relative px-4 py-3 rounded-2xl group ${msg.sender === 'USER'
+                            <div className={`relative px-5 py-3.5 rounded-2xl group leading-relaxed ${msg.sender === 'USER'
                                 ? 'bg-gradient-to-br from-gold/30 to-gold/10 text-cream rounded-tr-none border border-gold/20'
                                 : 'glass text-white/90 rounded-tl-none border border-white/5'
                                 }`}>
@@ -276,7 +284,7 @@ export default function ChatInterface() {
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                            placeholder="Envoyer un message à Milan..."
+                            placeholder={isDay ? "Posez une question à Lumina..." : "Envoyer un message à Milan..."}
                             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-cream placeholder:text-white/20 focus:outline-none focus:border-gold/30 transition-all"
                         />
                     </div>

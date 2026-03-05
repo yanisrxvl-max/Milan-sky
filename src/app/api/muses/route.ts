@@ -5,14 +5,20 @@ import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { logger } from '@/lib/logger';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
     try {
+        const { searchParams } = new URL(request.url);
+        const mode = searchParams.get('mode') || 'NOCTUA';
+
         const session = await getServerSession(authOptions);
         const userId = session?.user?.id;
 
-        // Get all active muses
+        // Get all active muses for the current mode
         const muses = await prisma.muse.findMany({
-            where: { isActive: true },
+            where: {
+                isActive: true,
+                mode: mode as any // Cast to ThemeMode
+            },
             orderBy: { price: 'asc' },
         });
 

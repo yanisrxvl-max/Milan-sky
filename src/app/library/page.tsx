@@ -2,6 +2,7 @@
 
 import { Suspense, useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import { useThemeMode } from '@/context/ThemeModeContext';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
@@ -61,6 +62,8 @@ function ContentItem({ item, idx, handleCardClick }: { item: any; idx: number; h
 
 export default function LibraryPage() {
   const { data: session, status } = useSession();
+  const { mode } = useThemeMode();
+  const currentThemeMode = mode === 'DAY' ? 'LUMINA' : 'NOCTUA';
   const router = useRouter();
 
   const [isVaultUnlocked, setIsVaultUnlocked] = useState(false);
@@ -80,7 +83,7 @@ export default function LibraryPage() {
       fetchBalance();
       fetchQuotidirty();
     }
-  }, [status, router, isVaultUnlocked]);
+  }, [status, router, isVaultUnlocked, mode]);
 
   useEffect(() => {
     if (!quotidirty) return;
@@ -116,7 +119,7 @@ export default function LibraryPage() {
   async function fetchContents() {
     setLoading(true);
     try {
-      const res = await fetch('/api/content');
+      const res = await fetch(`/api/content?mode=${currentThemeMode}`);
       if (res.ok) {
         const data = await res.json();
         setContents(data.contents || []);
@@ -130,7 +133,7 @@ export default function LibraryPage() {
 
   async function fetchQuotidirty() {
     try {
-      const res = await fetch('/api/quotidirty');
+      const res = await fetch(`/api/quotidirty?mode=${currentThemeMode}`);
       if (res.ok) {
         const data = await res.json();
         setQuotidirty(data.drop);

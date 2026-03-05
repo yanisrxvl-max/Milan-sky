@@ -6,8 +6,9 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Crown, Zap, Clock, Shield, Upload, LogOut, ChevronRight, CheckCircle2, ShoppingCart, Send, CreditCard } from 'lucide-react';
+import { Crown, Zap, Clock, Shield, Upload, LogOut, ChevronRight, CheckCircle2, ShoppingCart, Send, CreditCard, Camera } from 'lucide-react';
 import AnimatedCounter from '@/components/ui/AnimatedCounter';
+import StudioUpload from '@/components/admin/StudioUpload';
 
 interface Profile {
   id: string;
@@ -67,7 +68,7 @@ const STATUS_LABELS: Record<string, { label: string; class: string }> = {
   CANCELLED: { label: 'Annulé', class: 'bg-red-500/10 text-red-500 border-red-500/20' },
 };
 
-type Tab = 'profile' | 'purchases' | 'orders' | 'history';
+type Tab = 'profile' | 'purchases' | 'orders' | 'history' | 'studio';
 
 export default function DashboardPage() {
   return (
@@ -266,8 +267,9 @@ function DashboardContent() {
       <div className="flex gap-2 mb-8 overflow-x-auto pb-4 custom-scrollbar lg:justify-center">
         {[
           { id: 'profile' as Tab, label: 'Paramètres', icon: <Shield size={14} /> },
-          { id: 'purchases' as Tab, label: 'Vault Personnel', icon: <CheckCircle2 size={14} /> },
+          { id: 'purchases' as Tab, label: 'La Sphère', icon: <CheckCircle2 size={14} /> },
           { id: 'orders' as Tab, label: 'Demandes Privées', icon: <Send size={14} /> },
+          ...(session?.user?.role === 'ADMIN' ? [{ id: 'studio' as Tab, label: 'Studio Créateur', icon: <Camera size={14} /> }] : []),
           { id: 'history' as Tab, label: 'Registres', icon: <Clock size={14} /> },
         ].map((tab) => (
           <button
@@ -376,7 +378,7 @@ function DashboardContent() {
                   <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center text-white/20 mb-6">
                     <ShoppingCart size={32} />
                   </div>
-                  <h3 className="font-serif text-2xl text-cream mb-2">Le Vault est vide</h3>
+                  <h3 className="font-serif text-2xl text-cream mb-2">La Sphère est vide</h3>
                   <p className="text-white/40 mb-8 max-w-sm">Aucun fragment d'intimité n'a encore été débloqué.</p>
                   <Link href="/library" className="btn-outline !py-3 bg-dark-400 min-h-[44px] touch-manipulation active:scale-95 justify-center">
                     Explorer la Bibliothèque
@@ -476,6 +478,14 @@ function DashboardContent() {
                   ))}
                 </div>
               )}
+            </div>
+          )}
+
+          {activeTab === 'studio' && session?.user?.role === 'ADMIN' && (
+            <div className="max-w-2xl mx-auto">
+              <StudioUpload
+                onSuccess={() => setActiveTab('purchases')}
+              />
             </div>
           )}
         </motion.div>

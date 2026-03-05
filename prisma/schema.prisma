@@ -49,6 +49,11 @@ model User {
 
 // ... existing models ...
 
+enum ThemeMode {
+  LUMINA
+  NOCTUA
+}
+
 model Muse {
   id              String        @id @default(cuid())
   title           String
@@ -59,6 +64,7 @@ model Muse {
   isActive        Boolean       @default(true)
   imageUrl        String?
   backgroundImage String?
+  mode            ThemeMode     @default(NOCTUA)
   
   // Personification Fields
   age            Int?
@@ -165,6 +171,7 @@ model Content {
   imageUrl    String?
   mediaUrl    String?
   isActive    Boolean     @default(true)
+  mode        ThemeMode   @default(NOCTUA)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   purchases   Purchase[]
@@ -314,6 +321,7 @@ model Quotidirty {
   releaseTime     DateTime
   expireTime      DateTime
   isActive        Boolean          @default(true)
+  mode            ThemeMode        @default(NOCTUA)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
 
@@ -359,3 +367,17 @@ model ManualPaymentRequest {
   @@index([userId])
   @@index([status])
 }
+
+model Game {
+  id          String      @id @default(cuid())
+  title       String
+  description String?
+  type        String      // e.g., 'QUIZ', 'ADVENTURE'
+  imageUrl    String?
+  mediaUrl    String?     // Link to game engine/iframe or asset
+  mode        ThemeMode   @default(NOCTUA)
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+

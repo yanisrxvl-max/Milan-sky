@@ -5,10 +5,14 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import { MILAN_NAME, MILAN_AVATARS } from '@/lib/constants';
+import { useThemeMode } from '@/context/ThemeModeContext';
 import AnimatedCounter from './ui/AnimatedCounter';
+import ModeToggle from './ModeToggle';
 
 export default function Navbar() {
   const { data: session } = useSession();
+  const { mode } = useThemeMode();
+  const isDay = mode === 'DAY';
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -36,14 +40,14 @@ export default function Navbar() {
 
   const links = [
     { href: '/', label: 'Accueil' },
-    { href: '/library', label: 'Bibliothèque' },
+    { href: '/library', label: isDay ? 'Mes contenus' : 'Bibliothèque' },
     { href: '/muses', label: 'Les Muses' },
-    { href: '/games', label: 'Jeux' },
     { href: '/chat', label: 'Chat' },
+    { href: '/games', label: 'Jeux' },
     { href: '/private-requests', label: 'Privé' },
+    { href: '/story', label: 'Histoire' },
     { href: '/skycoins', label: 'SkyCoins' },
     { href: '/subscriptions', label: 'Abonnements' },
-    { href: '/story', label: 'Histoire' },
     ...(isAdmin ? [{ href: '/admin', label: 'Admin' }] : []),
   ];
 
@@ -51,26 +55,26 @@ export default function Navbar() {
     <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${isScrolled ? 'bg-dark-500/80 backdrop-blur-xl border-b border-white/[0.04] py-2' : 'bg-transparent py-4'}`}>
       <div className="max-w-[90rem] mx-auto px-4 md:px-8">
         <div className={`flex items-center justify-between transition-all duration-500 ${isScrolled ? 'h-14' : 'h-20'}`}>
-          <Link href="/" className="flex flex-col items-center gap-0 group relative cursor-pointer">
+          <Link href="/" className="flex flex-col items-center gap-0 group relative cursor-pointer mr-10 shrink-0">
             <div className="flex flex-col items-center leading-none overflow-visible">
-              <div className={`bg-gold mb-1.5 transform group-hover:scale-x-150 transition-all duration-700 ${isScrolled ? 'w-4 h-[1px]' : 'w-8 h-[2px] opacity-60'}`} />
-              <span className={`font-serif font-light text-white tracking-[0.05em] mb-1 transition-all duration-500 ${isScrolled ? 'text-xl' : 'text-3xl'}`}>MILAN</span>
+              <div className={`bg-gold mb-1.5 transform group-hover:scale-x-150 transition-all duration-700 ${isScrolled ? 'w-4 h-[1px]' : 'w-6 h-[2px] opacity-60'}`} />
+              <span className={`font-serif font-light text-white tracking-[0.05em] mb-1 transition-all duration-500 ${isScrolled ? 'text-xl' : 'text-2xl'}`}>MILAN</span>
               <div className={`flex items-center gap-2 w-full transition-all duration-500 ${isScrolled ? 'opacity-0 h-0 hidden' : 'opacity-100'}`}>
-                <div className="h-[0.5px] flex-1 bg-gradient-to-l from-gold/40 to-transparent" />
-                <span className="text-[10px] uppercase tracking-[0.8em] font-black gold-text-glow italic ml-[0.8em]">SKY</span>
-                <div className="h-[0.5px] flex-1 bg-gradient-to-r from-gold/40 to-transparent" />
+                <div className={`h-[0.5px] flex-1 bg-gradient-to-l ${isDay ? 'from-gold/40' : 'from-gray-400/40'} to-transparent`} />
+                <span className={`text-[10px] uppercase tracking-[0.8em] font-black italic ml-[0.8em] ${isDay ? 'gold-text-glow' : 'silver-text'}`}>SKY</span>
+                <div className={`h-[0.5px] flex-1 bg-gradient-to-r ${isDay ? 'from-gold/40' : 'from-gray-400/40'} to-transparent`} />
               </div>
             </div>
             <div className="absolute -inset-4" /> {/* Click target */}
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-1.5 p-1.5 rounded-2xl bg-white/[0.02] border border-white/[0.04] backdrop-blur-md">
+          <div className="hidden lg:flex items-center gap-0.5 p-1 rounded-2xl bg-white/[0.02] border border-white/[0.04] backdrop-blur-md mx-auto">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`px-4 py-2 rounded-xl text-[9px] uppercase tracking-[0.2em] font-bold transition-all duration-300 relative ${isActive(link.href)
+                className={`px-2.5 py-1.5 rounded-xl text-[9px] uppercase tracking-[0.1em] font-bold transition-all duration-300 relative ${isActive(link.href)
                   ? 'text-gold'
                   : 'text-white/40 hover:text-white hover:bg-white/5'
                   }`}
@@ -84,7 +88,11 @@ export default function Navbar() {
           </div>
 
           {/* Auth & Balance Section */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6 md:gap-10 shrink-0 ml-10">
+            <div className="flex items-center px-2">
+              <ModeToggle />
+            </div>
+
             {session ? (
               <div className="flex items-center gap-5">
                 {/* Balance Display */}
@@ -110,7 +118,7 @@ export default function Navbar() {
 
                 <Link
                   href="/dashboard"
-                  className={`btn-gold text-[9px] uppercase tracking-[0.2em] relative group overflow-hidden touch-manipulation ${isScrolled ? '!py-2 !px-4' : '!py-3 !px-6'}`}
+                  className={`btn-gold text-[9px] uppercase tracking-[0.2em] relative group overflow-hidden touch-manipulation flex-shrink-0 ${isScrolled ? '!py-2 !px-4' : '!py-3 !px-6'}`}
                 >
                   <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                   <span className="relative z-10">Profil</span>

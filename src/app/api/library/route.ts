@@ -1,16 +1,21 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { logger } from '@/lib/logger';
 
 // Get library content
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url);
+    const mode = searchParams.get('mode') || 'NOCTUA';
     const session = await getServerSession(authOptions);
 
     const content = await prisma.content.findMany({
-      where: { isActive: true },
+      where: {
+        isActive: true,
+        mode: mode as any
+      },
       orderBy: { createdAt: 'desc' },
     });
 

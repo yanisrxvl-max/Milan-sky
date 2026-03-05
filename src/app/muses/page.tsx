@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import { useThemeMode } from '@/context/ThemeModeContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, CheckCircle2, X, Copy, Info, MessageCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -28,6 +29,9 @@ const CATEGORY_MAP: Record<string, { label: string; filter: string[] }> = {
 
 export default function MusesPage() {
     const { data: session } = useSession();
+    const { mode } = useThemeMode();
+    const currentThemeMode = mode === 'DAY' ? 'LUMINA' : 'NOCTUA';
+
     const [muses, setMuses] = useState<Muse[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [activeFilter, setActiveFilter] = useState('ALL');
@@ -36,11 +40,12 @@ export default function MusesPage() {
 
     useEffect(() => {
         fetchMuses();
-    }, []);
+    }, [mode]);
 
     async function fetchMuses() {
+        setIsLoading(true);
         try {
-            const res = await fetch('/api/muses');
+            const res = await fetch(`/api/muses?mode=${currentThemeMode}`);
             if (res.ok) {
                 const data = await res.json();
                 setMuses(data.muses);

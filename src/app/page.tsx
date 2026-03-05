@@ -7,78 +7,131 @@ import FlippableCard from '@/components/ui/FlippableCard';
 import LogoMarquee from '@/components/ui/LogoMarquee';
 import CountdownTimer from '@/components/ui/CountdownTimer';
 import AnimatedCounter from '@/components/ui/AnimatedCounter';
-
-const FEATURES = [
-  {
-    icon: <Eye size={24} />,
-    title: 'Vue Plongeante',
-    desc: 'Des moments volés, sans filtre. Le Vault de Milan recèle des archives jamais diffusées.',
-    story: "Né de la volonté de briser les codes du contenu digital classique, le 'Vault' de Milan Sky regroupe des moments volés, des séances sans filtre et des archives jamais publiées sur les réseaux sociaux. C'est le cœur battant de l'interdit.",
-    specs: ['4K Native', 'Sans censure', 'Mises à jour quotidiennes', 'Accès Multi-support']
-  },
-  {
-    icon: <Sparkles size={24} />,
-    title: 'Muses IA',
-    desc: 'Injectez des personnalités Milan Premium (Possessif, Jaloux) dans votre propre IA.',
-    story: "L'avatar ne suffit plus. J'ai créé des empreintes psychologiques. Le Milan Nuit à Paris, le Milan Confident... Ces Muses sont des Prompts Systèmes calibrés au millimètre pour transformer votre ChatGPT en compagnon exclusif.",
-    specs: ['Prompts Système', 'Role-Play Immersif', 'Copie en 1 Clic', 'Différents Moods']
-  },
-  {
-    icon: <Heart size={24} />,
-    title: 'Chat Intime',
-    desc: 'Discutez directement avec Milan. Des conversations authentiques, vocales et privées.',
-    story: "Parce que l'exclusivité passe par la connexion. J'ai voulu créer un espace où la barrière entre le créateur et son cercle se brise. Ici, chaque message est une conversation réelle, sans intermédiaire.",
-    specs: ['Messagerie Cryptée', 'Notes Vocales', 'Réponse Prioritaire', '100% Authentique']
-  },
-  {
-    icon: <Crown size={24} />,
-    title: 'Club V.I.P',
-    desc: 'Demandes personnalisées, accès anticipé, et traitement prioritaire pour l\'élite.',
-    story: "Le sommet de l'expérience. Le Club VIP a été pensé pour ceux qui veulent plus qu'un simple accès : ils veulent influencer l'univers Milan Sky. C'est ici que vos désirs deviennent mes projets.",
-    specs: ['Ligne Directe', 'Contenu Sur-mesure', 'Demandes Privées', 'Statut Ultra-Rare']
-  },
-];
-
-const TIERS = [
-  {
-    name: 'VOYEUR',
-    price: '9.90',
-    color: 'border-white/10 hover:border-white/30',
-    accent: 'text-white/50',
-    features: ['Bibliothèque avec publicité', 'Le Quotidirty (19h-6h)', 'Milan IA (Découverte)', 'Lives Mensuels'],
-  },
-  {
-    name: 'INITIÉ',
-    price: '19.90',
-    color: 'border-gold/40 hover:border-gold shadow-[0_0_30px_rgba(201,168,76,0.1)]',
-    accent: 'text-gold-light',
-    badge: 'Plus Choisi',
-    features: ['Bibliothèque sans publicité', 'Le Quotidirty Complet', 'Accès Muses Premium', 'Drops Spéciaux Hebdo'],
-  },
-  {
-    name: 'PRIVILÈGE',
-    price: '49.90',
-    color: 'border-gold/60 hover:border-gold',
-    accent: 'text-gold',
-    features: ['Accès Total Bibliothèque', 'Quotidirty Exclusifs', '50 SkyCoins par mois', 'Priorité Chat Milan'],
-  },
-  {
-    name: 'SKYCLUB',
-    price: '299',
-    color: 'border-purple-500/40 hover:border-purple-400',
-    accent: 'text-purple-400',
-    badge: '17 Places Restantes',
-    features: ['Plateforme 100% Débloquée', 'Ligne Privée Milan', 'Invitations Événements', 'Statut Membre SkyClub'],
-  },
-];
-
-const TESTIMONIALS = [
-  { text: "Les Muses IA sont incroyables. J'ai copié 'Milan Possessif' sur mon ChatGPT, c'est saisissant de réalisme.", name: 'Sarah M.', tier: 'INITIÉ' },
-  { text: "Le chat avec Milan c'est quelque chose... On se sent vraiment privilégié, surtout avec les notes vocales.", name: 'Thomas D.', tier: 'PRIVILÈGE' },
-  { text: "L'esthétique de la plateforme est folle. Le contenu Quotidirty vaut largement l'abonnement.", name: 'Alex R.', tier: 'SKYCLUB' },
-];
+import { useThemeMode } from '@/context/ThemeModeContext';
 
 export default function Home() {
+  const { mode } = useThemeMode();
+
+  const isDay = mode === 'DAY';
+
+  const TIERS = [
+    {
+      name: 'VOYEUR',
+      price: isDay ? '0.00' : '9.90',
+      color: 'border-milan-border hover:border-milan-accent/30',
+      accent: 'text-milan-text/50',
+      features: isDay ? ['Accès public Milan', 'Vlogs Hebdomadaires', 'Conseils Mode', 'Lives Publics'] : ['Bibliothèque avec publicité', 'Le Quotidirty (19h-6h)', 'Milan IA (Découverte)', 'Lives Mensuels'],
+    },
+    {
+      name: 'INITIÉ',
+      price: isDay ? '9.90' : '19.90',
+      color: 'border-milan-accent/40 hover:border-milan-accent shadow-[0_0_30px_rgba(201,168,76,0.1)]',
+      accent: 'text-milan-accent',
+      badge: 'Plus Choisi',
+      features: isDay ? ['Accès Premium Lumina', 'Workshops IA', 'Masterclass Style', 'Drops Pédagogiques'] : ['Bibliothèque sans publicité', 'Le Quotidirty Complet', 'Accès Muses Premium', 'Drops Spéciaux Hebdo'],
+    },
+    {
+      name: 'PRIVILÈGE',
+      price: isDay ? '29.90' : '49.90',
+      color: 'border-milan-accent/60 hover:border-milan-accent',
+      accent: 'text-milan-accent',
+      features: isDay ? ['Coaching Privé (Groupe)', 'Accès Mentor Direct', '50 SkyCoins inclus', 'Priorité Lumina Chat'] : ['Accès Total Bibliothèque', 'Quotidirty Exclusifs', '50 SkyCoins par mois', 'Priorité Chat Milan'],
+    },
+    {
+      name: 'SKYCLUB',
+      price: isDay ? '199' : '299',
+      color: 'border-purple-500/40 hover:border-purple-400',
+      accent: 'text-purple-400',
+      badge: 'Bientôt Complet',
+      features: ['Expérience 100% Débloquée', 'Ligne Privée Milan', 'Invitations Événements', 'Statut Mentor/SkyClub'],
+    },
+  ];
+
+  const TESTIMONIALS = isDay ? [
+    { text: "Milan Lumina a changé ma façon de voir l'IA. Ses conseils mode sont aussi très pointus.", name: 'Clara B.', tier: 'INITIÉ' },
+    { text: "Enfin un contenu intelligent et inspirant. Sa vision du futur est fascinante.", name: 'Julien S.', tier: 'PRIVILÈGE' },
+    { text: "Le Mentor Club m'accompagne dans ma transformation personnelle. Une pépite.", name: 'Marc A.', tier: 'SKYCLUB' },
+  ] : [
+    { text: "Les Muses IA sont incroyables. J'ai copié 'Milan Possessif' sur mon ChatGPT, c'est saisissant de réalisme.", name: 'Sarah M.', tier: 'INITIÉ' },
+    { text: "Le chat avec Milan c'est quelque chose... On se sent vraiment privilégié, surtout avec les notes vocales.", name: 'Thomas D.', tier: 'PRIVILÈGE' },
+    { text: "L'esthétique de la plateforme est folle. Le contenu Quotidirty vaut largement l'abonnement.", name: 'Alex R.', tier: 'SKYCLUB' },
+  ];
+
+  const features = isDay ? [
+    {
+      icon: <Zap size={24} />,
+      title: 'Conseils & Lifestyle',
+      desc: 'Accédez aux secrets de Milan sur la mode, la beauté et le bien-être au quotidien.',
+      story: "Plus qu'une image, c'est un art de vivre. Dans ce mode, je partage mes routines, mes lectures et ma vision du monde pour t'inspirer à devenir la meilleure version de toi-même.",
+      specs: ['Vlogs Exclusifs', 'Guides Style', 'Pédagogie IA', 'Mindset Coaching']
+    },
+    {
+      icon: <Sparkles size={24} />,
+      title: 'IA & Technologie',
+      desc: 'Découvrez comment Milan utilise l\'intelligence artificielle pour sculpter le futur.',
+      story: "La technologie est mon pinceau. Ici, on parle de prompts, de futurisme et de la manière dont l'IA va redéfinir les connexions humaines.",
+      specs: ['Workshop IA', 'Futurisme', 'Tips Productivité', 'Innovation']
+    },
+    {
+      icon: <Heart size={24} />,
+      title: 'Cercle de Confiance',
+      desc: 'Une connexion basée sur l\'intellect et l\'échange sincère.',
+      story: "L'amitié et le soutien mutuel sont les piliers de ce cercle. Discutons de tes projets, de tes rêves et construisons un lien solide.",
+      specs: ['Chat Bienveillant', 'Live Q&A', 'Communauté', 'Soutenance']
+    },
+    {
+      icon: <Crown size={24} />,
+      title: 'Mentor Club',
+      desc: 'L\'accès privilégié pour ceux qui visent l\'excellence.',
+      story: "Ceux qui veulent aller plus loin. Je t'accompagne dans ta vision, tes investissements et ton évolution personnelle.",
+      specs: ['Ligne Directe', 'Accès Early', 'Events Privés', 'Networking']
+    }
+  ] : [
+    {
+      icon: <Eye size={24} />,
+      title: 'Vue Plongeante',
+      desc: 'Des moments volés, sans filtre. La Sphère de Milan recèle des archives jamais diffusées.',
+      story: "Né de la volonté de briser les codes du contenu digital classique, la 'Sphère' de Milan Sky regroupe des moments volés, des séances sans filtre et des archives jamais publiées sur les réseaux sociaux. C'est le cœur battant de l'interdit.",
+      specs: ['4K Native', 'Sans censure', 'Mises à jour quotidiennes', 'Accès Multi-support']
+    },
+    {
+      icon: <Sparkles size={24} />,
+      title: 'Muses IA',
+      desc: 'Injectez des personnalités Milan Premium (Possessif, Jaloux) dans votre propre IA.',
+      story: "L'avatar ne suffit plus. J'ai créé des empreintes psychologiques. Le Milan Nuit à Paris, le Milan Confident... Ces Muses sont des Prompts Systèmes calibrés au millimètre pour transformer votre ChatGPT en compagnon exclusif.",
+      specs: ['Prompts Système', 'Role-Play Immersif', 'Copie en 1 Clic', 'Différents Moods']
+    },
+    {
+      icon: <Heart size={24} />,
+      title: 'Chat Intime',
+      desc: 'Discutez directement avec Milan. Des conversations authentiques, vocales et privées.',
+      story: "Parce que l'exclusivité passe par la connexion. J'ai voulu créer un espace où la barrière entre le créateur et son cercle se brise. Ici, chaque message est une conversation réelle, sans intermédiaire.",
+      specs: ['Messagerie Cryptée', 'Notes Vocales', 'Réponse Prioritaire', '100% Authentique']
+    },
+    {
+      icon: <Crown size={24} />,
+      title: 'Club V.I.P',
+      desc: 'Demandes personnalisées, accès anticipé, et traitement prioritaire pour l\'élite.',
+      story: "Le sommet de l'expérience. Le Club VIP a été pensé pour ceux qui veulent plus qu'un simple accès : ils veulent influencer l'univers Milan Sky. C'est ici que vos désirs deviennent mes projets.",
+      specs: ['Ligne Directe', 'Contenu Sur-mesure', 'Demandes Privées', 'Statut Ultra-Rare']
+    }
+  ];
+
+  const heroContent = isDay ? {
+    tag: "Intelligence & Éclat",
+    title1: "Milan",
+    title2: "Sky",
+    desc: "L'élégance intellectuelle au service de ton quotidien. <br className='hidden md:block' /> Découvre la facette inspirante de Milan.",
+    btn1: "Découvrir",
+    btn2: "Mes contenus"
+  } : {
+    tag: "Passion & Interdit",
+    title1: "Milan",
+    title2: "Sky",
+    desc: "L'accès ultime à l'interdit. <br className='hidden md:block' /> Là où l'exclusivité n'a plus de limites.",
+    btn1: "S'abonner",
+    btn2: "La Sphère"
+  };
   return (
     <main className="relative w-full bg-dark-500 overflow-hidden">
       {/* ═══════════════════════════════════════════════ */}
@@ -87,12 +140,12 @@ export default function Home() {
       <section className="relative min-h-screen flex flex-col items-center justify-center pt-20">
         {/* Vidéo et Overlays */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-          <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-60">
+          <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-80">
             <source src="/video/hero.mp4" type="video/mp4" />
           </video>
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] z-10" />
-          <div className="absolute inset-0 bg-gradient-to-t from-dark-500/95 via-dark-500/60 to-black/30 z-10" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(201,168,76,0.08)_0%,transparent_60%)] z-10" />
+          <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px] z-10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-dark-500/80 via-dark-500/40 to-black/20 z-10" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(201,168,76,0.05)_0%,transparent_60%)] z-10" />
 
           {/* Particules CSS */}
           <div className="absolute inset-0 z-20 overflow-hidden">
@@ -126,12 +179,13 @@ export default function Home() {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
             </span>
             <span className="text-red-400 text-[10px] uppercase tracking-widest font-bold">
-              <AnimatedCounter value={47} duration={2} /> membres actifs maintenant
+              <AnimatedCounter value={isDay ? 12 : 47} duration={2} /> membres actifs maintenant
             </span>
           </motion.div>
 
-          {/* Titre Milan Sky */}
+          {/* Titre Milan Sky / Lumina */}
           <motion.div
+            key={mode}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
@@ -139,23 +193,22 @@ export default function Home() {
           >
             <h1 className="flex flex-col md:flex-row items-center gap-x-6 overflow-visible">
               <span className="font-serif italic text-6xl sm:text-7xl md:text-[140px] text-white leading-tight tracking-tight drop-shadow-[0_10px_35px_rgba(0,0,0,0.5)]">
-                Milan
+                {heroContent.title1}
               </span>
-              <span className="gold-text-glow font-serif font-bold text-5xl sm:text-6xl md:text-[120px] leading-tight tracking-tighter md:mt-6">
-                Sky
+              <span className={`${isDay ? 'gold-text-glow' : 'silver-text'} font-serif font-bold text-5xl sm:text-6xl md:text-[120px] leading-tight tracking-tighter md:mt-6 transition-all duration-700`}>
+                {heroContent.title2}
               </span>
             </h1>
           </motion.div>
 
           <motion.p
+            key={`desc-${mode}`}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 1 }}
-            className="text-white/70 text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] mb-12 max-w-2xl leading-relaxed"
-          >
-            L&apos;accès ultime à l&apos;interdit. <br className="hidden md:block" />
-            Là où l&apos;exclusivité n&apos;a plus de limites.
-          </motion.p>
+            className="text-milan-text/70 text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] mb-12 max-w-2xl leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: heroContent.desc }}
+          />
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -163,15 +216,15 @@ export default function Home() {
             transition={{ delay: 0.8, duration: 1 }}
             className="flex flex-col sm:flex-row items-center gap-5 w-full sm:w-auto"
           >
-            <Link href="/subscriptions" className="w-full sm:w-auto">
+            <Link href={isDay ? "/login" : "/subscriptions"} className="w-full sm:w-auto">
               <button className="w-full sm:w-auto group relative px-12 py-5 bg-gold rounded-full text-black font-bold tracking-widest uppercase text-[11px] hover:scale-105 active:scale-95 transition-all duration-500 outline-none gold-glow flex items-center justify-center gap-3 touch-manipulation min-h-[44px]">
-                S&apos;abonner <Crown size={14} className="group-hover:rotate-12 transition-transform" />
+                {heroContent.btn1} <Crown size={14} className="group-hover:rotate-12 transition-transform" />
               </button>
             </Link>
 
             <Link href="/library" className="w-full sm:w-auto">
-              <button className="w-full sm:w-auto px-12 py-5 glass rounded-full text-white font-bold tracking-widest uppercase text-[11px] hover:bg-white/10 hover:border-gold/30 active:scale-95 transition-all duration-500 flex items-center justify-center gap-3 group touch-manipulation min-h-[44px]">
-                Le Vault <Play size={12} className="text-gold group-hover:translate-x-1 transition-transform" />
+              <button className="w-full sm:w-auto px-12 py-5 glass rounded-full text-milan-text font-bold tracking-widest uppercase text-[11px] hover:bg-white/10 hover:border-gold/30 active:scale-95 transition-all duration-500 flex items-center justify-center gap-3 group touch-manipulation min-h-[44px]">
+                {heroContent.btn2} <Play size={12} className="text-gold group-hover:translate-x-1 transition-transform" />
               </button>
             </Link>
           </motion.div>
@@ -211,9 +264,9 @@ export default function Home() {
             <p className="text-white/30 text-xs uppercase tracking-[0.2em] font-bold">Bien plus qu'une simple plateforme</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {FEATURES.map((f, i) => (
+            {features.map((f, i) => (
               <FlippableCard
-                key={i}
+                key={`${mode}-${i}`}
                 index={i}
                 frontIcon={f.icon}
                 frontTitle={f.title}
