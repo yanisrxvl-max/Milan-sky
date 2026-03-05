@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milan Sky | The Uncensored Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Playfair+Display:ital,wght@0,600;0,900;1,600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* DESIGN SYSTEM - TOUT TON CSS EST ICI */
+        :root {
+            --bg-main: #0A0A0A;
+            --gold-main: #C9A84C;
+            --gold-hover: #E8C96D;
+            --text-main: #FFFFFF;
+            --text-sec: #888888;
+            --card-bg: #111111;
+            --border-subtle: #222222;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--bg-main); color: var(--text-main); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        h1, h2, h3, .logo { font-family: 'Playfair Display', serif; }
+        .gold { color: var(--gold-main); }
+        .white { color: var(--text-main); }
+        .italic { font-style: italic; }
+
+        /* BOUTONS */
+        .btn-primary { background: linear-gradient(to right, var(--gold-main), var(--gold-hover)); color: #000; padding: 18px 48px; border: none; border-radius: 50px; font-weight: 700; letter-spacing: 1px; cursor: pointer; transition: transform 0.2s; }
+        .btn-primary:hover { transform: scale(1.05); }
+
+        /* AGE GATE (PAGE DE GARDE +18) */
+        .age-gate-overlay { position: fixed; inset: 0; background: var(--bg-main); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+        .age-gate-content { text-align: center; max-width: 480px; padding: 24px; }
+        .gold-separator { height: 2px; width: 120px; background: var(--gold-main); margin: 24px auto; }
+        .restricted-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; color: var(--text-sec); margin: 24px 0 40px; }
+        .btn-secondary { background: transparent; border: none; color: #444; text-decoration: underline; margin-top: 20px; display: block; width: 100%; cursor: pointer; font-size: 14px;}
+
+        /* SECTION HERO & QUOTI'DIRTY */
+        .hero-wrapper { position: relative; width: 100%; height: 100vh; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at center, #1a1a1a 0%, #0A0A0A 100%); }
+        .quotidirty-hero { position: relative; z-index: 2; text-align: center; }
+        .quotidirty-title h1 { font-size: clamp(48px, 8vw, 96px); font-weight: 900; letter-spacing: -1px; text-transform: uppercase;}
+        
+        .countdown-wrapper { display: flex; justify-content: center; gap: 16px; margin: 40px 0; }
+        .countdown-block { display: flex; flex-direction: column; align-items: center; }
+        .count-number { font-size: clamp(60px, 10vw, 120px); color: var(--gold-main); text-shadow: 0 0 40px rgba(201, 168, 76, 0.4); animation: pulse-gold 2s infinite; font-weight: 900;}
+        .count-label { font-size: 12px; letter-spacing: 4px; color: #555; text-transform: uppercase; margin-top: 10px;}
+        .countdown-separator { font-size: clamp(48px, 8vw, 96px); color: #333; font-weight: 100; }
+        
+        @keyframes pulse-gold { 0%, 100% { text-shadow: 0 0 40px rgba(201,168,76,0.4); } 50% { text-shadow: 0 0 70px rgba(201,168,76,0.7); } }
+
+        /* BANDEAU DÉFILANT */
+        .ticker-wrapper { background: #0D0D0D; border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); padding: 15px 0; overflow: hidden; white-space: nowrap; }
+        .ticker-track { display: inline-block; animation: ticker 25s linear infinite; }
+        .ticker-item { font-size: 14px; letter-spacing: 3px; text-transform: uppercase; font-weight: 600; }
+        .ticker-item.platform { color: var(--gold-main); }
+        .ticker-sep { color: #333; margin: 0 30px; }
+        @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* SECTION DROPS PRECEDENTS */
+        .drops-feed { padding: 80px 24px; max-width: 1200px; margin: 0 auto; text-align: center;}
+        .feed-title { color: var(--text-main); margin-bottom: 40px; font-size: 32px; letter-spacing: 2px;}
+        .drops-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; text-align: left;}
+        
+        .drop-card { background: var(--card-bg); border: 1px solid var(--border-subtle); border-radius: 16px; overflow: hidden; position: relative;}
+        .drop-thumb { position: relative; height: 250px; background-color: #222; }
+        .drop-thumb img { width: 100%; height: 100%; object-fit: cover; filter: blur(15px) brightness(0.6); }
+        
+        .lock-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; flex-direction: column; }
+        .lock-icon { font-size: 24px; margin-bottom: 10px; }
+        .lock-price { color: var(--gold-main); font-weight: bold; font-size: 18px; letter-spacing: 1px;}
+        .unlock-btn { background: transparent; border: 1px solid var(--gold-main); color: var(--gold-main); padding: 10px 20px; border-radius: 50px; margin-top: 15px; cursor: pointer; transition: 0.3s;}
+        .unlock-btn:hover { background: var(--gold-main); color: #000; }
+        
+        .drop-info { padding: 20px; }
+        .type-badge { color: var(--gold-main); font-size: 12px; letter-spacing: 2px; font-weight: 700; }
+        .card-desc { color: #ccc; margin-top: 10px; font-size: 15px; }
+
+    </style>
+</head>
+<body>
+
+    <div id="age-gate" class="age-gate-overlay">
+        <div class="age-gate-content">
+            <h1 class="logo" style="font-size: 48px;">MILAN<span class="white">SKY</span></h1>
+            <div class="gold-separator"></div>
+            <h2 style="color: #888; font-family: 'Inter', sans-serif; letter-spacing: 4px; font-size: 16px;">ACCÈS RESTREINT</h2>
+            <p class="restricted-text">Ce site contient du contenu explicitement réservé aux personnes majeures (+18 ans). En accédant, vous certifiez sur l'honneur avoir l'âge légal requis dans votre pays de résidence.</p>
+            <button class="btn-primary" onclick="confirmAge()" style="width: 100%; margin-bottom: 15px;">J'AI + 18 ANS — ENTRER</button>
+            <button class="btn-secondary" onclick="denyAge()">JE SUIS MINEUR — QUITTER</button>
+        </div>
+    </div>
+
+    <div class="hero-wrapper" id="main-content" style="display: none;">
+        <section class="quotidirty-hero">
+            <div class="quotidirty-title">
+                <h1>LE <span class="gold italic">QUOTI'DIRTY</span></h1>
+                <p style="color: #888; font-size: 18px; margin-top: 10px; letter-spacing: 1px;">Chaque soir à 19h. Une seule chance.</p>
+            </div>
+
+            <div class="countdown-wrapper" id="main-countdown">
+                <div class="countdown-block">
+                    <span class="count-number" id="hours">10</span>
+                    <span class="count-label">heures</span>
+                </div>
+                <div class="countdown-separator">:</div>
+                <div class="countdown-block">
+                    <span class="count-number" id="minutes">45</span>
+                    <span class="count-label">minutes</span>
+                </div>
+                <div class="countdown-separator">:</div>
+                <div class="countdown-block">
+                    <span class="count-number" id="seconds">30</span>
+                    <span class="count-label">secondes</span>
+                </div>
+            </div>
+            
+            <button class="btn-primary" style="margin-top: 40px;" onclick="alert('Simulation : Ouverture du menu d\'inscription sans friction !')">REJOINDRE LE RITUEL</button>
+        </section>
+    </div>
+
+    <div class="ticker-wrapper" id="ticker" style="display: none;">
+        <div class="ticker-track">
+            <span class="ticker-item platform">Top 1% Creator</span><span class="ticker-sep">✦</span>
+            <span class="ticker-item white">Expérience immersive</span><span class="ticker-sep">✦</span>
+            <span class="ticker-item platform">Dark Luxury</span><span class="ticker-sep">✦</span>
+            <span class="ticker-item white">Contenu non censuré</span><span class="ticker-sep">✦</span>
+            <span class="ticker-item platform">Top 1% Creator</span><span class="ticker-sep">✦</span>
+            <span class="ticker-item white">Expérience immersive</span><span class="ticker-sep">✦</span>
+            <span class="ticker-item platform">Dark Luxury</span><span class="ticker-sep">✦</span>
+            <span class="ticker-item white">Contenu non censuré</span><span class="ticker-sep">✦</span>
+        </div>
+    </div>
+
+    <section class="drops-feed" id="feed" style="display: none;">
+        <h2 class="feed-title">L'ARCHIVE SÉLECTIVE</h2>
+        <div class="drops-grid">
+            
+            <div class="drop-card">
+                <div class="drop-thumb">
+                    <img src="https://images.unsplash.com/photo-1550989460-0adf9ea622e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Paris Minuit">
+                    <div class="lock-overlay">
+                        <div class="lock-icon">🔒</div>
+                        <div class="lock-price">150 SC</div>
+                        <button class="unlock-btn" onclick="alert('Simulation : Ouverture de la modale d\'achat Skycoins')">Débloquer</button>
+                    </div>
+                </div>
+                <div class="drop-info">
+                    <span class="type-badge">▶ SÉRIE PREMIUM</span>
+                    <p class="card-desc">Paris Minuit — Épisode 1</p>
+                </div>
+            </div>
+
+            <div class="drop-card">
+                <div class="drop-thumb">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Confessions">
+                    <div class="lock-overlay">
+                        <div class="lock-icon">🔒</div>
+                        <div class="lock-price">80 SC</div>
+                        <button class="unlock-btn" onclick="alert('Simulation : Ouverture de la modale d\'achat Skycoins')">Débloquer</button>
+                    </div>
+                </div>
+                <div class="drop-info">
+                    <span class="type-badge">▶ CONFESSION</span>
+                    <p class="card-desc">Ce que je n'ai jamais raconté.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+        // Fonction pour faire disparaître l'Age Gate et afficher le site
+        function confirmAge() {
+            document.getElementById('age-gate').style.display = 'none';
+            document.getElementById('main-content').style.display = 'flex';
+            document.getElementById('ticker').style.display = 'block';
+            document.getElementById('feed').style.display = 'block';
+        }
+
+        // Fonction si refus
+        function denyAge() {
+            window.location.href = 'https://www.google.com';
+        }
+
+        // Compte à rebours dynamique vers 19h
+        function updateCountdown() {
+            const now = new Date();
+            const target = new Date();
+            target.setHours(19, 0, 0, 0);
+            
+            if (now >= target) {
+                target.setDate(target.getDate() + 1);
+            }
+            
+            const diff = target - now;
+            const hours = Math.floor(diff / 3600000);
+            const minutes = Math.floor((diff % 3600000) / 60000);
+            const seconds = Math.floor((diff % 60000) / 1000);
+            
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>

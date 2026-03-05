@@ -184,7 +184,7 @@ function DashboardContent() {
   const tier = profile.subscription ? TIER_DISPLAY[profile.subscription.tier] : null;
 
   return (
-    <div className="page-container max-w-4xl mx-auto px-4 py-8">
+    <div className="page-container max-w-4xl mx-auto px-4 py-8 pt-24">
       {/* Profile Header */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
@@ -276,11 +276,10 @@ function DashboardContent() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
-              activeTab === tab.id
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${activeTab === tab.id
                 ? 'bg-gold/10 text-gold border border-gold/20'
                 : 'text-white/40 hover:text-white/60 hover:bg-white/5'
-            }`}
+              }`}
           >
             {tab.label}
           </button>

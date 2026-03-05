@@ -4,65 +4,83 @@ import { Suspense, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
-import toast from 'react-hot-toast';
+import { PremiumButton } from '@/components/ui/PremiumButton';
+import { PaymentBridgeModal } from '@/components/PaymentBridgeModal';
 
 const plans = [
   {
-    id: 'BASIC',
-    name: 'BASIC',
-    emoji: '⚡',
-    price: '12,90€',
-    period: '/mois',
+    id: 'VOYEUR',
+    name: 'VOYEUR',
+    emoji: '👁️',
+    price: '9,90',
+    period: '€/mois',
+    subtitle: 'Découvrir l’univers',
     features: [
-      'Accès contenu quotidien',
-      'Bibliothèque standard',
-      'Chat limité (10 msg/jour)',
-      'Badge Basic',
+      'Accès bibliothèque médias sensuels avec publicité',
+      'Accès à LE QUOTIDIRTY (19h-6h)',
+      'Accès à Milan IA version découverte',
+      'Accès aux lives collectifs mensuels',
     ],
     recommended: false,
     limited: false,
     color: 'border-white/10',
-    bgHover: 'hover:border-white/20',
+    accent: 'text-white/40',
   },
   {
-    id: 'ELITE',
-    name: 'ELITE',
-    emoji: '👑',
-    price: '39,90€',
-    period: '/mois',
+    id: 'INITIE',
+    name: 'INITIÉ',
+    emoji: '🔥',
+    price: '19,90',
+    period: '€/mois',
+    subtitle: 'Entrer dans l’expérience',
     features: [
-      'Tout le contenu Basic +',
-      'Contenu exclusif illimité',
-      'Chat illimité',
-      'Accès drops en avant-première',
-      'Réductions SkyCoins (15%)',
-      'Badge Élite doré',
+      'Accès complet à la bibliothèque sans publicité',
+      'Accès complet à LE QUOTIDIRTY',
+      'Accès complet à Milan IA',
+      'Accès aux drops spéciaux hebdomadaires',
     ],
     recommended: true,
     limited: false,
-    color: 'border-gold/40',
-    bgHover: 'hover:border-gold/60',
+    color: 'border-gold shadow-[0_0_30px_rgba(201,168,76,0.15)]',
+    accent: 'text-gold',
+    badge: 'Plus Choisi',
   },
   {
-    id: 'ICON',
-    name: 'ICON',
-    emoji: '✦',
-    price: '89,90€',
-    period: '/mois',
+    id: 'PRIVILEGE',
+    name: 'PRIVILÈGE',
+    emoji: '💎',
+    price: '49,90',
+    period: '€/mois',
+    subtitle: 'Expérience premium',
     features: [
-      'Tout le contenu Elite +',
-      'Accès VIP total',
-      'Commandes privées prioritaires',
-      'Chat prioritaire + vocal',
-      'Contenu jamais publié',
-      'Réductions SkyCoins (30%)',
-      'Badge Icon platine',
-      'Support dédié 24/7',
+      'Accès complet à toute la bibliothèque Milan Sky',
+      'Accès aux Quotidirty exclusifs Privilege',
+      'SkyCoins mensuels offerts',
+      'Priorité dans le chat Milan',
+    ],
+    recommended: false,
+    limited: false,
+    color: 'border-gold/60',
+    accent: 'text-gold',
+  },
+  {
+    id: 'SKYCLUB',
+    name: 'SKYCLUB',
+    emoji: '👑',
+    price: '299',
+    period: '€/mois',
+    subtitle: 'Cercle privé',
+    features: [
+      'Accès total à toute la plateforme Milan Sky',
+      'Ligne privée Milan',
+      'Invitations événements et rencontres',
+      'Statut membre SkyClub',
     ],
     recommended: false,
     limited: true,
-    color: 'border-purple-500/30',
-    bgHover: 'hover:border-purple-500/50',
+    color: 'border-purple-500/40',
+    accent: 'text-purple-400',
+    badge: 'Limité à 50 membres',
   },
 ];
 
@@ -78,41 +96,23 @@ function SubscriptionsContent() {
   const { data: session } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [loadingTier, setLoadingTier] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<typeof plans[0] | null>(null);
 
   const cancelled = searchParams.get('cancelled');
 
-  async function handleSubscribe(tier: string) {
+  function handleSubscribe(plan: typeof plans[0]) {
     if (!session) {
       router.push('/register');
       return;
     }
 
-    setLoadingTier(tier);
-
-    try {
-      const res = await fetch('/api/subscriptions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tier }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok && data.url) {
-        window.location.href = data.url;
-      } else {
-        toast.error(data.error || 'Erreur');
-      }
-    } catch {
-      toast.error('Erreur serveur');
-    } finally {
-      setLoadingTier(null);
-    }
+    setSelectedPlan(plan);
+    setIsModalOpen(true);
   }
 
   return (
-    <div className="page-container max-w-6xl mx-auto px-4 py-12">
+    <div className="page-container max-w-7xl mx-auto px-4 py-12 pt-24 pb-32">
       {/* Header */}
       <div className="text-center mb-16">
         <motion.h1
@@ -128,7 +128,7 @@ function SubscriptionsContent() {
           transition={{ delay: 0.2 }}
           className="text-white/40 max-w-xl mx-auto text-lg"
         >
-          Trois niveaux d&apos;exclusivité. Un seul objectif : vous offrir l&apos;inaccessible.
+          Quatre niveaux d&apos;exclusivité. Un seul objectif : vous offrir l&apos;inaccessible.
         </motion.p>
       </div>
 
@@ -139,79 +139,86 @@ function SubscriptionsContent() {
       )}
 
       {/* Plans Grid */}
-      <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
         {plans.map((plan, i) => (
           <motion.div
             key={plan.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
-            className={`relative rounded-2xl border ${plan.color} ${plan.bgHover} bg-dark-100/50 backdrop-blur-sm p-8 transition-all duration-500 flex flex-col ${
-              plan.recommended ? 'animate-halo md:scale-105 md:-translate-y-2' : ''
-            } ${plan.recommended ? 'gold-border-animated' : ''}`}
+            className={`relative rounded-3xl border ${plan.color} bg-dark-100/50 backdrop-blur-md p-8 transition-all duration-500 flex flex-col hover:border-gold/20 ${plan.recommended ? 'lg:scale-105 border-gold shadow-[0_0_30px_rgba(201,168,76,0.15)]' : ''}`}
           >
-            {/* Recommended Badge */}
-            {plan.recommended && (
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
-                <span className="inline-flex items-center gap-1 px-4 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-gold-dark via-gold to-gold-light text-black animate-pulse-soft">
-                  ✦ Recommandé
+            {plan.badge && (
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10 w-full flex justify-center">
+                <span className={`text-[10px] tracking-widest uppercase px-4 py-1.5 rounded-full font-bold shadow-xl ${plan.id === 'SKYCLUB' ? 'bg-purple-500 text-white' : 'bg-gold text-dark'}`}>
+                  {plan.badge}
                 </span>
               </div>
             )}
 
-            {/* Limited Badge */}
-            {plan.limited && (
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
-                <span className="inline-flex items-center gap-1 px-4 py-1.5 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-300 border border-purple-500/30">
-                  Places limitées
-                </span>
-              </div>
-            )}
-
-            {/* Plan Header */}
-            <div className="text-center mb-8 pt-2">
-              <span className="text-3xl mb-3 block">{plan.emoji}</span>
-              <h3 className="font-sans text-lg font-bold tracking-[0.2em] mb-4">
+            <div className="text-center mb-8">
+              <span className="text-4xl mb-4 block animate-pulse">
+                {plan.emoji}
+              </span>
+              <h3 className={`font-serif text-2xl tracking-widest uppercase mb-1 ${plan.accent}`}>
                 {plan.name}
               </h3>
+              <p className="text-[10px] uppercase tracking-widest text-white/20 mb-6">{plan.subtitle}</p>
+
+              {plan.id === 'SKYCLUB' && (
+                <div className="absolute top-0 left-0 w-full animate-pulse z-20">
+                  <div className="bg-red-600/90 text-[10px] text-white font-bold py-2.5 text-center uppercase tracking-[0.4em] shadow-[0_5px_20px_rgba(220,38,38,0.3)]">
+                    ⚠ PLACES LIMITÉES : 17 DISPONIBLES
+                  </div>
+                </div>
+              )}
+
               <div className="flex items-baseline justify-center gap-1">
-                <span className="font-serif text-4xl lg:text-5xl gold-text">
+                <span className="font-serif text-4xl gold-text">
                   {plan.price}
                 </span>
-                <span className="text-white/30 text-sm">{plan.period}</span>
+                <span className="text-white/20 text-xs">{plan.period}</span>
               </div>
             </div>
 
-            {/* Features */}
-            <ul className="space-y-3 mb-8 flex-1">
+            <ul className="space-y-4 mb-10 flex-1">
               {plan.features.map((feature) => (
-                <li key={feature} className="flex items-start gap-2.5 text-sm text-white/60">
-                  <span className="text-gold mt-0.5 shrink-0">✓</span>
-                  {feature}
+                <li key={feature} className="flex items-start gap-3 text-[11px] text-white/50 leading-relaxed group">
+                  <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${plan.accent.replace('text-', 'bg-') || 'bg-gold'}`} />
+                  <span className="group-hover:text-white/80 transition-colors">{feature}</span>
                 </li>
               ))}
             </ul>
 
-            {/* CTA */}
-            <button
-              onClick={() => handleSubscribe(plan.id)}
-              disabled={loadingTier !== null}
-              className={`w-full text-center py-3.5 rounded-xl font-semibold transition-all duration-300 ${
-                plan.recommended
-                  ? 'btn-gold'
-                  : 'btn-outline'
-              }`}
-            >
-              {loadingTier === plan.id ? 'Redirection...' : 'Choisir ce plan'}
-            </button>
+            <div className="mt-auto pt-6">
+              <PremiumButton
+                onClick={() => handleSubscribe(plan)}
+                variant={plan.recommended ? 'gold' : 'outline'}
+                fullWidth
+                className="py-5 font-bold tracking-widest uppercase text-[10px]"
+              >
+                Choisir
+              </PremiumButton>
+            </div>
           </motion.div>
         ))}
       </div>
 
+      {/* Payment Bridge Modal */}
+      {selectedPlan && (
+        <PaymentBridgeModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          tierName={selectedPlan.name}
+          price={`${selectedPlan.price}${selectedPlan.period}`}
+          type="subscription"
+        />
+      )}
+
       {/* Bottom Note */}
-      <div className="text-center mt-12">
-        <p className="text-white/20 text-sm">
-          Paiement sécurisé par Stripe. Annulez à tout moment. Sans engagement.
+      <div className="text-center mt-20">
+        <p className="text-white/20 text-[10px] uppercase tracking-[0.2em]">
+          Paiement manuel via Revolut, PayPal ou Crypto. Validation sous 5-10 min.
         </p>
       </div>
     </div>

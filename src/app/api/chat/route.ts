@@ -6,6 +6,7 @@ import { chatMessageSchema } from '@/lib/validations';
 import { chatLimiter, getClientIp, rateLimitResponse } from '@/lib/rate-limit';
 import { sanitizeForDB } from '@/lib/sanitize';
 import { logger } from '@/lib/logger';
+import { openai, MILAN_SYSTEM_PROMPT } from '@/lib/openai';
 
 const CHAT_LIMITS: Record<string, number> = {
   BASIC: 10,
@@ -13,7 +14,8 @@ const CHAT_LIMITS: Record<string, number> = {
   ICON: 999,
 };
 
-const MILAN_REPLIES = [
+// Fallback replies if OpenAI is unavailable or API key not set
+const FALLBACK_REPLIES = [
   "Merci pour ton message 💫 Je prends note...",
   "Intéressant... j'aime ta curiosité 🖤",
   "Tu sais que t'es dans le bon univers ici ✨",
@@ -22,10 +24,6 @@ const MILAN_REPLIES = [
   "J'ai quelque chose de spécial en préparation pour les membres comme toi...",
   "Patience... les meilleurs contenus arrivent bientôt 🌙",
   "Tu fais partie des vrais. Ça se voit 👑",
-  "Merci d'être là. Ça compte plus que tu ne le penses 🖤",
-  "Si tu veux du contenu encore plus exclusif, regarde les packs privés 🔐",
-  "J'apprécie ta fidélité. Les meilleurs drops sont pour bientôt ✨",
-  "Tu veux savoir un secret ? Les ICON ont accès à des choses que personne d'autre ne voit 🤫",
 ];
 
 // Get chat history
@@ -74,6 +72,10 @@ export async function GET() {
 
 // Send message
 export async function POST(request: NextRequest) {
+  console.log('--- Chat Request Received ---');
+  console.log('OPENAI_API_KEY Present:', !!process.env.OPENAI_API_KEY);
+  console.log('OpenAI Object Initialized:', !!openai);
+
   try {
     const ip = getClientIp(request);
     const { success } = chatLimiter(ip);
@@ -125,8 +127,82 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Generate and save Milan's reply
-    const replyText = MILAN_REPLIES[Math.floor(Math.random() * MILAN_REPLIES.length)];
+    // Generate Milan's reply
+    let replyText: string;
+
+    if (openai) {
+      try {
+        // Fetch active personality items
+        const userWithMuses = await prisma.user.findUnique({
+          where: { id: session.user.id },
+          select: {
+            activeMuseId: true,
+            activeElixirId: true,
+            activeMoodPackId: true,
+            elixirExpiresAt: true
+          }
+        });
+
+        let systemPrompt = MILAN_SYSTEM_PROMPT;
+
+        if (userWithMuses) {
+          // Check Elixir expiration
+          const elixirActive = userWithMuses.activeElixirId &&
+            (!userWithMuses.elixirExpiresAt || new Date() < userWithMuses.elixirExpiresAt);
+
+          const activeIds = [
+            userWithMuses.activeMuseId,
+            elixirActive ? userWithMuses.activeElixirId : null,
+            userWithMuses.activeMoodPackId
+          ].filter(Boolean) as string[];
+
+          if (activeIds.length > 0) {
+            const activeItems = await prisma.muse.findMany({
+              where: { id: { in: activeIds } }
+            });
+
+            const personalityInstructions = activeItems.map(item => `INSTRUCTION [${item.category}]: ${item.prompt}`).join('\n\n');
+            systemPrompt += `\n\nACTIONS DE PERSONNALITÉ ACTIVES :\n${personalityInstructions}\n\nIMPORTANT : Priorise ces instructions de personnalité au-dessus du ton de base si elles se contredisent légèrement.`;
+          }
+        }
+
+        // Fetch recent conversation history for context (last 20 messages)
+        const recentMessages = await prisma.message.findMany({
+          where: { userId: session.user.id },
+          orderBy: { createdAt: 'desc' },
+          take: 20,
+        });
+
+        const conversationHistory = recentMessages
+          .reverse()
+          .map((msg) => ({
+            role: msg.sender === 'USER' ? 'user' as const : 'assistant' as const,
+            content: msg.content,
+          }));
+
+        const completion = await openai.chat.completions.create({
+          model: 'gpt-4o-mini',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            ...conversationHistory,
+          ],
+          max_tokens: 300,
+          temperature: 0.85,
+        });
+
+        replyText = completion.choices[0]?.message?.content || FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)];
+      } catch (aiError) {
+        console.error('CRITICAL: OpenAI API Error:', aiError);
+        logger.error('OpenAI API error, falling back to static replies', {
+          error: String(aiError),
+          message: aiError instanceof Error ? aiError.message : 'Unknown error'
+        });
+        replyText = FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)];
+      }
+    } else {
+      // No API key configured — use fallback replies
+      replyText = FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)];
+    }
 
     const milanMessage = await prisma.message.create({
       data: {

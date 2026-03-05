@@ -51,5 +51,5 @@ export const skycoinsPurchaseSchema = z.object({
 });
 
 export const subscriptionSchema = z.object({
-  tier: z.enum(['BASIC', 'ELITE', 'ICON']),
+  tier: z.enum(['VOYEUR', 'INITIE', 'PRIVILEGE', 'SKYCLUB']),
 });

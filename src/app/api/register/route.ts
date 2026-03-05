@@ -25,6 +25,9 @@ export async function POST(request: NextRequest) {
 
     const { email, password, name } = parsed.data;
     const normalizedEmail = email.toLowerCase().trim();
+    const adminEmailEnv = process.env.ADMIN_EMAIL?.toLowerCase().trim();
+
+    const assignedRole = adminEmailEnv && normalizedEmail === adminEmailEnv ? 'ADMIN' : 'USER';
 
     const existing = await prisma.user.findUnique({
       where: { email: normalizedEmail },
@@ -41,22 +44,35 @@ export async function POST(request: NextRequest) {
     const passwordHash = await bcrypt.hash(password, 12);
     const verifyToken = uuid();
 
+    // Check if SMTP is properly configured
+    const smtpConfigured = process.env.SMTP_USER && process.env.SMTP_USER !== 'your-email@gmail.com';
+
     const user = await prisma.user.create({
       data: {
         email: normalizedEmail,
         passwordHash,
+        role: assignedRole,
         name: name || null,
-        verifyToken,
+        verifyToken: smtpConfigured ? verifyToken : null,
+        emailVerified: smtpConfigured ? null : new Date(), // Auto-verify if no SMTP
         skyCoinsBalance: {
           create: { balance: 0 },
         },
       },
     });
 
-    try {
-      await sendVerificationEmail(normalizedEmail, verifyToken);
-    } catch (emailError) {
-      logger.error('Failed to send verification email', { email: normalizedEmail, error: String(emailError) });
+    // Only send verification email if SMTP is configured
+    if (smtpConfigured) {
+      try {
+        await sendVerificationEmail(normalizedEmail, verifyToken);
+      } catch (emailError) {
+        logger.error('Failed to send verification email', { email: normalizedEmail, error: String(emailError) });
+        // Auto-verify if email fails to send
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { emailVerified: new Date(), verifyToken: null },
+        });
+      }
     }
 
     logger.info('New user registered', { userId: user.id });

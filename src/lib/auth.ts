@@ -39,6 +39,11 @@ export const authOptions: NextAuthOptions = {
           email: user.email,
           name: user.name,
           image: user.avatarUrl,
+          role: user.role,
+          subscription: user.subscription ? {
+            tier: user.subscription.tier,
+            status: user.subscription.status,
+          } : null,
         };
       },
     }),
@@ -55,12 +60,16 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.role = (user as any).role;
+        token.subscription = (user as any).subscription;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user && token.id) {
-        (session.user as { id: string }).id = token.id as string;
+        session.user.id = token.id as string;
+        session.user.role = token.role as 'USER' | 'ADMIN';
+        session.user.subscription = token.subscription as any;
       }
       return session;
     },

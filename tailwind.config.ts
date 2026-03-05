@@ -40,8 +40,8 @@ const config: Config = {
         cream: '#F5F0E8',
       },
       fontFamily: {
-        serif: ['Cormorant Garamond', 'Georgia', 'serif'],
-        sans: ['Montserrat', 'system-ui', 'sans-serif'],
+        serif: ['var(--font-playfair)', 'serif'],
+        sans: ['var(--font-inter)', 'sans-serif'],
       },
       animation: {
         'gold-border': 'goldBorder 3s ease-in-out infinite',
