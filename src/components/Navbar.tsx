@@ -38,6 +38,7 @@ export default function Navbar() {
     { href: '/', label: 'Accueil' },
     { href: '/library', label: 'Bibliothèque' },
     { href: '/muses', label: 'Les Muses' },
+    { href: '/games', label: 'Jeux' },
     { href: '/chat', label: 'Chat' },
     { href: '/private-requests', label: 'Privé' },
     { href: '/skycoins', label: 'SkyCoins' },

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { Home, Grid, Coins, MessageSquare, User, Settings, Send, LayoutGrid, Crown, Sparkles } from 'lucide-react';
+import { Home, Grid, Coins, MessageSquare, User, Settings, Send, LayoutGrid, Crown, Sparkles, Gamepad2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const navItems = [
@@ -12,6 +12,7 @@ const navItems = [
   { href: '/skycoins', icon: Coins, label: 'Boutique' },
   { href: '/subscriptions', icon: Crown, label: 'Abonnement' },
   { href: '/muses', icon: Sparkles, label: 'Muses' },
+  { href: '/games', icon: Gamepad2, label: 'Jeux' },
   { href: '/chat', icon: MessageSquare, label: 'Chat' },
   { href: '/private-requests', icon: Send, label: 'Demandes' },
   { href: '/dashboard', icon: User, label: 'Profil' },
