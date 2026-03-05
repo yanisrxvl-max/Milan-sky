@@ -195,7 +195,7 @@ export default function Home() {
               <span className="font-serif italic text-6xl sm:text-7xl md:text-[140px] text-white leading-tight tracking-tight drop-shadow-[0_10px_35px_rgba(0,0,0,0.5)]">
                 {heroContent.title1}
               </span>
-              <span className={`${isDay ? 'gold-text-glow' : 'silver-text'} font-serif font-bold text-5xl sm:text-6xl md:text-[120px] leading-tight tracking-tighter md:mt-6 transition-all duration-700`}>
+              <span className={`${isDay ? 'gold-text-glow' : 'silver-text'} font-serif font-bold text-5xl sm:text-6xl md:text-[120px] leading-tight tracking-tighter md:mt-6 pb-4 transition-all duration-700`}>
                 {heroContent.title2}
               </span>
             </h1>
