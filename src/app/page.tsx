@@ -398,9 +398,9 @@ export default function Home() {
               className="mb-12 mx-auto max-w-2xl p-8 rounded-[2rem] bg-gradient-to-r from-gold/[0.06] to-transparent border border-gold/15 text-center"
             >
               <p className="font-serif text-3xl text-gold mb-2">2,5%</p>
-              <p className="text-[9px] uppercase tracking-[0.3em] text-white/30 font-bold mb-4">des bénéfices annuels reversés</p>
+              <p className="text-[9px] uppercase tracking-[0.3em] text-white/30 font-bold mb-4">de mes revenus annuels reversés</p>
               <p className="text-white/40 text-sm leading-relaxed max-w-md mx-auto">
-                Chaque année, je m&apos;engage à reverser 2,5% de mes bénéfices annuels aux associations et aux personnes dans le besoin. Un engagement personnel et inconditionnel.
+                Chaque année, je m&apos;engage à reverser 2,5% de mes revenus annuels aux associations et aux personnes dans le besoin. Un engagement personnel et inconditionnel.
               </p>
             </motion.div>
 

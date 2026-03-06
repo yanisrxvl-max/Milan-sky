@@ -246,11 +246,10 @@ export default function EngagementPage() {
                         <Heart className="text-gold mx-auto mb-4" size={28} />
                         <p className="font-serif text-5xl md:text-6xl text-gold mb-3">2,5%</p>
                         <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-bold mb-6">
-                            des bénéfices annuels reversés chaque année
+                            de mes revenus annuels reversés chaque année
                         </p>
                         <p className="text-white/50 text-sm leading-relaxed max-w-lg mx-auto mb-8">
-                            Au-delà des causes spécifiques soutenues par chaque abonnement, je m&apos;engage à reverser
-                            chaque année <span className="text-gold font-bold">2,5% de ses bénéfices annuels</span> aux
+                            chaque année <span className="text-gold font-bold">2,5% de mes revenus annuels</span> aux
                             associations et aux personnes dans le besoin. C&apos;est un engagement personnel, inconditionnel et permanent.
                         </p>
                         <div className="flex items-center justify-center gap-8">
