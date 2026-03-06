@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Crown, Shield, Eye, Zap, Heart, Star, ArrowRight, Play, Sparkles } from 'lucide-react';
+import { Crown, Shield, Eye, Zap, Heart, Star, ArrowRight, Play, Sparkles, MessageCircle, BookOpen, Brain } from 'lucide-react';
 import Link from 'next/link';
 import AnimatedCounter from '@/components/ui/AnimatedCounter';
 import CountdownTimer from '@/components/ui/CountdownTimer';
@@ -236,6 +236,19 @@ export default function Home() {
             </h1>
           </motion.div>
 
+          {/* Sous-titre Hero */}
+          <motion.p
+            key={`subtitle-${mode}`}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.8 }}
+            className="text-white/50 text-sm md:text-base font-light tracking-wide mb-6 max-w-lg mx-auto"
+          >
+            {isDay
+              ? 'Le créateur de contenu qui construit son propre univers.'
+              : "L'accès ultime à l'interdit."}
+          </motion.p>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -337,8 +350,8 @@ export default function Home() {
               className="group relative rounded-[2.5rem] border border-white/5 bg-dark-200/30 p-10 flex flex-col hover:border-gold/30 transition-all duration-500 overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-40 h-40 bg-gold/5 rounded-full blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 -mr-10 -mt-10" />
-              <div className="w-14 h-14 rounded-2xl bg-gold/10 border border-gold/20 flex items-center justify-center text-2xl mb-8 group-hover:scale-110 transition-transform duration-500">
-                {isDay ? '✨' : '🔥'}
+              <div className="w-14 h-14 rounded-2xl bg-gold/10 border border-gold/20 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500">
+                {isDay ? <Sparkles size={24} className="text-gold" /> : <Eye size={24} className="text-gold" />}
               </div>
               <div className="mb-2">
                 <span className="text-[9px] text-gold/60 uppercase tracking-widest font-bold">Pilier 01</span>
@@ -369,8 +382,8 @@ export default function Home() {
               <div className="absolute -top-2 -right-2 bg-gold text-dark text-[8px] uppercase tracking-widest font-black px-3 py-1.5 rounded-full">
                 Le Cœur
               </div>
-              <div className="w-14 h-14 rounded-2xl bg-gold/20 border border-gold/30 flex items-center justify-center text-2xl mb-8 group-hover:scale-110 transition-transform duration-500">
-                💬
+              <div className="w-14 h-14 rounded-2xl bg-gold/20 border border-gold/30 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500">
+                <MessageCircle size={24} className="text-gold" />
               </div>
               <div className="mb-2">
                 <span className="text-[9px] text-gold/60 uppercase tracking-widest font-bold">Pilier 02</span>
@@ -398,8 +411,8 @@ export default function Home() {
               className="group relative rounded-[2.5rem] border border-white/5 bg-dark-200/30 p-10 flex flex-col hover:border-purple-500/30 transition-all duration-500 overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-40 h-40 bg-purple-500/5 rounded-full blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 -mr-10 -mt-10" />
-              <div className="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-2xl mb-8 group-hover:scale-110 transition-transform duration-500">
-                👑
+              <div className="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500">
+                <Crown size={24} className="text-purple-400" />
               </div>
               <div className="mb-2">
                 <span className="text-[9px] text-purple-400/60 uppercase tracking-widest font-bold">Pilier 03</span>
@@ -421,7 +434,61 @@ export default function Home() {
 
 
       {/* ═══════════════════════════════════════════════ */}
-      {/* SECTION 3: SOCIAL PROOF */}
+      {/* SECTION 3: CAUSES (JOUR) / SOCIAL PROOF (NUIT) */}
+      {/* ═══════════════════════════════════════════════ */}
+      {isDay ? (
+        <section className="py-32 px-4 relative border-t border-white/[0.03]">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <p className="text-white/30 text-[10px] uppercase tracking-[0.3em] font-bold mb-4">Un engagement concret</p>
+              <h2 className="section-title mb-4">
+                Nos <span className="gold-text italic">Causes</span>
+              </h2>
+              <p className="text-white/40 text-sm max-w-xl mx-auto">
+                Milan Sky reverse une partie de ses revenus à des causes qui comptent. Chaque abonnement a un impact direct.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8 mb-12">
+              {[
+                { icon: Shield, title: 'Protection des mineurs', desc: 'Lutte contre le trafic sexuel et l\'exploitation. 30% de l\'abonnement Ambitieux reversé.', color: 'text-blue-400', border: 'border-blue-500/20 hover:border-blue-500/40', bg: 'bg-blue-500/5' },
+                { icon: Brain, title: 'Prévention des addictions', desc: 'Accompagnement psychologique et prévention. 30% de l\'abonnement Créateur reversé.', color: 'text-purple-400', border: 'border-purple-500/20 hover:border-purple-500/40', bg: 'bg-purple-500/5' },
+                { icon: BookOpen, title: 'Éducation pour tous', desc: 'Soutien scolaire et accès à la culture pour les enfants défavorisés. 50% de l\'abonnement Visionnaire.', color: 'text-emerald-400', border: 'border-emerald-500/20 hover:border-emerald-500/40', bg: 'bg-emerald-500/5' },
+              ].map((cause, i) => {
+                const Icon = cause.icon;
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.12, duration: 0.6 }}
+                    className={`card-premium relative overflow-hidden group ${cause.border} transition-all duration-500`}
+                  >
+                    <div className={`w-12 h-12 rounded-2xl ${cause.bg} border border-white/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 ${cause.color}`}>
+                      <Icon size={22} />
+                    </div>
+                    <h3 className="font-serif text-xl text-cream mb-3">{cause.title}</h3>
+                    <p className="text-white/40 text-sm leading-relaxed">{cause.desc}</p>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            <div className="text-center">
+              <Link
+                href="/engagement"
+                className="inline-flex items-center gap-3 px-8 py-4 rounded-full border border-gold/30 bg-gold/5 text-gold text-[10px] uppercase tracking-widest font-bold hover:bg-gold hover:text-dark transition-all duration-300"
+              >
+                <Heart size={14} /> Découvrir nos engagements <ArrowRight size={14} />
+              </Link>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {/* ═══════════════════════════════════════════════ */}
+      {/* SECTION 4: SOCIAL PROOF (TOUJOURS) */}
       {/* ═══════════════════════════════════════════════ */}
       <section className="py-32 px-4 relative border-t border-white/[0.03]">
         <div className="max-w-6xl mx-auto">
@@ -456,66 +523,6 @@ export default function Home() {
                     <p className="text-gold/40 text-[9px] font-bold uppercase tracking-widest leading-normal">{t.tier}</p>
                   </div>
                 </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════ */}
-      {/* SECTION 4: PRICING */}
-      {/* ═══════════════════════════════════════════════ */}
-      <section className="py-32 px-4 relative border-t border-white/[0.03] overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(201,168,76,0.05)_0%,transparent_60%)] pointer-events-none" />
-
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="section-title mb-4">
-              {t('pricing.title')} <span className="gold-text italic">{t('pricing.title_accent')}</span>
-            </h2>
-            <p className="text-white/30 text-xs tracking-widest uppercase font-bold">{t('pricing.subtitle')}</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-            {TIERS.map((tier, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.6 }}
-                className={`card-premium flex flex-col items-center relative group ${tier.color} ${i === 1 ? 'lg:scale-105 z-20 bg-dark-200/80 shadow-2xl' : 'z-10'}`}
-              >
-                {tier.badge && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-20">
-                    <span className={`text-[9px] tracking-[0.2em] uppercase px-4 py-1.5 rounded-full font-bold whitespace-nowrap shadow-lg ${tier.name === 'SKYCLUB' ? 'bg-purple-500 text-white shadow-purple-500/30' : 'bg-gold text-black shadow-gold/30'}`}>
-                      {tier.badge}
-                    </span>
-                  </div>
-                )}
-
-                <div className="text-center mb-10 mt-4 w-full">
-                  <h3 className={`font-serif text-2xl tracking-[0.2em] uppercase mb-4 ${tier.accent}`}>{tier.name}</h3>
-                  <div className="flex items-baseline justify-center gap-1">
-                    <span className="text-5xl font-serif text-cream">{tier.price}</span>
-                    <span className="text-white/30 text-xs font-bold uppercase">{t('pricing.per_month')}</span>
-                  </div>
-                </div>
-
-                <div className="space-y-4 mb-10 w-full flex-1">
-                  {tier.features.map((f, j) => (
-                    <div key={j} className="flex items-center gap-3">
-                      <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${i === 1 ? 'bg-gold' : 'bg-gold/40 group-hover:bg-gold/60'}`} />
-                      <span className="text-white/50 text-[11px] uppercase tracking-wider font-medium">{f}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <Link href="/subscriptions" className="w-full">
-                  <button className={`w-full py-4 rounded-xl text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 touch-manipulation min-h-[44px] active:scale-95 ${i === 1 ? 'bg-gold text-dark hover:shadow-[0_0_20px_rgba(201,168,76,0.3)] hover:scale-[1.02]' : 'bg-white/5 border border-white/10 text-white/60 hover:border-gold/30 hover:text-gold'}`}>
-                    {t('pricing.select')}
-                  </button>
-                </Link>
               </motion.div>
             ))}
           </div>
