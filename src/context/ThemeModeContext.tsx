@@ -17,11 +17,19 @@ export function ThemeModeProvider({ children }: { children: React.ReactNode }) {
     const [transitionTarget, setTransitionTarget] = useState<Mode | null>(null);
 
     useEffect(() => {
-        // We no longer read from localStorage on mount. 
-        // The instructions are to ALWAYS start on DAY mode every time the site is loaded.
-        setMode('DAY');
-        document.documentElement.setAttribute('data-mode', 'DAY');
-        localStorage.setItem('milan-mode', 'DAY');
+        let initialMode: Mode = 'DAY';
+
+        // Check URL for specific mode override (e.g. ?mode=night)
+        if (typeof window !== 'undefined') {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('mode') === 'night') {
+                initialMode = 'NIGHT';
+            }
+        }
+
+        setMode(initialMode);
+        document.documentElement.setAttribute('data-mode', initialMode);
+        localStorage.setItem('milan-mode', initialMode);
     }, []);
 
     const toggleMode = useCallback(() => {
