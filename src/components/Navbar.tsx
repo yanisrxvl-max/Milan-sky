@@ -56,17 +56,9 @@ export default function Navbar() {
       <div className="max-w-[90rem] mx-auto px-4 md:px-8">
         <div className={`flex items-center justify-between transition-all duration-500 ${isScrolled ? 'h-14' : 'h-20'}`}>
           <div className="flex items-center gap-2 md:gap-3 shrink-0 md:mr-10">
-            <Link href="/" className="flex items-center gap-3 group relative cursor-pointer shrink-0">
-              <div className={`relative flex items-center justify-center transition-all duration-500 ${isScrolled ? 'w-8 h-8' : 'w-10 h-10'}`}>
-                <div className="absolute inset-0 bg-red-600/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                <div className="absolute inset-0 bg-gold/10 rounded-full blur-lg opacity-40 group-hover:opacity-80 transition-opacity duration-700" />
-                <img
-                  src="/images/milan_logo_transparent.png"
-                  alt="Milan Sky"
-                  className="w-full h-full object-contain relative z-10 drop-shadow-[0_2px_8px_rgba(255,215,0,0.2)] group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500"
-                />
-              </div>
-              <div className="flex flex-col items-start leading-none overflow-visible">
+            <Link href="/" className="flex flex-col items-center gap-0 group relative cursor-pointer shrink-0">
+              <div className="flex flex-col items-center leading-none overflow-visible">
+                <div className={`bg-gold mb-1.5 transform group-hover:scale-x-150 transition-all duration-700 ${isScrolled ? 'w-4 h-[1px]' : 'w-6 h-[2px] opacity-60'}`} />
                 <span className={`font-serif font-light text-white tracking-[0.05em] mb-1 transition-all duration-500 ${isScrolled ? 'text-xl' : 'text-2xl'}`}>MILAN</span>
                 <div className={`flex items-center gap-2 w-full transition-all duration-500 ${isScrolled ? 'opacity-0 h-0 hidden' : 'opacity-100'}`}>
                   <div className={`h-[0.5px] flex-1 bg-gradient-to-l ${isDay ? 'from-gold/40' : 'from-gray-400/40'} to-transparent`} />
@@ -74,6 +66,7 @@ export default function Navbar() {
                   <div className={`h-[0.5px] flex-1 bg-gradient-to-r ${isDay ? 'from-gold/40' : 'from-gray-400/40'} to-transparent`} />
                 </div>
               </div>
+              <div className="absolute -inset-4" /> {/* Click target */}
             </Link>
 
             {/* Language Selector — under logo */}
