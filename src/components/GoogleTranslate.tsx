@@ -136,10 +136,9 @@ export default function GoogleTranslate() {
       }
     } catch (err) { }
 
-    // Force a reliable hard navigation for iOS WebKit/Safari to pick up the cookie
-    // Safari aggressively caches `window.location.reload()` and ignores newly set cookies.
+    // Force a reliable hard navigation to pick up the cookie
     setTimeout(() => {
-      window.location.href = window.location.pathname + window.location.search;
+      window.location.reload();
     }, 150);
   }
 
