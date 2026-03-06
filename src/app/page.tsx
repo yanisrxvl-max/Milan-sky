@@ -367,7 +367,7 @@ export default function Home() {
               {[
                 { icon: Shield, title: 'Protection des mineurs', desc: 'Lutte contre le trafic sexuel et l\'exploitation. 30% de l\'abonnement Ambitieux reversé.', color: 'text-blue-400', border: 'border-blue-500/20 hover:border-blue-500/40', bg: 'bg-blue-500/5' },
                 { icon: Brain, title: 'Prévention des addictions', desc: 'Accompagnement psychologique et prévention. 30% de l\'abonnement Créateur reversé.', color: 'text-purple-400', border: 'border-purple-500/20 hover:border-purple-500/40', bg: 'bg-purple-500/5' },
-                { icon: BookOpen, title: 'Éducation pour tous', desc: 'Soutien scolaire et accès à la culture pour les enfants défavorisés. 50% de l\'abonnement Visionnaire.', color: 'text-emerald-400', border: 'border-emerald-500/20 hover:border-emerald-500/40', bg: 'bg-emerald-500/5' },
+                { icon: BookOpen, title: 'Éducation pour tous', desc: 'Soutien scolaire et accès à la culture pour les enfants défavorisés. 30% de l\'abonnement Visionnaire.', color: 'text-emerald-400', border: 'border-emerald-500/20 hover:border-emerald-500/40', bg: 'bg-emerald-500/5' },
               ].map((cause, i) => {
                 const Icon = cause.icon;
                 return (

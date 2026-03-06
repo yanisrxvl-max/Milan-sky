@@ -47,7 +47,7 @@ const CAUSES = [
         title: 'Éducation pour tous',
         subtitle: 'Enfants défavorisés en France',
         description: 'Contribution directe à l\'éducation des enfants défavorisés : fournitures scolaires, soutien scolaire et accès à la culture. Parce que l\'avenir se construit à l\'école.',
-        stats: '50%',
+        stats: '30%',
         plan: 'Abonnement VISIONNAIRE',
         color: 'from-emerald-500/20 to-emerald-900/20',
         border: 'border-emerald-500/20 hover:border-emerald-500/40',
@@ -130,7 +130,7 @@ export default function EngagementPage() {
                 <div className="flex items-center justify-center gap-12 md:gap-20">
                     <AnimatedStat value="3" label={t('engagement.causes_supported')} delay={0.2} />
                     <div className="w-px h-12 bg-white/10" />
-                    <AnimatedStat value="30-50%" label={t('engagement.donated_per_sub')} delay={0.4} />
+                    <AnimatedStat value="30%" label={t('engagement.donated_per_sub')} delay={0.4} />
                     <div className="w-px h-12 bg-white/10 hidden md:block" />
                     <div className="hidden md:block">
                         <AnimatedStat value="100%" label={t('engagement.transparency')} delay={0.6} />
@@ -299,7 +299,7 @@ export default function EngagementPage() {
                                 <p className="text-[9px] uppercase tracking-widest text-white/30 font-bold">{t('engagement.associations')}</p>
                             </div>
                             <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
-                                <p className="font-serif text-2xl text-cream mb-1">30-50%</p>
+                                <p className="font-serif text-2xl text-cream mb-1">30%</p>
                                 <p className="text-[9px] uppercase tracking-widest text-white/30 font-bold">{t('engagement.revenue')}</p>
                             </div>
                             <div className="p-4 rounded-2xl bg-white/5 border border-white/10">

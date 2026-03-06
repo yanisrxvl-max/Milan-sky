@@ -11,7 +11,7 @@ const STATS = [
     { value: '3M', label: 'enfants en situation de pauvreté en France', icon: Users },
     { value: '1/5', label: 'des enfants n\'ont pas accès au soutien scolaire', icon: BookOpen },
     { value: '40%', label: 'des inégalités se construisent avant 6 ans', icon: GraduationCap },
-    { value: '50%', label: 'de l\'abonnement Visionnaire reversé', icon: Heart },
+    { value: '30%', label: 'de l\'abonnement Visionnaire reversé', icon: Heart },
 ];
 
 export default function EducationPourTousPage() {
@@ -202,7 +202,7 @@ export default function EducationPourTousPage() {
                         Agir avec <span className="text-emerald-400 italic">Milan Sky</span>
                     </h2>
                     <p className="text-white/40 text-sm mb-10 max-w-lg mx-auto">
-                        50% de chaque abonnement Visionnaire est reversé à l&apos;éducation des enfants. S&apos;abonner, c&apos;est aussi construire l&apos;avenir.
+                        30% de chaque abonnement Visionnaire est reversé à l&apos;éducation des enfants. S&apos;abonner, c&apos;est aussi construire l&apos;avenir.
                     </p>
                     <Link href="/subscriptions" className="btn-gold !py-4 !px-10 text-xs uppercase tracking-widest font-bold">
                         Voir les abonnements

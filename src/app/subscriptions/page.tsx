@@ -168,7 +168,7 @@ const dayPlans = [
     color: 'border-emerald-500/50 shadow-[0_0_50px_rgba(16,185,129,0.15)] bg-emerald-900/10',
     accent: 'text-emerald-400',
     badge: 'IMPACT MAXIMUM',
-    charity: { icon: '📚', name: 'Éducation & fournitures scolaires pour enfants défavorisés en France', percent: 50, color: 'text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/20' },
+    charity: { icon: '📚', name: 'Éducation & fournitures scolaires pour enfants défavorisés en France', percent: 30, color: 'text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/20' },
   },
 ];
 

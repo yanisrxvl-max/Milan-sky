@@ -234,7 +234,7 @@ export default function StoryPage() {
                             </h2>
                             <p className="text-white/40 max-w-2xl mx-auto text-sm leading-relaxed">
                                 Milan Sky croit que le succès n&apos;a de valeur que lorsqu&apos;il est partagé.
-                                C&apos;est pourquoi <strong className="text-white/60">30 à 50% de chaque abonnement payant</strong> est reversé à une cause humanitaire.
+                                C&apos;est pourquoi <strong className="text-white/60">30% de chaque abonnement payant</strong> est reversé à une cause humanitaire.
                             </p>
                         </motion.div>
 
@@ -265,7 +265,7 @@ export default function StoryPage() {
                                     title: 'Éducation pour tous',
                                     description: 'Fournitures scolaires et soutien éducatif pour enfants défavorisés en France.',
                                     plan: 'Abonnement VISIONNAIRE',
-                                    percent: '50%',
+                                    percent: '30%',
                                     color: 'border-emerald-500/20 hover:border-emerald-500/40',
                                     glow: 'from-emerald-500/10',
                                     textColor: 'text-emerald-400',
