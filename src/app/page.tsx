@@ -144,7 +144,7 @@ export default function Home() {
           <motion.div
             animate={{ opacity: isDay ? 1 : 0 }}
             transition={{ duration: 0.8 }}
-            className="absolute inset-0 bg-[#e6dfd5]"
+            className="absolute inset-0 bg-[#2a1f14]"
           />
 
           {/* Night Video */}
@@ -178,8 +178,15 @@ export default function Home() {
             className="absolute inset-0 bg-black z-[5]"
           />
 
-          <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px] z-10" />
-          <div className="absolute inset-0 bg-gradient-to-t from-dark-500/80 via-dark-500/40 to-black/20 z-10" />
+          {/* Global dark overlay */}
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px] z-10" />
+          {/* Day-specific warm brown tint */}
+          <motion.div
+            animate={{ opacity: isDay ? 1 : 0 }}
+            transition={{ duration: 0.6 }}
+            className="absolute inset-0 bg-[#1a1008]/60 z-10"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-dark-500/90 via-dark-500/50 to-black/30 z-10" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(201,168,76,0.05)_0%,transparent_60%)] z-10" />
 
           {/* Particules CSS */}
@@ -474,6 +481,21 @@ export default function Home() {
                 );
               })}
             </div>
+
+            {/* 2.5% Annual Commitment */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+              className="mb-12 mx-auto max-w-2xl p-8 rounded-[2rem] bg-gradient-to-r from-gold/[0.06] to-transparent border border-gold/15 text-center"
+            >
+              <p className="font-serif text-3xl text-gold mb-2">2,5%</p>
+              <p className="text-[9px] uppercase tracking-[0.3em] text-white/30 font-bold mb-4">des bénéfices annuels reversés</p>
+              <p className="text-white/40 text-sm leading-relaxed max-w-md mx-auto">
+                Chaque année, Milan Sky s&apos;engage à reverser 2,5% de ses bénéfices annuels aux associations et aux personnes dans le besoin. Un engagement personnel et inconditionnel.
+              </p>
+            </motion.div>
 
             <div className="text-center">
               <Link

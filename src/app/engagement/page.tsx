@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Heart, Shield, Brain, BookOpen, ExternalLink, TrendingUp, Users, Target } from 'lucide-react';
+import { Heart, Shield, Brain, BookOpen, ExternalLink, TrendingUp, Users, Target, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { useThemeMode } from '@/context/ThemeModeContext';
 import { useI18n } from '@/context/I18nContext';
@@ -11,7 +11,7 @@ import { useEffect } from 'react';
 const CAUSES = [
     {
         icon: Shield,
-        emoji: '🛡️',
+        slug: 'lutte-exploitation',
         title: 'Lutte contre le trafic sexuel',
         subtitle: 'Protection des mineurs',
         description: 'Soutien direct aux associations qui combattent l\'exploitation sexuelle et protègent les enfants. Chaque abonnement Ambitieux reverse 30% à cette cause.',
@@ -27,9 +27,9 @@ const CAUSES = [
     },
     {
         icon: Brain,
-        emoji: '💜',
+        slug: 'prevention-addictions',
         title: 'Prévention des addictions',
-        subtitle: 'Camsex & accompagnement psychologique',
+        subtitle: 'Accompagnement psychologique',
         description: 'Financement de la prévention des addictions liées au contenu adulte, du dépistage et de l\'accompagnement psychologique pour les personnes dépendantes.',
         stats: '30%',
         plan: 'Abonnement CRÉATEUR',
@@ -43,7 +43,7 @@ const CAUSES = [
     },
     {
         icon: BookOpen,
-        emoji: '📚',
+        slug: 'education-pour-tous',
         title: 'Éducation pour tous',
         subtitle: 'Enfants défavorisés en France',
         description: 'Contribution directe à l\'éducation des enfants défavorisés : fournitures scolaires, soutien scolaire et accès à la culture. Parce que l\'avenir se construit à l\'école.',
@@ -206,12 +206,20 @@ export default function EngagementPage() {
                                             </a>
                                         ))}
                                     </div>
+
+                                    {/* Lien vers la page immersive */}
+                                    <Link
+                                        href={`/engagement/${cause.slug}`}
+                                        className={`inline-flex items-center gap-2 mt-4 ${cause.accent} text-[10px] uppercase tracking-widest font-bold hover:gap-4 transition-all`}
+                                    >
+                                        Découvrir cette cause <ArrowRight size={14} />
+                                    </Link>
                                 </div>
 
                                 {/* Big stat */}
                                 <div className="text-center md:text-right">
                                     <div className="inline-flex flex-col items-center bg-white/5 border border-white/10 rounded-3xl p-8 md:p-10">
-                                        <span className="text-5xl mb-3">{cause.emoji}</span>
+                                        <div className={`mb-3 ${cause.accent}`}><Icon size={36} /></div>
                                         <span className={`font-serif text-4xl font-bold ${cause.accent}`}>{cause.stats}</span>
                                         <span className="text-[8px] uppercase tracking-widest text-white/30 font-bold mt-2">{t('subs.donated')}</span>
                                         <div className="h-px w-12 bg-white/10 my-3" />
@@ -222,6 +230,47 @@ export default function EngagementPage() {
                         </motion.div>
                     );
                 })}
+            </section>
+
+            {/* ── ENGAGEMENT 2,5% ── */}
+            <section className="relative z-10 max-w-4xl mx-auto px-4 py-16">
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8 }}
+                    className="text-center p-12 rounded-[2.5rem] bg-gradient-to-br from-gold/[0.08] to-dark-200/30 border border-gold/20 relative overflow-hidden"
+                >
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(201,168,76,0.06),transparent_60%)] pointer-events-none" />
+                    <div className="relative z-10">
+                        <Heart className="text-gold mx-auto mb-4" size={28} />
+                        <p className="font-serif text-5xl md:text-6xl text-gold mb-3">2,5%</p>
+                        <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-bold mb-6">
+                            des bénéfices annuels reversés chaque année
+                        </p>
+                        <p className="text-white/50 text-sm leading-relaxed max-w-lg mx-auto mb-8">
+                            Au-delà des causes spécifiques soutenues par chaque abonnement, Milan Sky s&apos;engage à reverser
+                            chaque année <span className="text-gold font-bold">2,5% de ses bénéfices annuels</span> aux
+                            associations et aux personnes dans le besoin. C&apos;est un engagement personnel, inconditionnel et permanent.
+                        </p>
+                        <div className="flex items-center justify-center gap-8">
+                            <div className="text-center">
+                                <p className="font-serif text-xl text-cream">Annuel</p>
+                                <p className="text-[8px] uppercase tracking-widest text-white/30 font-bold">Fréquence</p>
+                            </div>
+                            <div className="w-px h-10 bg-white/10" />
+                            <div className="text-center">
+                                <p className="font-serif text-xl text-cream">Inconditionnel</p>
+                                <p className="text-[8px] uppercase tracking-widest text-white/30 font-bold">Type</p>
+                            </div>
+                            <div className="w-px h-10 bg-white/10" />
+                            <div className="text-center">
+                                <p className="font-serif text-xl text-cream">Permanent</p>
+                                <p className="text-[8px] uppercase tracking-widest text-white/30 font-bold">Durée</p>
+                            </div>
+                        </div>
+                    </div>
+                </motion.div>
             </section>
 
             {/* ── TRANSPARENCE ── */}
