@@ -44,6 +44,11 @@ model User {
   totalSpentInChat Int      @default(0)
   lastSeenAt       DateTime @default(now())
 
+  // Gamification & Loyalty
+  totalSkyCoinsEarned Int   @default(0)
+  dailyLogins         DailyLogin[]
+  missionCompletions  MissionCompletion[]
+
   @@index([email])
 }
 
@@ -279,6 +284,11 @@ enum TransactionType {
   SKYCOINS_SPEND
   SUBSCRIPTION_PAYMENT
   REFUND
+  LOGIN_BONUS
+  MISSION_REWARD
+  GAME_REWARD
+  REFERRAL_BONUS
+  REWARD_REDEEM
 }
 
 enum ContentType {
@@ -381,3 +391,30 @@ model Game {
   updatedAt   DateTime    @updatedAt
 }
 
+// -----------------------------------------------------------------------------
+// Gamification & Loyalty Models 
+// -----------------------------------------------------------------------------
+
+model DailyLogin {
+  id        String   @id @default(cuid())
+  userId    String
+  date      DateTime @db.Date
+  bonus     Int      @default(2)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId])
+}
+
+model MissionCompletion {
+  id          String   @id @default(cuid())
+  userId      String
+  missionKey  String   // e.g., "watch_2_videos", "play_game", "send_message"
+  reward      Int
+  completedAt DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, missionKey, completedAt])
+  @@index([userId])
+}

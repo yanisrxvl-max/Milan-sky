@@ -27,18 +27,38 @@ export async function GET() {
       return NextResponse.json({ error: 'Utilisateur non trouvé' }, { status: 404 });
     }
 
+    // Calculate Fan Rank
+    let fanRankBadge = 'Fan Découverte';
+    const totalUsers = await prisma.user.count({
+      where: { totalSkyCoinsEarned: { gt: 0 } }
+    });
+
+    if (totalUsers > 0 && user.totalSkyCoinsEarned > 0) {
+      const higherCount = await prisma.user.count({
+        where: { totalSkyCoinsEarned: { gt: user.totalSkyCoinsEarned } }
+      });
+      const userRankValue = higherCount + 1;
+      const percentile = (userRankValue / totalUsers) * 100;
+
+      if (percentile <= 1) fanRankBadge = 'Divine Fan';
+      else if (percentile <= 10) fanRankBadge = 'Sky Royalty';
+      else if (percentile <= 25) fanRankBadge = 'Elite Circle';
+      else if (percentile <= 50) fanRankBadge = 'Inner Circle';
+    }
+
     return NextResponse.json({
       id: user.id,
       email: user.email,
       name: user.name,
       avatarUrl: user.avatarUrl,
       createdAt: user.createdAt,
+      fanRank: fanRankBadge,
       subscription: user.subscription
         ? {
-            tier: user.subscription.tier,
-            status: user.subscription.status,
-            currentPeriodEnd: user.subscription.currentPeriodEnd,
-          }
+          tier: user.subscription.tier,
+          status: user.subscription.status,
+          currentPeriodEnd: user.subscription.currentPeriodEnd,
+        }
         : null,
       skyCoinsBalance: user.skyCoinsBalance?.balance ?? 0,
       purchases: user.purchases.map((p) => ({

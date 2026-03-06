@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Crown, Zap, Clock, Shield, Upload, LogOut, ChevronRight, CheckCircle2, ShoppingCart, Send, CreditCard, Camera } from 'lucide-react';
+import { Crown, Zap, Clock, Shield, Upload, LogOut, ChevronRight, CheckCircle2, ShoppingCart, Send, CreditCard, Camera, Trophy, Gift } from 'lucide-react';
 import AnimatedCounter from '@/components/ui/AnimatedCounter';
 import StudioUpload from '@/components/admin/StudioUpload';
 
@@ -22,6 +22,7 @@ interface Profile {
     currentPeriodEnd: string;
   } | null;
   skyCoinsBalance: number;
+  fanRank: string;
   purchases: Array<{
     id: string;
     contentTitle: string;
@@ -245,6 +246,12 @@ function DashboardContent() {
               <Link href="/skycoins" className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] uppercase font-bold tracking-widest bg-gold/10 border border-gold/30 text-gold hover:bg-gold hover:text-dark transition-all shadow-[0_0_15px_rgba(201,168,76,0.2)]">
                 <AnimatedCounter value={profile.skyCoinsBalance} /> SC
               </Link>
+
+              {profile.fanRank && (
+                <Link href="/skycoins" className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[10px] uppercase font-bold tracking-widest bg-dark-400 border border-gold/20 text-cream hover:bg-gold/10 transition-all cursor-pointer">
+                  <Trophy size={14} className="text-gold" /> {profile.fanRank}
+                </Link>
+              )}
             </div>
           </div>
 
@@ -367,6 +374,41 @@ function DashboardContent() {
                     </Link>
                   </div>
                 )}
+              </div>
+
+              {/* Missions Widget */}
+              <div className="card-premium md:col-span-2 bg-gradient-to-br from-dark-200/40 to-gold/5 border-gold/20">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-serif text-xl text-cream flex items-center gap-2">
+                    <Zap size={18} className="text-gold" /> Missions Quotidiennes
+                  </h3>
+                  <Link href="/skycoins" className="text-[10px] uppercase font-bold tracking-widest text-gold hover:text-gold-light transition-colors flex items-center gap-1">
+                    Voir tout <ChevronRight size={12} />
+                  </Link>
+                </div>
+                <p className="text-white/40 text-xs mb-4">Gagnez des SkyCoins gratuits chaque jour en complétant vos objectifs.</p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Link href="/skycoins" className="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl p-4 transition-all flex items-center justify-between group">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-gold"><Gift size={14} /></div>
+                      <div className="text-left">
+                        <p className="text-sm font-bold text-cream group-hover:text-gold transition-colors">Bonus de Connexion</p>
+                        <p className="text-[10px] text-white/40 uppercase tracking-widest">+2 SC (multiplié)</p>
+                      </div>
+                    </div>
+                    <ChevronRight size={14} className="text-white/20 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                  <Link href="/skycoins" className="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl p-4 transition-all flex items-center justify-between group">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 text-sm">🎯</div>
+                      <div className="text-left">
+                        <p className="text-sm font-bold text-cream group-hover:text-blue-400 transition-colors">3 Missions Disponibles</p>
+                        <p className="text-[10px] text-white/40 uppercase tracking-widest">Jusqu'à +18 SC</p>
+                      </div>
+                    </div>
+                    <ChevronRight size={14} className="text-white/20 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </div>
               </div>
             </div>
           )}
