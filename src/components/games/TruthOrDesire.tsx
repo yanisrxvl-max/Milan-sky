@@ -62,10 +62,10 @@ export default function TruthOrDesire({ onComplete }: { onComplete: () => void }
         const text = available[randomIdx];
 
         if (type === 'Truth') {
-            setUsedTruths(new Set([...used, originalIdx]));
+            setUsedTruths(new Set([...Array.from(used), originalIdx]));
             setTruthCount(c => c + 1);
         } else {
-            setUsedDesires(new Set([...used, originalIdx]));
+            setUsedDesires(new Set([...Array.from(used), originalIdx]));
             setDesireCount(c => c + 1);
         }
 
