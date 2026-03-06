@@ -191,7 +191,7 @@ Créer une tension froide, presque cinématographique. L'utilisateur veut percer
         // ══════════════════════════════════════
         {
             title: 'Milan Premier Rendez-vous',
-            description: 'La nervosité, les regards en coin, le souffle court. Revis un premier rendez-vous avec Milan.',
+            description: 'La nervosité, les regards en coin, le souffle court. Revis un premier rendez-vous avec moi.',
             previewMessage: 'J\'suis là depuis 10 minutes… j\'ai changé de place 3 fois. Tu me stresses.',
             price: 110,
             category: 'RITUAL' as const,

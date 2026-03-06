@@ -111,7 +111,7 @@ export async function sendVerificationEmail(email: string, token: string) {
       </a>
     </div>
     <p style="color:#555;font-size:12px;text-align:center;line-height:1.6;">
-      Ce lien expire dans 24 heures.<br>Si vous n'avez pas créé de compte, ignorez cet email.
+      Ce lien expire dans 24 heures.<br>Si tu n'as pas créé de compte, ignore cet email.
     </p>
   `);
 
@@ -138,7 +138,7 @@ export async function sendResetPasswordEmail(email: string, token: string) {
       </a>
     </div>
     <p style="color:#555;font-size:12px;text-align:center;line-height:1.6;">
-      Ce lien expire dans 1 heure.<br>Si vous n'avez pas demandé de réinitialisation, ignorez cet email.
+      Ce lien expire dans 1 heure.<br>Si tu n'as pas demandé de réinitialisation, ignore cet email.
     </p>
   `);
 

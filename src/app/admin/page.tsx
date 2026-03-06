@@ -192,7 +192,7 @@ function AdminContent() {
                         Gestion des <span className="gold-text italic">Exclusivités</span>
                     </motion.h1>
                     <p className="text-white/30 max-w-lg text-sm leading-relaxed">
-                        Bienvenue dans votre centre de commandement. Ici, vous orchestrez l&apos;univers Milan Sky avec précision et élégance.
+                        Bienvenue dans ton centre de commandement. Ici, tu orchestres mon univers avec précision et élégance.
                     </p>
                 </div>
 

@@ -199,7 +199,7 @@ export default function EducationPourTousPage() {
                 <SectionReveal>
                     <BookOpen size={32} className="text-emerald-400 mx-auto mb-6" />
                     <h2 className="font-serif text-3xl md:text-4xl text-cream mb-4">
-                        Agir avec <span className="text-emerald-400 italic">Milan Sky</span>
+                        Agir avec <span className="text-emerald-400 italic">moi</span>
                     </h2>
                     <p className="text-white/40 text-sm mb-10 max-w-lg mx-auto">
                         30% de chaque abonnement Visionnaire est reversé à l&apos;éducation des enfants. S&apos;abonner, c&apos;est aussi construire l&apos;avenir.

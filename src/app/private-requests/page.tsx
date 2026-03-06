@@ -89,7 +89,7 @@ export default function PrivateRequestsPage() {
         <div className="text-center p-12 card-premium max-w-sm">
           <Lock className="mx-auto mb-6 text-gold" size={48} />
           <h1 className="font-serif text-2xl gold-text mb-4">Espace Privé</h1>
-          <p className="text-white/40 mb-8 text-sm">Veuillez vous connecter pour accéder à la conciergerie Milan Sky.</p>
+          <p className="text-white/40 mb-8 text-sm">Connecte-toi pour accéder à ma conciergerie privée.</p>
           <Link href="/login" className="btn-gold block">Se connecter</Link>
         </div>
       </div>

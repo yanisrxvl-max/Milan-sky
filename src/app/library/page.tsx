@@ -545,7 +545,7 @@ function NightLibrary() {
                   <div className="flex justify-between text-[11px] uppercase tracking-widest text-white/40 mb-2"><span>Votre Solde</span><span>{balance} SC</span></div>
                   <div className="flex justify-between text-[11px] uppercase tracking-widest text-gold font-bold"><span>Après achat</span><span>{remaining >= 0 ? remaining : 0} SC</span></div>
                   {!hasEnough && (
-                    <p className="mt-4 text-[10px] text-red-400 font-bold uppercase tracking-widest animate-pulse">Solde insuffisant. Il vous manque {selectedContent.price - balance} SC.</p>
+                    <p className="mt-4 text-[10px] text-red-400 font-bold uppercase tracking-widest animate-pulse">Solde insuffisant. Il te manque {selectedContent.price - balance} SC.</p>
                   )}
                 </div>
               )}

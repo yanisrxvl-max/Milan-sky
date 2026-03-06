@@ -27,7 +27,7 @@ const DAY_GAMES = [
     {
         id: 'guess-secret',
         title: 'Guess the Secret',
-        description: 'Milan vous raconte 3 anecdotes. Démêlez le vrai du faux pour prouver votre instinct.',
+        description: 'Je te raconte 3 anecdotes. Démêle le vrai du faux pour prouver ton instinct.',
         type: 'Déduction',
         imageUrl: '/images/muses/milan5.jpg',
         component: GuessTheSecret
@@ -62,7 +62,7 @@ const NIGHT_GAMES = [
     {
         id: 'chemistry-test',
         title: 'Chemistry Test',
-        description: 'Testez votre compatibilité avec le Milan de la Nuit. Jusqu\'où irez-vous ?',
+        description: 'Teste ta compatibilité avec moi. Jusqu\'où iras-tu ?',
         type: 'Test de Compatibilité',
         imageUrl: '/images/muses/milan8.jpg',
         component: ChemistryTest

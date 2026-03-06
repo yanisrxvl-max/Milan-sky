@@ -368,7 +368,7 @@ function DashboardContent() {
                     <div className="w-16 h-16 rounded-full bg-white/5 mx-auto flex items-center justify-center text-white/20 mb-4">
                       <Shield size={24} />
                     </div>
-                    <p className="text-white/40 text-sm mb-6">Vous ne possédez aucun badge d'accès.</p>
+                    <p className="text-white/40 text-sm mb-6">Tu ne possèdes aucun badge d'accès.</p>
                     <Link href="/subscriptions" className="btn-gold !py-3 min-h-[44px] touch-manipulation active:scale-95 justify-center">
                       Accéder au Cercle
                     </Link>
@@ -464,7 +464,7 @@ function DashboardContent() {
                   <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center text-white/20 mb-6">
                     <Send size={32} />
                   </div>
-                  <p className="text-white/40 mb-4 max-w-sm">Vous n'avez passé aucune commande de contenu sur-mesure.</p>
+                  <p className="text-white/40 mb-4 max-w-sm">Tu n'as passé aucune commande de contenu sur-mesure.</p>
                 </div>
               ) : (
                 <div className="space-y-3">

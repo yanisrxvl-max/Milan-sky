@@ -249,7 +249,7 @@ export default function EngagementPage() {
                             des bénéfices annuels reversés chaque année
                         </p>
                         <p className="text-white/50 text-sm leading-relaxed max-w-lg mx-auto mb-8">
-                            Au-delà des causes spécifiques soutenues par chaque abonnement, Milan Sky s&apos;engage à reverser
+                            Au-delà des causes spécifiques soutenues par chaque abonnement, je m&apos;engage à reverser
                             chaque année <span className="text-gold font-bold">2,5% de ses bénéfices annuels</span> aux
                             associations et aux personnes dans le besoin. C&apos;est un engagement personnel, inconditionnel et permanent.
                         </p>

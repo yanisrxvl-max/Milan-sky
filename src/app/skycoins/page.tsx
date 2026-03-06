@@ -125,7 +125,7 @@ function SkyCoinsContent() {
             toast.error('Fonds insuffisants');
             return;
         }
-        if (!confirm('Êtes-vous sûr de vouloir réclamer cette récompense ?')) return;
+        if (!confirm('Es-tu sûr(e) de vouloir réclamer cette récompense ?')) return;
 
         try {
             const res = await fetch('/api/skycoins/rewards/redeem', {
@@ -135,7 +135,7 @@ function SkyCoinsContent() {
             });
             const data = await res.json();
             if (res.ok) {
-                toast.success('Récompense réclamée ! Le support vous contactera.');
+                toast.success('Récompense réclamée ! Le support te contactera.');
                 fetchBalance();
             } else {
                 toast.error(data.error);
@@ -185,7 +185,7 @@ function SkyCoinsContent() {
                         </div>
                     </motion.div>
                 ) : (
-                    <p className="text-white/40 mb-8 max-w-md mx-auto">Connectez-vous pour commencer à gagner des SkyCoins, accomplir des missions et monter dans le classement.</p>
+                    <p className="text-white/40 mb-8 max-w-md mx-auto">Connecte-toi pour commencer à gagner des SkyCoins, accomplir des missions et monter dans le classement.</p>
                 )}
             </div>
 
@@ -203,7 +203,7 @@ function SkyCoinsContent() {
                             <div className="card-premium relative overflow-hidden group col-span-1 border-gold/20 shadow-[0_0_20px_rgba(201,168,76,0.05)]">
                                 <div className="absolute top-0 right-0 p-4 opacity-10"><Gift size={80} /></div>
                                 <h3 className="text-cream font-bold text-lg mb-2 relative z-10">Récompense Quotidienne</h3>
-                                <p className="text-white/40 text-xs mb-6 relative z-10">Connectez-vous tous les jours pour réclamer votre bonus gratuit.</p>
+                                <p className="text-white/40 text-xs mb-6 relative z-10">Connecte-toi tous les jours pour réclamer ton bonus gratuit.</p>
                                 <PremiumButton
                                     onClick={handleClaimDaily}
                                     disabled={claimingDaily}
@@ -271,7 +271,7 @@ function SkyCoinsContent() {
                                             {!fan.avatarUrl && <div className="w-full h-full flex items-center justify-center text-white/20"><Star size={14} /></div>}
                                         </div>
                                         <div className="flex-1">
-                                            <p className={`font-bold text-sm ${fan.isCurrentUser ? 'text-gold' : 'text-cream'}`}>{fan.name} {fan.isCurrentUser && '(Vous)'}</p>
+                                            <p className={`font-bold text-sm ${fan.isCurrentUser ? 'text-gold' : 'text-cream'}`}>{fan.name} {fan.isCurrentUser && '(Toi)'}</p>
                                         </div>
                                         <div className="text-right">
                                             <span className="font-mono font-bold text-gold text-sm">{fan.score} SC</span>
@@ -379,7 +379,7 @@ function SkyCoinsContent() {
                 <div>
                     <h3 className="text-xl font-serif text-cream mb-2">Avantage Abonnés</h3>
                     <p className="text-white/50 text-sm leading-relaxed mb-4">
-                        Avoir un abonnement actif vous permet de multiplier vos gains lors de vos connexions et accomplissements.
+                        Avoir un abonnement actif te permet de multiplier tes gains lors de tes connexions et accomplissements.
                     </p>
                     <div className="flex flex-wrap gap-3">
                         <span className="text-[10px] px-3 py-1.5 bg-white/5 border border-white/10 rounded uppercase font-bold text-white/40">Voyeur : x1</span>

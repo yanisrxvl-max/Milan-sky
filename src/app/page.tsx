@@ -243,13 +243,13 @@ export default function Home() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(201,168,76,0.04),transparent_70%)] pointer-events-none" />
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-20">
-            <p className="text-white/30 text-[10px] uppercase tracking-[0.3em] font-bold mb-4">L'univers Milan Sky</p>
+            <p className="text-white/30 text-[10px] uppercase tracking-[0.3em] font-bold mb-4">Mon Univers</p>
             <h2 className="section-title mb-4">
               {isDay ? 'Tout ce dont tu' : 'Tout ce dont tu'} <span className="gold-text italic">as besoin</span>
             </h2>
             <p className="text-white/40 text-sm max-w-xl mx-auto">
               {isDay
-                ? 'Milan Sky est bâti autour de 3 piliers qui ensemble créent une expérience unique.'
+                ? 'Mon univers est bâti autour de 3 piliers qui ensemble créent une expérience unique.'
                 : 'Trois espaces. Un univers. Une connexion sans filtre.'}
             </p>
           </div>
@@ -305,7 +305,7 @@ export default function Home() {
               <h3 className="font-serif text-2xl text-cream mb-4">Chat & IA Milan</h3>
               <p className="text-white/40 text-sm leading-relaxed mb-8 flex-1">
                 {isDay
-                  ? 'Conversations authentiques, Q&A, et l\'IA Milan Sky — ton accès direct à l\'univers.'
+                  ? 'Conversations authentiques, Q&A, et mon IA personnelle — ton accès direct à mon univers.'
                   : 'Messages privés, notes vocales, Muses IA et réponses personnalisées. L\'illusion de proximité devient réelle.'}
               </p>
               <Link
@@ -359,7 +359,7 @@ export default function Home() {
                 Nos <span className="gold-text italic">Causes</span>
               </h2>
               <p className="text-white/40 text-sm max-w-xl mx-auto">
-                Milan Sky reverse une partie de ses revenus à des causes qui comptent. Chaque abonnement a un impact direct.
+                Je reverse une partie de mes revenus à des causes qui me tiennent à cœur. Chaque abonnement a un impact direct.
               </p>
             </div>
 
@@ -400,7 +400,7 @@ export default function Home() {
               <p className="font-serif text-3xl text-gold mb-2">2,5%</p>
               <p className="text-[9px] uppercase tracking-[0.3em] text-white/30 font-bold mb-4">des bénéfices annuels reversés</p>
               <p className="text-white/40 text-sm leading-relaxed max-w-md mx-auto">
-                Chaque année, Milan Sky s&apos;engage à reverser 2,5% de ses bénéfices annuels aux associations et aux personnes dans le besoin. Un engagement personnel et inconditionnel.
+                Chaque année, je m&apos;engage à reverser 2,5% de mes bénéfices annuels aux associations et aux personnes dans le besoin. Un engagement personnel et inconditionnel.
               </p>
             </motion.div>
 

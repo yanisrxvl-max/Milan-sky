@@ -61,7 +61,7 @@ export default function MusesPage() {
 
     async function handlePurchase(museId: string) {
         if (!session) {
-            toast.error('Connectez-vous pour débloquer une Muse');
+            toast.error('Connecte-toi pour débloquer une Muse');
             return;
         }
         try {

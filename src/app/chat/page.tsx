@@ -24,7 +24,7 @@ export default function ChatPage() {
             <span className="text-4xl">💬</span>
           </div>
           <h1 className="font-serif text-3xl gold-text mb-4 text-cream">Chat avec {MILAN_NAME}</h1>
-          <p className="text-white/40 mb-8 text-sm leading-relaxed">Connectez-vous pour accéder à votre espace privé et échanger directement avec Milan.</p>
+          <p className="text-white/40 mb-8 text-sm leading-relaxed">Connecte-toi pour accéder à ton espace privé et échanger directement avec moi.</p>
           <Link href="/login?callbackUrl=/chat" className="btn-gold w-full block py-4 text-center rounded-xl font-bold tracking-widest uppercase text-xs">
             Se connecter
           </Link>

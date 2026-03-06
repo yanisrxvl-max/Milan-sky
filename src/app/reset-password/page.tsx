@@ -61,7 +61,7 @@ function RequestResetForm() {
           <div className="text-5xl mb-6">📧</div>
           <h1 className="font-serif text-3xl gold-text mb-4">Email envoyé</h1>
           <p className="text-white/50 mb-8">
-            Si un compte existe avec cette adresse, vous recevrez un email de réinitialisation.
+            Si un compte existe avec cette adresse, tu recevras un email de réinitialisation.
           </p>
           <Link href="/login" className="btn-outline">
             Retour à la connexion
@@ -144,7 +144,7 @@ function NewPasswordForm({ token }: { token: string }) {
         <div className="w-full max-w-md text-center">
           <div className="text-5xl mb-6">✅</div>
           <h1 className="font-serif text-3xl gold-text mb-4">Mot de passe mis à jour</h1>
-          <p className="text-white/50 mb-8">Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.</p>
+          <p className="text-white/50 mb-8">Tu peux maintenant te connecter avec ton nouveau mot de passe.</p>
           <Link href="/login" className="btn-gold">
             Se connecter
           </Link>
