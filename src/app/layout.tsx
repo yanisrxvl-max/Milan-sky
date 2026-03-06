@@ -31,6 +31,16 @@ export const metadata: Metadata = {
     ],
   },
   manifest: '/manifest.json',
+  icons: {
+    icon: [
+      { url: '/favicon.ico?v=2' },
+      { url: '/images/milan_icon_192.png?v=2', sizes: '192x192', type: 'image/png' },
+      { url: '/images/milan_icon_512.png?v=2', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png?v=2' },
+    ],
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
