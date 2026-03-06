@@ -365,9 +365,9 @@ export default function Home() {
 
             <div className="grid md:grid-cols-3 gap-8 mb-12">
               {[
-                { icon: Shield, title: 'Protection des mineurs', desc: 'Lutte contre le trafic sexuel et l\'exploitation. 30% de l\'abonnement Ambitieux reversé.', color: 'text-blue-400', border: 'border-blue-500/20 hover:border-blue-500/40', bg: 'bg-blue-500/5' },
-                { icon: Brain, title: 'Prévention des addictions', desc: 'Accompagnement psychologique et prévention. 30% de l\'abonnement Créateur reversé.', color: 'text-purple-400', border: 'border-purple-500/20 hover:border-purple-500/40', bg: 'bg-purple-500/5' },
-                { icon: BookOpen, title: 'Éducation pour tous', desc: 'Soutien scolaire et accès à la culture pour les enfants défavorisés. 30% de l\'abonnement Visionnaire.', color: 'text-emerald-400', border: 'border-emerald-500/20 hover:border-emerald-500/40', bg: 'bg-emerald-500/5' },
+                { icon: Shield, slug: 'lutte-exploitation', title: 'Protection des mineurs', desc: 'Lutte contre le trafic sexuel et l\'exploitation. 30% de l\'abonnement Ambitieux reversé.', color: 'text-blue-400', border: 'border-blue-500/20 hover:border-blue-500/40', bg: 'bg-blue-500/5' },
+                { icon: Brain, slug: 'prevention-addictions', title: 'Prévention des addictions', desc: 'Accompagnement psychologique et prévention. 30% de l\'abonnement Créateur reversé.', color: 'text-purple-400', border: 'border-purple-500/20 hover:border-purple-500/40', bg: 'bg-purple-500/5' },
+                { icon: BookOpen, slug: 'education-pour-tous', title: 'Éducation pour tous', desc: 'Soutien scolaire et accès à la culture pour les enfants défavorisés. 30% de l\'abonnement Visionnaire.', color: 'text-emerald-400', border: 'border-emerald-500/20 hover:border-emerald-500/40', bg: 'bg-emerald-500/5' },
               ].map((cause, i) => {
                 const Icon = cause.icon;
                 return (
@@ -379,6 +379,7 @@ export default function Home() {
                     transition={{ delay: i * 0.12, duration: 0.6 }}
                     className={`card-premium relative overflow-hidden group ${cause.border} transition-all duration-500`}
                   >
+                    <Link href={`/engagement/${cause.slug}`} className="absolute inset-0 z-20" aria-label={cause.title} />
                     <div className={`w-12 h-12 rounded-2xl ${cause.bg} border border-white/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 ${cause.color}`}>
                       <Icon size={22} />
                     </div>
