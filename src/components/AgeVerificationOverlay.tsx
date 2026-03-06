@@ -7,7 +7,6 @@ import { MILAN_NAME } from '@/lib/constants';
 
 export default function AgeVerificationOverlay() {
     const [show, setShow] = useState(false);
-    const [accepted, setAccepted] = useState(false);
     const pathname = usePathname();
 
     const isLegalPage = pathname?.startsWith('/legal');
@@ -24,7 +23,6 @@ export default function AgeVerificationOverlay() {
     }, [isLegalPage]);
 
     const handleVerify = () => {
-        if (!accepted) return;
         localStorage.setItem('milan_age_verified', 'true');
         setShow(false);
         document.body.style.overflow = 'unset';
