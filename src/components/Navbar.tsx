@@ -57,8 +57,7 @@ export default function Navbar() {
         <div className={`flex items-center justify-between transition-all duration-500 ${isScrolled ? 'h-14' : 'h-20'}`}>
           <div className="flex items-center gap-2 md:gap-3 shrink-0 md:mr-10">
             <Link href="/" className="flex flex-col items-center gap-0 group relative cursor-pointer shrink-0">
-              <div className="flex flex-col items-center leading-none overflow-visible">
-                <div className={`bg-gold mb-1.5 transform group-hover:scale-x-150 transition-all duration-700 ${isScrolled ? 'w-4 h-[1px]' : 'w-6 h-[2px] opacity-60'}`} />
+              <div className="flex flex-col items-center leading-none overflow-visible pt-1">
                 <span className={`font-serif font-light text-white tracking-[0.05em] mb-1 transition-all duration-500 ${isScrolled ? 'text-xl' : 'text-2xl'}`}>MILAN</span>
                 <div className={`flex items-center gap-2 w-full transition-all duration-500 ${isScrolled ? 'opacity-0 h-0 hidden' : 'opacity-100'}`}>
                   <div className={`h-[0.5px] flex-1 bg-gradient-to-l ${isDay ? 'from-gold/40' : 'from-gray-400/40'} to-transparent`} />
