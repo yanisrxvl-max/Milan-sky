@@ -43,13 +43,10 @@ export default function Navbar() {
 
   const links = [
     { href: '/', label: t('nav.home') },
-    { href: '/subscriptions', label: t('nav.subscriptions') },
-    { href: '/library', label: isDay ? t('nav.library_day') : t('nav.library_night') },
-    { href: '/chat', label: t('nav.chat') },
-    { href: '/muses', label: t('nav.muses') },
-    { href: isDay ? '/engagement' : '/private-requests', label: isDay ? t('nav.engagement') : t('nav.private') },
-    { href: '/games', label: t('nav.games') },
-    { href: '/skycoins', label: t('nav.skycoins') },
+    { href: '/library', label: isDay ? '✨ Contenu' : '🔥 Contenu Nuit' },
+    { href: '/chat', label: '💬 Chat' },
+    { href: '/skycoins', label: '✦ SkyCoins' },
+    { href: '/subscriptions', label: isDay ? t('nav.subscriptions') : 'Accès' },
     ...(isAdmin ? [{ href: '/admin', label: t('nav.admin') }] : []),
   ];
 

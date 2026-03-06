@@ -1,12 +1,10 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Crown, Shield, Eye, Zap, Heart, Star, Compass, ArrowRight, Play, Sparkles } from 'lucide-react';
+import { Crown, Shield, Eye, Zap, Heart, Star, ArrowRight, Play, Sparkles } from 'lucide-react';
 import Link from 'next/link';
-import FlippableCard from '@/components/ui/FlippableCard';
-import LogoMarquee from '@/components/ui/LogoMarquee';
-import CountdownTimer from '@/components/ui/CountdownTimer';
 import AnimatedCounter from '@/components/ui/AnimatedCounter';
+import CountdownTimer from '@/components/ui/CountdownTimer';
 import { useThemeMode } from '@/context/ThemeModeContext';
 import { useI18n } from '@/context/I18nContext';
 
@@ -311,33 +309,116 @@ export default function Home() {
         </motion.div>
       </section>
 
-      <LogoMarquee />
-
-      {/* ═════════════════════════════ */}
-      {/* SECTION 2: FEATURES (Flippable) */}
       {/* ═══════════════════════════════════════════════ */}
-      <section className="relative py-32 px-4 bg-dark-500">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(201,168,76,0.03),transparent_70%)] pointer-events-none" />
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="section-title mb-4">{t('features.title')} <span className="gold-text italic">{t('features.title_accent')}</span></h2>
-            <p className="text-white/30 text-xs uppercase tracking-[0.2em] font-bold">{t('features.subtitle')}</p>
+      {/* SECTION 2: LES 3 PILIERS */}
+      {/* ═══════════════════════════════════════════════ */}
+      <section className="relative py-32 px-4 bg-dark-500 border-t border-white/[0.03]">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(201,168,76,0.04),transparent_70%)] pointer-events-none" />
+        <div className="max-w-6xl mx-auto relative z-10">
+          <div className="text-center mb-20">
+            <p className="text-white/30 text-[10px] uppercase tracking-[0.3em] font-bold mb-4">L'univers Milan Sky</p>
+            <h2 className="section-title mb-4">
+              {isDay ? 'Tout ce dont tu' : 'Tout ce dont tu'} <span className="gold-text italic">as besoin</span>
+            </h2>
+            <p className="text-white/40 text-sm max-w-xl mx-auto">
+              {isDay
+                ? 'Milan Sky est bâti autour de 3 piliers qui ensemble créent une expérience unique.'
+                : 'Trois espaces. Un univers. Une connexion sans filtre.'}
+            </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((f, i) => (
-              <FlippableCard
-                key={`${mode}-${i}`}
-                index={i}
-                frontIcon={f.icon}
-                frontTitle={f.title}
-                frontDesc={f.desc}
-                backStory={f.story}
-                backSpecs={f.specs}
-              />
-            ))}
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Pilier 1 — Contenu */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="group relative rounded-[2.5rem] border border-white/5 bg-dark-200/30 p-10 flex flex-col hover:border-gold/30 transition-all duration-500 overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 w-40 h-40 bg-gold/5 rounded-full blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 -mr-10 -mt-10" />
+              <div className="w-14 h-14 rounded-2xl bg-gold/10 border border-gold/20 flex items-center justify-center text-2xl mb-8 group-hover:scale-110 transition-transform duration-500">
+                {isDay ? '✨' : '🔥'}
+              </div>
+              <div className="mb-2">
+                <span className="text-[9px] text-gold/60 uppercase tracking-widest font-bold">Pilier 01</span>
+              </div>
+              <h3 className="font-serif text-2xl text-cream mb-4">Contenu Exclusif</h3>
+              <p className="text-white/40 text-sm leading-relaxed mb-8 flex-1">
+                {isDay
+                  ? 'Vlogs, masterclass, conseils de style et contenu pédagogique. Un univers pensé pour t\'inspirer.'
+                  : 'Bibliothèque sans censure, drops quotidiens à 19h et archives jamais publiées nulle part ailleurs.'}
+              </p>
+              <Link
+                href="/library"
+                className="inline-flex items-center gap-2 text-gold text-[10px] uppercase tracking-widest font-bold hover:gap-4 transition-all"
+              >
+                {isDay ? 'Découvrir le Contenu' : 'Accéder à la Bibliothèque'} <ArrowRight size={14} />
+              </Link>
+            </motion.div>
+
+            {/* Pilier 2 — Chat & IA */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="group relative rounded-[2.5rem] border border-gold/20 bg-gradient-to-br from-gold/[0.06] to-dark-200/30 p-10 flex flex-col hover:border-gold/50 transition-all duration-500 overflow-hidden shadow-[0_0_40px_rgba(201,168,76,0.07)]"
+            >
+              <div className="absolute top-0 right-0 w-40 h-40 bg-gold/10 rounded-full blur-[60px] opacity-60 group-hover:opacity-100 transition-opacity duration-700 -mr-10 -mt-10" />
+              <div className="absolute -top-2 -right-2 bg-gold text-dark text-[8px] uppercase tracking-widest font-black px-3 py-1.5 rounded-full">
+                Le Cœur
+              </div>
+              <div className="w-14 h-14 rounded-2xl bg-gold/20 border border-gold/30 flex items-center justify-center text-2xl mb-8 group-hover:scale-110 transition-transform duration-500">
+                💬
+              </div>
+              <div className="mb-2">
+                <span className="text-[9px] text-gold/60 uppercase tracking-widest font-bold">Pilier 02</span>
+              </div>
+              <h3 className="font-serif text-2xl text-cream mb-4">Chat & IA Milan</h3>
+              <p className="text-white/40 text-sm leading-relaxed mb-8 flex-1">
+                {isDay
+                  ? 'Conversations authentiques, Q&A, et l\'IA Milan Sky — ton accès direct à l\'univers.'
+                  : 'Messages privés, notes vocales, Muses IA et réponses personnalisées. L\'illusion de proximité devient réelle.'}
+              </p>
+              <Link
+                href="/chat"
+                className="inline-flex items-center gap-2 text-gold text-[10px] uppercase tracking-widest font-bold hover:gap-4 transition-all"
+              >
+                Ouvrir le Chat <ArrowRight size={14} />
+              </Link>
+            </motion.div>
+
+            {/* Pilier 3 — SkyCoins & Statut */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="group relative rounded-[2.5rem] border border-white/5 bg-dark-200/30 p-10 flex flex-col hover:border-purple-500/30 transition-all duration-500 overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 w-40 h-40 bg-purple-500/5 rounded-full blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-700 -mr-10 -mt-10" />
+              <div className="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-2xl mb-8 group-hover:scale-110 transition-transform duration-500">
+                👑
+              </div>
+              <div className="mb-2">
+                <span className="text-[9px] text-purple-400/60 uppercase tracking-widest font-bold">Pilier 03</span>
+              </div>
+              <h3 className="font-serif text-2xl text-cream mb-4">SkyCoins & Statut</h3>
+              <p className="text-white/40 text-sm leading-relaxed mb-8 flex-1">
+                Gagne des SkyCoins chaque jour. Monte dans le classement des fans. Débloque des récompenses exclusives que personne d&apos;autre ne peut avoir.
+              </p>
+              <Link
+                href="/skycoins"
+                className="inline-flex items-center gap-2 text-purple-400 text-[10px] uppercase tracking-widest font-bold hover:gap-4 transition-all"
+              >
+                Voir mon Statut <ArrowRight size={14} />
+              </Link>
+            </motion.div>
           </div>
         </div>
       </section>
+
 
       {/* ═══════════════════════════════════════════════ */}
       {/* SECTION 3: SOCIAL PROOF */}
