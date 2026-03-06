@@ -21,6 +21,14 @@ export const metadata: Metadata = {
     title: 'Milan Sky',
     description: 'L\'accès ultime à l\'interdit, là où l\'exclusivité n\'a plus de limites.',
     type: 'website',
+    images: [
+      {
+        url: '/images/milan_icon.png',
+        width: 1024,
+        height: 1024,
+        alt: 'Milan Sky Logo',
+      },
+    ],
   },
   manifest: '/manifest.json',
   appleWebApp: {
