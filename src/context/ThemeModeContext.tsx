@@ -12,18 +12,16 @@ interface ThemeModeContextType {
 const ThemeModeContext = createContext<ThemeModeContextType | undefined>(undefined);
 
 export function ThemeModeProvider({ children }: { children: React.ReactNode }) {
-    const [mode, setMode] = useState<Mode>('NIGHT');
+    const [mode, setMode] = useState<Mode>('DAY'); // Default is always DAY
     const [transitioning, setTransitioning] = useState(false);
     const [transitionTarget, setTransitionTarget] = useState<Mode | null>(null);
 
     useEffect(() => {
-        const savedMode = localStorage.getItem('milan-mode') as Mode;
-        if (savedMode) {
-            setMode(savedMode);
-            document.documentElement.setAttribute('data-mode', savedMode);
-        } else {
-            document.documentElement.setAttribute('data-mode', 'NIGHT');
-        }
+        // We no longer read from localStorage on mount. 
+        // The instructions are to ALWAYS start on DAY mode every time the site is loaded.
+        setMode('DAY');
+        document.documentElement.setAttribute('data-mode', 'DAY');
+        localStorage.setItem('milan-mode', 'DAY');
     }, []);
 
     const toggleMode = useCallback(() => {
