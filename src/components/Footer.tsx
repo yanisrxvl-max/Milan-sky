@@ -20,9 +20,19 @@ export default function Footer() {
                 {/* Logo / Brand */}
                 <div className="flex flex-col items-center mb-10 overflow-visible pb-4">
                     <div className="w-12 h-[1px] bg-gold/40 mb-3" />
-                    <Link href="/" className="group flex flex-col items-center overflow-visible">
-                        <span className="font-serif text-3xl text-white tracking-[0.2em] group-hover:gold-text-glow transition-all duration-500">MILAN</span>
-                        <span className="text-[10px] uppercase tracking-[0.6em] gold-text mt-1 font-bold italic ml-[0.6em]">SKY</span>
+                    <Link href="/" className="group flex flex-col items-center gap-2 overflow-visible">
+                        <div className="w-12 h-12 relative flex items-center justify-center">
+                            <div className="absolute inset-0 bg-gold/10 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                            <img
+                                src="/images/milan_logo_transparent.png"
+                                alt="Milan Sky"
+                                className="w-full h-full object-contain relative z-10 drop-shadow-[0_2px_8px_rgba(255,215,0,0.15)] group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500"
+                            />
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <span className="font-serif text-2xl md:text-3xl text-white tracking-[0.2em] group-hover:gold-text-glow transition-all duration-500">MILAN</span>
+                            <span className="text-[10px] uppercase tracking-[0.6em] gold-text mt-1 font-bold italic ml-[0.6em]">SKY</span>
+                        </div>
                     </Link>
                 </div>
 
