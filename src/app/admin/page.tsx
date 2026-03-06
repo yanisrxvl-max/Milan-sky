@@ -8,8 +8,9 @@ import { Upload, MessageSquare, Video, Settings, Users, Plus, X, Image as ImageI
 import { PremiumButton } from '@/components/ui/PremiumButton';
 import { ContentType, SubscriptionTier } from '@prisma/client';
 import toast from 'react-hot-toast';
+import { Target, Flag, Rocket } from 'lucide-react'; // Added icons for Evolution
 
-type AdminTab = 'content' | 'requests' | 'payments' | 'quotidirty' | 'analytics' | 'users' | 'settings';
+type AdminTab = 'content' | 'requests' | 'payments' | 'quotidirty' | 'analytics' | 'users' | 'settings' | 'evolution';
 
 export default function AdminDashboardPage() {
     return (
@@ -34,6 +35,10 @@ function AdminContent() {
     const [isLoadingQuotidirty, setIsLoadingQuotidirty] = useState(false);
     const [analytics, setAnalytics] = useState<any>(null);
 
+    // Evolution J-14 State
+    const [launchMissions, setLaunchMissions] = useState<any[]>([]);
+    const [isLoadingMissions, setIsLoadingMissions] = useState(false);
+
     useEffect(() => {
         if (activeTab === 'content') {
             fetchContents();
@@ -45,8 +50,43 @@ function AdminContent() {
             fetchQuotidirties();
         } else if (activeTab === 'analytics') {
             fetchAnalytics();
+        } else if (activeTab === 'evolution') {
+            fetchLaunchMissions();
         }
     }, [activeTab]);
+
+    async function fetchLaunchMissions() {
+        setIsLoadingMissions(true);
+        try {
+            const res = await fetch('/api/admin/launch-missions');
+            if (res.ok) {
+                const data = await res.json();
+                setLaunchMissions(data.missions || []);
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setIsLoadingMissions(false);
+        }
+    }
+
+    async function updateMissionStatus(missionId: string, status: string) {
+        try {
+            const res = await fetch('/api/admin/launch-missions', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ missionId, status }),
+            });
+            if (res.ok) {
+                if (status === 'DONE') {
+                    toast.success('Mission Accomplie ! 🚀', { icon: '🎯' });
+                }
+                fetchLaunchMissions();
+            }
+        } catch {
+            toast.error('Erreur Serveur');
+        }
+    }
 
     async function fetchQuotidirties() {
         setIsLoadingQuotidirty(true);
@@ -166,6 +206,7 @@ function AdminContent() {
 
     const tabs = [
         { id: 'analytics', label: 'Analytiques', icon: <Info size={18} /> },
+        { id: 'evolution', label: 'J-14 Évolution', icon: <Target size={18} /> },
         { id: 'content', label: 'Bibliothèque', icon: <Video size={18} /> },
         { id: 'muses', label: 'Muses IA', icon: <Sparkles size={18} />, href: '/admin/muses' },
         { id: 'quotidirty', label: 'Le Quotidirty', icon: <AlertCircle size={18} /> },
@@ -523,6 +564,92 @@ function AdminContent() {
                                 </div>
                             )}
 
+                            {activeTab === 'evolution' && (
+                                <div className="p-10 bg-dark-600/50 min-h-screen relative overflow-hidden">
+                                    {/* Decorative background elements */}
+                                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gold/5 blur-[120px] rounded-full pointer-events-none" />
+                                    <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/5 blur-[120px] rounded-full pointer-events-none" />
+
+                                    <div className="relative z-10 flex flex-col md:flex-row items-start md:items-end justify-between mb-12 gap-6">
+                                        <div>
+                                            <div className="flex items-center gap-3 mb-3">
+                                                <Rocket size={18} className="text-gold" />
+                                                <h3 className="font-serif text-3xl text-cream italic">J-14 <span className="gold-text">Évolution</span></h3>
+                                            </div>
+                                            <p className="text-[10px] text-white/40 uppercase tracking-[0.3em] font-medium ml-1">Tableau de bord de Lancement Stratégique</p>
+                                        </div>
+                                        <div className="bg-dark-300 border border-white/5 rounded-2xl px-6 py-4 flex items-center gap-6">
+                                            <div className="text-center">
+                                                <p className="text-[9px] uppercase tracking-widest text-white/30 mb-1">Missions</p>
+                                                <p className="text-cream font-mono text-xl">{launchMissions.filter(m => m.status === 'DONE').length} <span className="text-white/20 text-sm">/ {launchMissions.length}</span></p>
+                                            </div>
+                                            <div className="w-px h-8 bg-white/5" />
+                                            <div className="w-48">
+                                                <div className="flex justify-between text-[9px] font-bold tracking-widest uppercase mb-2">
+                                                    <span className="text-gold">Progression</span>
+                                                    <span className="text-white">{Math.round((launchMissions.filter(m => m.status === 'DONE').length / Math.max(1, launchMissions.length)) * 100)}%</span>
+                                                </div>
+                                                <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                                    <motion.div
+                                                        className="h-full bg-gradient-to-r from-gold/50 to-gold"
+                                                        initial={{ width: 0 }}
+                                                        animate={{ width: `${Math.round((launchMissions.filter(m => m.status === 'DONE').length / Math.max(1, launchMissions.length)) * 100)}%` }}
+                                                        transition={{ duration: 1, ease: "easeOut" }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {isLoadingMissions ? (
+                                        <div className="flex justify-center py-40">
+                                            <div className="animate-spin h-10 w-10 border-2 border-gold border-t-transparent rounded-full" />
+                                        </div>
+                                    ) : (
+                                        <div className="grid md:grid-cols-3 gap-6 relative z-10">
+                                            {/* TODO Column */}
+                                            <div className="space-y-4">
+                                                <div className="flex items-center justify-between px-2 mb-6 text-white/40">
+                                                    <span className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-white/20" /> À FAIRE</span>
+                                                    <span className="text-xs font-mono bg-white/5 px-2 py-0.5 rounded-lg">{launchMissions.filter(m => m.status === 'TODO').length}</span>
+                                                </div>
+                                                <AnimatePresence>
+                                                    {launchMissions.filter(m => m.status === 'TODO').map(mission => (
+                                                        <MissionCard key={mission.id} mission={mission} onUpdate={updateMissionStatus} />
+                                                    ))}
+                                                </AnimatePresence>
+                                            </div>
+
+                                            {/* IN PROGRESS Column */}
+                                            <div className="space-y-4">
+                                                <div className="flex items-center justify-between px-2 mb-6 text-gold/60">
+                                                    <span className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-gold/50 animate-pulse" /> EN COURS</span>
+                                                    <span className="text-xs font-mono bg-gold/10 px-2 py-0.5 rounded-lg">{launchMissions.filter(m => m.status === 'IN_PROGRESS').length}</span>
+                                                </div>
+                                                <AnimatePresence>
+                                                    {launchMissions.filter(m => m.status === 'IN_PROGRESS').map(mission => (
+                                                        <MissionCard key={mission.id} mission={mission} onUpdate={updateMissionStatus} />
+                                                    ))}
+                                                </AnimatePresence>
+                                            </div>
+
+                                            {/* DONE Column */}
+                                            <div className="space-y-4">
+                                                <div className="flex items-center justify-between px-2 mb-6 text-green-400/60">
+                                                    <span className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-green-400" /> TERMINÉ</span>
+                                                    <span className="text-xs font-mono bg-green-400/10 px-2 py-0.5 rounded-lg">{launchMissions.filter(m => m.status === 'DONE').length}</span>
+                                                </div>
+                                                <AnimatePresence>
+                                                    {launchMissions.filter(m => m.status === 'DONE').map(mission => (
+                                                        <MissionCard key={mission.id} mission={mission} onUpdate={updateMissionStatus} />
+                                                    ))}
+                                                </AnimatePresence>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
                             {activeTab === 'quotidirty' && (
                                 <div className="p-10">
                                     <div className="flex items-center justify-between mb-12">
@@ -752,5 +879,54 @@ function UploadContentForm({ onCancel, onSuccess }: { onCancel: () => void; onSu
                 </div>
             </form>
         </div>
+    );
+}
+
+// ----- Evolution UI Component -----
+
+function MissionCard({ mission, onUpdate }: { mission: any, onUpdate: (id: string, st: string) => void }) {
+    return (
+        <motion.div
+            layout
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className={`p-5 rounded-3xl border transition-all duration-300 group
+                ${mission.status === 'DONE'
+                    ? 'bg-green-500/5 border-green-500/20 opacity-60'
+                    : mission.status === 'IN_PROGRESS'
+                        ? 'bg-gold/5 border-gold/30 hover:bg-gold/10'
+                        : 'bg-dark-300 border-white/5 hover:border-white/10'
+                }
+            `}
+        >
+            <div className="flex items-center gap-2 mb-3">
+                <span className={`text-[8px] font-bold uppercase tracking-widest px-2 py-1 rounded-md 
+                    ${mission.importance === 'HIGH' ? 'bg-red-500/10 text-red-400' : mission.importance === 'LOW' ? 'bg-white/5 text-white/40' : 'bg-blue-500/10 text-blue-400'}`}>
+                    {mission.category}
+                </span>
+                {mission.status === 'DONE' && <CheckCircle2 size={12} className="text-green-400" />}
+            </div>
+            <h4 className={`font-serif text-lg mb-2 ${mission.status === 'DONE' ? 'text-white/50 line-through decoration-white/20' : 'text-cream'}`}>{mission.title}</h4>
+            <p className="text-[11px] text-white/40 leading-relaxed font-light mb-5">{mission.description}</p>
+
+            <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                {mission.status !== 'TODO' && (
+                    <button onClick={() => onUpdate(mission.id, 'TODO')} className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/30 hover:bg-white/10 hover:text-white transition-all">
+                        <X size={14} />
+                    </button>
+                )}
+                {mission.status !== 'IN_PROGRESS' && mission.status !== 'DONE' && (
+                    <button onClick={() => onUpdate(mission.id, 'IN_PROGRESS')} className="flex-1 py-2 rounded-xl bg-gold/10 text-gold text-[9px] font-bold uppercase tracking-widest border border-gold/20 hover:bg-gold hover:text-dark transition-all">
+                        Démarrer
+                    </button>
+                )}
+                {mission.status !== 'DONE' && (
+                    <button onClick={() => onUpdate(mission.id, 'DONE')} className="flex-1 py-2 rounded-xl bg-green-500/10 text-green-400 text-[9px] font-bold uppercase tracking-widest border border-green-500/20 hover:bg-green-500 hover:text-dark transition-all">
+                        Terminer
+                    </button>
+                )}
+            </div>
+        </motion.div>
     );
 }

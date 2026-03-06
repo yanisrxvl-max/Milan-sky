@@ -418,3 +418,31 @@ model MissionCompletion {
   @@unique([userId, missionKey, completedAt])
   @@index([userId])
 }
+
+// -----------------------------------------------------------------------------
+// Admin J-14 Launch Tracking
+// -----------------------------------------------------------------------------
+
+model LaunchMission {
+  id          String            @id @default(cuid())
+  title       String
+  description String
+  status      MissionStatus     @default(TODO)
+  importance  MissionImportance @default(MEDIUM)
+  category    String            // Content, Technique, Marketing...
+  order       Int               @default(0) // Logic for ordering
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+enum MissionStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum MissionImportance {
+  LOW
+  MEDIUM
+  HIGH
+}
