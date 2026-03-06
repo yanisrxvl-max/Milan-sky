@@ -227,7 +227,7 @@ export default function StoryPage() {
                             className="text-center mb-20"
                         >
                             <span className="text-gold/80 text-[10px] uppercase tracking-[0.4em] font-bold block mb-4">
-                                Notre Engagement
+                                Mon Engagement
                             </span>
                             <h2 className="text-4xl md:text-6xl font-serif text-cream tracking-tight mb-6">
                                 Plus qu&apos;une plateforme, <span className="gold-text italic">une mission.</span>

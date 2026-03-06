@@ -85,7 +85,7 @@ const translations: Record<Locale, Record<string, string>> = {
         'subs.spots_left': 'places restantes',
 
         // Engagement Page
-        'engagement.tag': 'Notre Engagement',
+        'engagement.tag': 'Mon Engagement',
         'engagement.title': 'Plus qu\'une plateforme,',
         'engagement.title_accent': 'une responsabilité.',
         'engagement.desc': 'Je crois que le divertissement peut aussi être un vecteur de changement. Une partie de chaque abonnement est directement reversée à des causes qui comptent pour moi. Ici, tout est transparent.',
@@ -93,7 +93,7 @@ const translations: Record<Locale, Record<string, string>> = {
         'engagement.donated_per_sub': 'Reversé par abonnement',
         'engagement.transparency': 'Transparence',
         'engagement.see_subs': 'Voir les abonnements',
-        'engagement.causes_title': 'Les Causes que nous soutenons',
+        'engagement.causes_title': 'Mes causes',
         'engagement.quarterly_goal': 'Objectif trimestriel',
         'engagement.in_progress': 'En cours',
         'engagement.proof_space': 'Espace réservé',

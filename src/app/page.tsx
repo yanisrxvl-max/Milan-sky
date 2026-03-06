@@ -356,7 +356,7 @@ export default function Home() {
             <div className="text-center mb-16">
               <p className="text-white/30 text-[10px] uppercase tracking-[0.3em] font-bold mb-4">Un engagement concret</p>
               <h2 className="section-title mb-4">
-                Nos <span className="gold-text italic">Causes</span>
+                Mes <span className="gold-text italic">causes</span>
               </h2>
               <p className="text-white/40 text-sm max-w-xl mx-auto">
                 Je reverse une partie de mes revenus à des causes qui me tiennent à cœur. Chaque abonnement a un impact direct.
@@ -409,7 +409,7 @@ export default function Home() {
                 href="/engagement"
                 className="inline-flex items-center gap-3 px-8 py-4 rounded-full border border-gold/30 bg-gold/5 text-gold text-[10px] uppercase tracking-widest font-bold hover:bg-gold hover:text-dark transition-all duration-300"
               >
-                <Heart size={14} /> Découvrir nos engagements <ArrowRight size={14} />
+                <Heart size={14} /> Découvrir mes engagements <ArrowRight size={14} />
               </Link>
             </div>
           </div>
