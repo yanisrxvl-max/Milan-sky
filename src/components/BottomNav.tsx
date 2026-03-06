@@ -3,16 +3,14 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { Home, Grid, Coins, MessageSquare, User, Settings, Send, LayoutGrid, Crown, Sparkles, Gamepad2 } from 'lucide-react';
+import { Home, Coins, MessageSquare, User, Settings, LayoutGrid } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const navItems = [
   { href: '/', icon: Home, label: 'Accueil' },
-  { href: '/subscriptions', icon: Crown, label: 'Abonnement' },
-  { href: '/library', icon: LayoutGrid, label: 'Mon Album' },
+  { href: '/library', icon: LayoutGrid, label: 'Contenu' },
   { href: '/chat', icon: MessageSquare, label: 'Chat' },
-  { href: '/muses', icon: Sparkles, label: 'Muses' },
-  { href: '/private-requests', icon: Send, label: 'Demandes' },
+  { href: '/skycoins', icon: Coins, label: 'SkyCoins' },
   { href: '/dashboard', icon: User, label: 'Profil' },
 ];
 
@@ -20,7 +18,7 @@ export default function BottomNav() {
   const pathname = usePathname();
   const { data: session } = useSession();
 
-  // Don't show on auth pages or if in transition
+  // Don't show on auth pages
   if (['/login', '/register', '/reset-password'].includes(pathname)) return null;
 
   const isAdmin = session?.user?.role === 'ADMIN';
@@ -29,11 +27,11 @@ export default function BottomNav() {
     : navItems;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[100] w-full pb-[calc(1rem+env(safe-area-inset-bottom))] px-4 pointer-events-none flex justify-center">
+    <div className="fixed bottom-0 left-0 right-0 z-[100] w-full pb-[calc(0.75rem+env(safe-area-inset-bottom))] px-4 pointer-events-none flex justify-center lg:hidden">
       <motion.nav
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="pointer-events-auto flex items-center gap-1 p-2 bg-dark-500/60 backdrop-blur-2xl border border-white/10 rounded-[28px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] ring-1 ring-white/5"
+        className="pointer-events-auto flex items-center gap-1 p-2 bg-dark-500/70 backdrop-blur-2xl border border-white/10 rounded-[28px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] ring-1 ring-white/5"
       >
         {items.map((item) => {
           const isActive = pathname === item.href;
@@ -57,7 +55,6 @@ export default function BottomNav() {
                 />
               )}
 
-              {/* Dot indicator */}
               {isActive && (
                 <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-gold shadow-[0_0_8px_rgba(201,168,76,0.8)]" />
               )}

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Crown, Shield, Eye, Zap, Heart, Star, ArrowRight, Play, Sparkles, MessageCircle, BookOpen, Brain } from 'lucide-react';
+import { Crown, Shield, Eye, Heart, Star, ArrowRight, Play, Sparkles, MessageCircle, BookOpen, Brain } from 'lucide-react';
 import Link from 'next/link';
 import AnimatedCounter from '@/components/ui/AnimatedCounter';
 import CountdownTimer from '@/components/ui/CountdownTimer';
@@ -14,39 +14,6 @@ export default function Home() {
 
   const isDay = mode === 'DAY';
 
-  const TIERS = [
-    {
-      name: 'VOYEUR',
-      price: isDay ? '0.00' : '9.90',
-      color: 'border-milan-border hover:border-milan-accent/30',
-      accent: 'text-milan-text/50',
-      features: isDay ? ['Accès public Milan', 'Vlogs Hebdomadaires', 'Conseils Mode', 'Lives Publics'] : ['Bibliothèque avec publicité', 'Le Quotidirty (19h-6h)', 'Milan IA (Découverte)', 'Lives Mensuels'],
-    },
-    {
-      name: 'INITIÉ',
-      price: isDay ? '9.90' : '19.90',
-      color: 'border-milan-accent/40 hover:border-milan-accent shadow-[0_0_30px_rgba(201,168,76,0.1)]',
-      accent: 'text-milan-accent',
-      badge: 'Plus Choisi',
-      features: isDay ? ['Accès Premium Lumina', 'Workshops IA', 'Masterclass Style', 'Drops Pédagogiques'] : ['Bibliothèque sans publicité', 'Le Quotidirty Complet', 'Accès Muses Premium', 'Drops Spéciaux Hebdo'],
-    },
-    {
-      name: 'PRIVILÈGE',
-      price: isDay ? '29.90' : '49.90',
-      color: 'border-milan-accent/60 hover:border-milan-accent',
-      accent: 'text-milan-accent',
-      features: isDay ? ['Coaching Privé (Groupe)', 'Accès Mentor Direct', '50 SkyCoins inclus', 'Priorité Lumina Chat'] : ['Accès Total Bibliothèque', 'Quotidirty Exclusifs', '50 SkyCoins par mois', 'Priorité Chat Milan'],
-    },
-    {
-      name: 'SKYCLUB',
-      price: isDay ? '199' : '299',
-      color: 'border-purple-500/40 hover:border-purple-400',
-      accent: 'text-purple-400',
-      badge: 'Bientôt Complet',
-      features: ['Expérience 100% Débloquée', 'Ligne Privée Milan', 'Invitations Événements', 'Statut Mentor/SkyClub'],
-    },
-  ];
-
   const TESTIMONIALS = isDay ? [
     { text: "Milan Lumina a changé ma façon de voir l'IA. Ses conseils mode sont aussi très pointus.", name: 'Clara B.', tier: 'INITIÉ' },
     { text: "Enfin un contenu intelligent et inspirant. Sa vision du futur est fascinante.", name: 'Julien S.', tier: 'PRIVILÈGE' },
@@ -55,66 +22,6 @@ export default function Home() {
     { text: "Les Muses IA sont incroyables. J'ai copié 'Milan Possessif' sur mon ChatGPT, c'est saisissant de réalisme.", name: 'Sarah M.', tier: 'INITIÉ' },
     { text: "Le chat avec Milan c'est quelque chose... On se sent vraiment privilégié, surtout avec les notes vocales.", name: 'Thomas D.', tier: 'PRIVILÈGE' },
     { text: "L'esthétique de la plateforme est folle. Le contenu Quotidirty vaut largement l'abonnement.", name: 'Alex R.', tier: 'SKYCLUB' },
-  ];
-
-  const features = isDay ? [
-    {
-      icon: <Zap size={24} />,
-      title: 'Conseils & Lifestyle',
-      desc: 'Accédez aux secrets de Milan sur la mode, la beauté et le bien-être au quotidien.',
-      story: "Plus qu'une image, c'est un art de vivre. Dans ce mode, je partage mes routines, mes lectures et ma vision du monde pour t'inspirer à devenir la meilleure version de toi-même.",
-      specs: ['Vlogs Exclusifs', 'Guides Style', 'Pédagogie IA', 'Mindset Coaching']
-    },
-    {
-      icon: <Sparkles size={24} />,
-      title: 'IA & Technologie',
-      desc: 'Découvrez comment Milan utilise l\'intelligence artificielle pour sculpter le futur.',
-      story: "La technologie est mon pinceau. Ici, on parle de prompts, de futurisme et de la manière dont l'IA va redéfinir les connexions humaines.",
-      specs: ['Workshop IA', 'Futurisme', 'Tips Productivité', 'Innovation']
-    },
-    {
-      icon: <Heart size={24} />,
-      title: 'Cercle de Confiance',
-      desc: 'Une connexion basée sur l\'intellect et l\'échange sincère.',
-      story: "L'amitié et le soutien mutuel sont les piliers de ce cercle. Discutons de tes projets, de tes rêves et construisons un lien solide.",
-      specs: ['Chat Bienveillant', 'Live Q&A', 'Communauté', 'Soutenance']
-    },
-    {
-      icon: <Crown size={24} />,
-      title: 'Mentor Club',
-      desc: 'L\'accès privilégié pour ceux qui visent l\'excellence.',
-      story: "Ceux qui veulent aller plus loin. Je t'accompagne dans ta vision, tes investissements et ton évolution personnelle.",
-      specs: ['Ligne Directe', 'Accès Early', 'Events Privés', 'Networking']
-    }
-  ] : [
-    {
-      icon: <Eye size={24} />,
-      title: 'Vue Plongeante',
-      desc: 'Des moments volés, sans filtre. La Sphère de Milan recèle des archives jamais diffusées.',
-      story: "Né de la volonté de briser les codes du contenu digital classique, 'Mon Album' regroupe des moments volés, des séances sans filtre et des archives jamais publiées sur les réseaux sociaux. C'est le cœur battant de l'interdit.",
-      specs: ['4K Native', 'Sans censure', 'Mises à jour quotidiennes', 'Accès Multi-support']
-    },
-    {
-      icon: <Sparkles size={24} />,
-      title: 'Muses IA',
-      desc: 'Injectez des personnalités Milan Premium (Possessif, Jaloux) dans votre propre IA.',
-      story: "L'avatar ne suffit plus. J'ai créé des empreintes psychologiques. Le Milan Nuit à Paris, le Milan Confident... Ces Muses sont des Prompts Systèmes calibrés au millimètre pour transformer votre ChatGPT en compagnon exclusif.",
-      specs: ['Prompts Système', 'Role-Play Immersif', 'Copie en 1 Clic', 'Différents Moods']
-    },
-    {
-      icon: <Heart size={24} />,
-      title: 'Chat Intime',
-      desc: 'Discutez directement avec Milan. Des conversations authentiques, vocales et privées.',
-      story: "Parce que l'exclusivité passe par la connexion. J'ai voulu créer un espace où la barrière entre le créateur et son cercle se brise. Ici, chaque message est une conversation réelle, sans intermédiaire.",
-      specs: ['Messagerie Cryptée', 'Notes Vocales', 'Réponse Prioritaire', '100% Authentique']
-    },
-    {
-      icon: <Crown size={24} />,
-      title: 'Club V.I.P',
-      desc: 'Demandes personnalisées, accès anticipé, et traitement prioritaire pour l\'élite.',
-      story: "Le sommet de l'expérience. Le Club VIP a été pensé pour ceux qui veulent plus qu'un simple accès : ils veulent influencer l'univers Milan Sky. C'est ici que vos désirs deviennent mes projets.",
-      specs: ['Ligne Directe', 'Contenu Sur-mesure', 'Demandes Privées', 'Statut Ultra-Rare']
-    }
   ];
 
   const heroContent = isDay ? {

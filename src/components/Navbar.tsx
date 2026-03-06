@@ -106,7 +106,7 @@ export default function Navbar() {
                 {balance !== null && (
                   <Link href="/skycoins" className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gold/5 border border-gold/10 rounded-full hover:bg-gold/10 hover:border-gold/30 transition-all group">
                     <span className="text-[10px] font-black text-gold tracking-widest"><AnimatedCounter value={balance} /> SC</span>
-                    <div className="w-4 h-4 rounded-full bg-gold/20 flex items-center justify-center text-[10px] text-gold font-bold group-hover:bg-gold group-hover:text-dark transition-colors">✦</div>
+                    <div className="w-4 h-4 rounded-full bg-gold/20 flex items-center justify-center text-[8px] text-gold font-black group-hover:bg-gold group-hover:text-dark transition-colors">SC</div>
                   </Link>
                 )}
 
