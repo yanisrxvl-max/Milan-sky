@@ -215,6 +215,116 @@ export default function StoryPage() {
                 ))}
             </div>
 
+            {/* ENGAGEMENT CARITATIF — Day Mode Only */}
+            {isDay && (
+                <section className="relative z-10 py-32 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gold/[0.03] to-transparent pointer-events-none" />
+                    <div className="max-w-6xl mx-auto px-4">
+                        <motion.div
+                            initial={{ opacity: 0, y: 40 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            className="text-center mb-20"
+                        >
+                            <span className="text-gold/80 text-[10px] uppercase tracking-[0.4em] font-bold block mb-4">
+                                Notre Engagement
+                            </span>
+                            <h2 className="text-4xl md:text-6xl font-serif text-cream tracking-tight mb-6">
+                                Plus qu&apos;une plateforme, <span className="gold-text italic">une mission.</span>
+                            </h2>
+                            <p className="text-white/40 max-w-2xl mx-auto text-sm leading-relaxed">
+                                Milan Sky croit que le succès n&apos;a de valeur que lorsqu&apos;il est partagé.
+                                C&apos;est pourquoi <strong className="text-white/60">30 à 50% de chaque abonnement payant</strong> est reversé à une cause humanitaire.
+                            </p>
+                        </motion.div>
+
+                        <div className="grid md:grid-cols-3 gap-8 mb-20">
+                            {[
+                                {
+                                    icon: '🛡️',
+                                    title: 'Lutte contre le trafic sexuel',
+                                    description: 'Soutien aux associations de lutte contre l\'exploitation sexuelle et la protection des mineurs.',
+                                    plan: 'Abonnement AMBITIEUX',
+                                    percent: '30%',
+                                    color: 'border-blue-500/20 hover:border-blue-500/40',
+                                    glow: 'from-blue-500/10',
+                                    textColor: 'text-blue-400',
+                                },
+                                {
+                                    icon: '💜',
+                                    title: 'Prévention des addictions',
+                                    description: 'Accompagnement psychologique et prévention des addictions liées au contenu adulte.',
+                                    plan: 'Abonnement CRÉATEUR',
+                                    percent: '30%',
+                                    color: 'border-purple-500/20 hover:border-purple-500/40',
+                                    glow: 'from-purple-500/10',
+                                    textColor: 'text-purple-400',
+                                },
+                                {
+                                    icon: '📚',
+                                    title: 'Éducation pour tous',
+                                    description: 'Fournitures scolaires et soutien éducatif pour enfants défavorisés en France.',
+                                    plan: 'Abonnement VISIONNAIRE',
+                                    percent: '50%',
+                                    color: 'border-emerald-500/20 hover:border-emerald-500/40',
+                                    glow: 'from-emerald-500/10',
+                                    textColor: 'text-emerald-400',
+                                },
+                            ].map((cause, i) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: i * 0.15 }}
+                                    className={`relative rounded-[2rem] border ${cause.color} bg-white/[0.02] backdrop-blur-md p-8 transition-all duration-500 group`}
+                                >
+                                    <div className={`absolute inset-0 bg-gradient-to-b ${cause.glow} to-transparent rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity`} />
+                                    <div className="relative z-10">
+                                        <span className="text-4xl block mb-6">{cause.icon}</span>
+                                        <h3 className="font-serif text-xl text-cream mb-4">{cause.title}</h3>
+                                        <p className="text-white/40 text-sm leading-relaxed mb-6">{cause.description}</p>
+                                        <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                                            <span className="text-[9px] uppercase tracking-widest text-white/30 font-bold">{cause.plan}</span>
+                                            <span className={`text-[10px] uppercase tracking-widest font-black ${cause.textColor}`}>{cause.percent} reversé</span>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+
+                        {/* Transparency Promise */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            viewport={{ once: true }}
+                            className="max-w-3xl mx-auto text-center p-10 rounded-[2rem] bg-white/[0.02] border border-gold/10"
+                        >
+                            <Heart className="text-gold mx-auto mb-6" size={32} />
+                            <h3 className="font-serif text-2xl text-cream mb-4">Transparence Totale</h3>
+                            <p className="text-white/40 text-sm leading-relaxed mb-6">
+                                Chaque trimestre, Milan Sky publiera un rapport détaillé des montants collectés et reversés.
+                                Les preuves de virements et partenariats avec les associations seront accessibles publiquement sur cette page.
+                            </p>
+                            <div className="grid grid-cols-3 gap-6 pt-6 border-t border-white/5">
+                                <div>
+                                    <p className="font-serif text-2xl text-gold mb-1">20%</p>
+                                    <p className="text-[9px] uppercase tracking-widest text-white/30 font-bold">Par abonnement</p>
+                                </div>
+                                <div>
+                                    <p className="font-serif text-2xl text-cream mb-1">3</p>
+                                    <p className="text-[9px] uppercase tracking-widest text-white/30 font-bold">Causes soutenues</p>
+                                </div>
+                                <div>
+                                    <p className="font-serif text-2xl text-cream mb-1">100%</p>
+                                    <p className="text-[9px] uppercase tracking-widest text-white/30 font-bold">Transparence</p>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                </section>
+            )}
+
             {/* 5. Call-To-Action Magistral */}
             <section className="relative z-20 min-h-[80vh] flex items-center justify-center px-4 py-32 overflow-hidden bg-dark-500">
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-dark" />

@@ -327,3 +327,52 @@
     transform: translateY(0);
   }
 }
+
+/* ── Cinematic Mode Transition ── */
+@keyframes mode-curtain {
+  0% {
+    opacity: 0;
+  }
+
+  40% {
+    opacity: 0.95;
+  }
+
+  60% {
+    opacity: 0.95;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes mode-flash {
+  0% {
+    opacity: 0;
+  }
+
+  45% {
+    opacity: 0;
+  }
+
+  55% {
+    opacity: 1;
+  }
+
+  70% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.animate-mode-curtain {
+  animation: mode-curtain 900ms ease-in-out forwards;
+}
+
+.animate-mode-flash {
+  animation: mode-flash 900ms ease-in-out forwards;
+}

@@ -16,11 +16,18 @@ const CHAT_LIMITS: Record<string, number> = {
     SKYCLUB: 999,
 };
 
-const FALLBACK_REPLIES = [
+const FALLBACK_REPLIES_NIGHT = [
     "Merci pour ton message 💫 Je prends note...",
     "Intéressant... j'aime ta curiosité 🖤",
     "Tu sais que t'es dans le bon univers ici ✨",
     "Je vois que tu veux aller plus loin... J'adore ça 🔥",
+];
+
+const FALLBACK_REPLIES_DAY = [
+    "Merci de partager ça avec moi 💛 C'est important.",
+    "Je t'écoute. Prends ton temps ✨",
+    "C'est courageux de se poser ces questions 🌱",
+    "Tu es plus fort(e) que ce que tu penses 💫",
 ];
 
 export async function GET(request: NextRequest) {
@@ -150,7 +157,8 @@ export async function POST(request: NextRequest) {
         });
 
         // 4. AIService (Simulated or Real) — We'll trigger AI response if it's a text message
-        let replyText = FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)];
+        const fallbacks = mode === 'DAY' ? FALLBACK_REPLIES_DAY : FALLBACK_REPLIES_NIGHT;
+        let replyText = fallbacks[Math.floor(Math.random() * fallbacks.length)];
 
         if (openai && messageType === 'TEXT') {
             try {

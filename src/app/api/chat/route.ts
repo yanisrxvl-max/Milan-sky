@@ -6,7 +6,7 @@ import { chatMessageSchema } from '@/lib/validations';
 import { chatLimiter, getClientIp, rateLimitResponse } from '@/lib/rate-limit';
 import { sanitizeForDB } from '@/lib/sanitize';
 import { logger } from '@/lib/logger';
-import { openai, MILAN_SYSTEM_PROMPT } from '@/lib/openai';
+import { openai, MILAN_LUMINA_PROMPT, MILAN_NOCTUA_PROMPT } from '@/lib/openai';
 
 const CHAT_LIMITS: Record<string, number> = {
   VOYEUR: 10,
@@ -16,7 +16,7 @@ const CHAT_LIMITS: Record<string, number> = {
 };
 
 // Fallback replies if OpenAI is unavailable or API key not set
-const FALLBACK_REPLIES = [
+const FALLBACK_REPLIES_NIGHT = [
   "Merci pour ton message 💫 Je prends note...",
   "Intéressant... j'aime ta curiosité 🖤",
   "Tu sais que t'es dans le bon univers ici ✨",
@@ -25,6 +25,17 @@ const FALLBACK_REPLIES = [
   "J'ai quelque chose de spécial en préparation pour les membres comme toi...",
   "Patience... les meilleurs contenus arrivent bientôt 🌙",
   "Tu fais partie des vrais. Ça se voit 👑",
+];
+
+const FALLBACK_REPLIES_DAY = [
+  "Merci de partager ça avec moi 💛 C'est important ce que tu ressens.",
+  "Je t'écoute. Prends ton temps pour mettre des mots dessus ✨",
+  "C'est courageux de se poser ces questions. Tu es sur le bon chemin 🌱",
+  "Tu sais quoi ? Tu es plus fort(e) que ce que tu penses 💫",
+  "Respire. Chaque jour est une nouvelle chance de grandir 🌿",
+  "Tes émotions sont valides. Ne les minimise jamais 💛",
+  "La vie avance, et toi aussi. Un pas à la fois ✨",
+  "Tu mérites d'être écouté(e). Je suis là pour ça 🌱",
 ];
 
 // Get chat history
@@ -97,11 +108,14 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
+    const userMode = body.mode === 'DAY' ? 'DAY' : 'NIGHT';
     const parsed = chatMessageSchema.safeParse(body);
 
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.errors[0].message }, { status: 400 });
     }
+
+    const fallbackReplies = userMode === 'DAY' ? FALLBACK_REPLIES_DAY : FALLBACK_REPLIES_NIGHT;
 
     let conversation = await prisma.conversation.findUnique({
       where: { userId: session.user.id }
@@ -169,7 +183,7 @@ export async function POST(request: NextRequest) {
           }
         });
 
-        let systemPrompt = MILAN_SYSTEM_PROMPT;
+        let systemPrompt = userMode === 'DAY' ? MILAN_LUMINA_PROMPT : MILAN_NOCTUA_PROMPT;
 
         if (userWithMuses) {
           // Check Elixir expiration
@@ -216,18 +230,18 @@ export async function POST(request: NextRequest) {
           temperature: 0.85,
         });
 
-        replyText = completion.choices[0]?.message?.content || FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)];
+        replyText = completion.choices[0]?.message?.content || fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)];
       } catch (aiError) {
         console.error('CRITICAL: OpenAI API Error:', aiError);
         logger.error('OpenAI API error, falling back to static replies', {
           error: String(aiError),
           message: aiError instanceof Error ? aiError.message : 'Unknown error'
         });
-        replyText = FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)];
+        replyText = fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)];
       }
     } else {
       // No API key configured — use fallback replies
-      replyText = FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)];
+      replyText = fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)];
     }
 
     const milanMessage = await prisma.message.create({

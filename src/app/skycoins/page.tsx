@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { PremiumButton } from '@/components/ui/PremiumButton';
 import { PaymentBridgeModal } from '@/components/PaymentBridgeModal';
+import { useI18n } from '@/context/I18nContext';
 
 const packs = [
   {
@@ -59,6 +60,7 @@ export default function SkyCoinsPage() {
 function SkyCoinsContent() {
   const { data: session } = useSession();
   const router = useRouter();
+  const { t } = useI18n();
   const [balance, setBalance] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPack, setSelectedPack] = useState<typeof packs[0] | null>(null);
@@ -95,7 +97,7 @@ function SkyCoinsContent() {
           animate={{ opacity: 1, y: 0 }}
           className="section-title mb-4"
         >
-          Boutique <span className="gold-text italic">SkyCoins</span>
+          {t('skycoins.title')} <span className="gold-text italic">{t('skycoins.title_accent')}</span>
         </motion.h1>
 
         {/* Balance Display */}
@@ -107,7 +109,7 @@ function SkyCoinsContent() {
           >
             <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center text-gold text-sm">✦</div>
             <div className="text-left">
-              <p className="text-white/30 text-[9px] uppercase tracking-widest font-bold">Votre solde actuel</p>
+              <p className="text-white/30 text-[9px] uppercase tracking-widest font-bold">{t('skycoins.balance')}</p>
               <p className="font-serif text-2xl gold-text leading-tight">{balance} SC</p>
             </div>
           </motion.div>
@@ -124,8 +126,8 @@ function SkyCoinsContent() {
             transition={{ delay: i * 0.1 }}
             onClick={() => handleBuy(pack)}
             className={`group relative cursor-pointer overflow-hidden rounded-[3rem] border transition-all duration-700 p-10 flex flex-col items-center ${pack.popular
-                ? 'bg-gold/5 border-gold/40 shadow-[0_20px_60px_rgba(201,168,76,0.15)] scale-105 z-10'
-                : 'bg-dark-200/40 border-white/5 hover:border-white/20'
+              ? 'bg-gold/5 border-gold/40 shadow-[0_20px_60px_rgba(201,168,76,0.15)] scale-105 z-10'
+              : 'bg-dark-200/40 border-white/5 hover:border-white/20'
               }`}
           >
             {/* Badges */}
@@ -162,14 +164,14 @@ function SkyCoinsContent() {
 
             <div className="w-full pt-6 border-t border-white/5 flex flex-col gap-3">
               <p className="text-[10px] text-white/20 uppercase tracking-[0.3em] font-medium text-center italic">
-                {pack.bonus > 0 ? `Inclus ${pack.bonus} SC offerts` : 'Accès immédiat'}
+                {pack.bonus > 0 ? `${t('skycoins.included_free').replace('SC', pack.bonus + ' SC')}` : t('skycoins.instant')}
               </p>
               <PremiumButton
                 variant={pack.popular ? 'gold' : 'outline'}
                 fullWidth
                 className="!py-4 uppercase text-[10px] tracking-widest"
               >
-                Sélectionner
+                {t('skycoins.select')}
               </PremiumButton>
             </div>
           </motion.div>
@@ -190,14 +192,14 @@ function SkyCoinsContent() {
       {/* Why SkyCoins */}
       <div className="max-w-3xl mx-auto">
         <h2 className="font-serif text-2xl text-center mb-8">
-          Pourquoi les <span className="gold-text">SkyCoins</span> ?
+          {t('skycoins.why_title')} <span className="gold-text">{t('skycoins.why_accent')}</span> ?
         </h2>
         <div className="grid sm:grid-cols-2 gap-4">
           {[
-            { icon: '🔓', title: 'Accès à la carte', desc: 'Débloquez uniquement le contenu qui vous intéresse.' },
-            { icon: '🎯', title: 'Flexibilité totale', desc: 'Pas d\'abonnement obligatoire pour accéder au contenu.' },
-            { icon: '💎', title: 'Économies', desc: 'Plus vous achetez, plus le prix par SkyCoins diminue.' },
-            { icon: '⚡', title: 'Instantané', desc: 'Crédit immédiat après paiement, accès direct.' },
+            { icon: '🔓', title: t('skycoins.why1_title'), desc: t('skycoins.why1_desc') },
+            { icon: '🎯', title: t('skycoins.why2_title'), desc: t('skycoins.why2_desc') },
+            { icon: '💎', title: t('skycoins.why3_title'), desc: t('skycoins.why3_desc') },
+            { icon: '⚡', title: t('skycoins.why4_title'), desc: t('skycoins.why4_desc') },
           ].map((item) => (
             <div key={item.title} className="card-premium !p-5 flex gap-4 items-start">
               <span className="text-2xl shrink-0">{item.icon}</span>
@@ -212,7 +214,7 @@ function SkyCoinsContent() {
 
       <div className="text-center mt-12">
         <p className="text-white/20 text-[10px] uppercase tracking-widest">
-          Paiement manuel via Revolut, PayPal ou Crypto. Validation sous 5-10 min.
+          {t('skycoins.payment_info')}
         </p>
       </div>
     </div>

@@ -8,12 +8,10 @@ import { motion } from 'framer-motion';
 
 const navItems = [
   { href: '/', icon: Home, label: 'Accueil' },
-  { href: '/library', icon: LayoutGrid, label: 'Bibliothèque' },
-  { href: '/skycoins', icon: Coins, label: 'Boutique' },
   { href: '/subscriptions', icon: Crown, label: 'Abonnement' },
-  { href: '/muses', icon: Sparkles, label: 'Muses' },
-  { href: '/games', icon: Gamepad2, label: 'Jeux' },
+  { href: '/library', icon: LayoutGrid, label: 'Mon Album' },
   { href: '/chat', icon: MessageSquare, label: 'Chat' },
+  { href: '/muses', icon: Sparkles, label: 'Muses' },
   { href: '/private-requests', icon: Send, label: 'Demandes' },
   { href: '/dashboard', icon: User, label: 'Profil' },
 ];

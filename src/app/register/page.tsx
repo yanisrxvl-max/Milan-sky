@@ -6,16 +6,18 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { Crown, Eye, EyeOff, Shield, Check, Sparkles } from 'lucide-react';
-
-const PERKS = [
-  'Accès au chat privé avec Milan',
-  'Bibliothèque de contenu exclusif',
-  'SkyCoins offerts à l\'inscription',
-  'Drops et avant-premières réservés',
-];
+import { useI18n } from '@/context/I18nContext';
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { t } = useI18n();
+
+  const PERKS = [
+    t('register.perk1'),
+    t('register.perk2'),
+    t('register.perk3'),
+    t('register.perk4'),
+  ];
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -73,10 +75,10 @@ export default function RegisterPage() {
           <div className="text-center mb-6">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gold/20 bg-gold/5 mb-5">
               <Sparkles size={12} className="text-gold animate-pulse" />
-              <span className="text-[11px] tracking-[0.15em] text-gold uppercase">Accès Limité</span>
+              <span className="text-[11px] tracking-[0.15em] text-gold uppercase">{t('register.limited')}</span>
             </div>
-            <h1 className="font-serif text-2xl text-cream tracking-wide mb-2">Rejoindre le Cercle</h1>
-            <p className="text-white/25 text-sm">Seuls les membres sélectionnés accèdent à l&apos;univers Milan Sky</p>
+            <h1 className="font-serif text-2xl text-cream tracking-wide mb-2">{t('register.title')}</h1>
+            <p className="text-white/25 text-sm">{t('register.subtitle')}</p>
           </div>
 
           {/* Perks List */}
@@ -99,19 +101,19 @@ export default function RegisterPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs text-white/40 mb-2 tracking-wide uppercase">Nom</label>
+              <label className="block text-xs text-white/40 mb-2 tracking-wide uppercase">{t('register.name')}</label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="input-field"
-                placeholder="Comment doit-on vous appeler ?"
+                placeholder={t('register.name_placeholder')}
                 autoComplete="name"
               />
             </div>
 
             <div>
-              <label className="block text-xs text-white/40 mb-2 tracking-wide uppercase">Email</label>
+              <label className="block text-xs text-white/40 mb-2 tracking-wide uppercase">{t('register.email')}</label>
               <input
                 type="email"
                 value={email}
@@ -124,14 +126,14 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-xs text-white/40 mb-2 tracking-wide uppercase">Mot de passe</label>
+              <label className="block text-xs text-white/40 mb-2 tracking-wide uppercase">{t('register.password')}</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="input-field !pr-12"
-                  placeholder="Minimum 8 caractères"
+                  placeholder={t('register.password_placeholder')}
                   required
                   minLength={8}
                   autoComplete="new-password"
@@ -159,7 +161,7 @@ export default function RegisterPage() {
                 ) : (
                   <>
                     <Crown size={16} />
-                    Demander l&apos;accès
+                    {t('register.submit')}
                   </>
                 )}
               </span>
@@ -170,9 +172,9 @@ export default function RegisterPage() {
         {/* Bottom */}
         <div className="text-center mt-8 space-y-3">
           <p className="text-white/20 text-sm">
-            Déjà membre ?{' '}
+            {t('register.already_member')}{' '}
             <Link href="/login" className="text-gold hover:text-gold-light transition-colors font-medium">
-              Se connecter
+              {t('register.login')}
             </Link>
           </p>
           <motion.p
@@ -181,7 +183,7 @@ export default function RegisterPage() {
             transition={{ delay: 2 }}
             className="text-white/10 text-xs flex items-center justify-center gap-1"
           >
-            <Shield size={10} /> Inscription sécurisée &bull; Données chiffrées
+            <Shield size={10} /> {t('register.secure')} &bull; {t('register.encrypted')}
           </motion.p>
         </div>
       </motion.div>

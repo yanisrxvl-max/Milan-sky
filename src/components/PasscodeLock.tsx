@@ -145,7 +145,7 @@ export default function PasscodeLock({ onSuccess }: PasscodeLockProps) {
                 </button>
             </div>
 
-            <p className="mt-20 text-[10px] text-white/10 uppercase tracking-[0.5em]">Milan Sky Private Vault</p>
+            <p className="mt-20 text-[11px] font-serif italic text-white/30 tracking-[0.4em]">Milan Sky <span className="gold-text not-italic text-[9px] uppercase tracking-[0.6em] ml-2 font-bold">Private Vault</span></p>
         </div>
     );
 }

@@ -8,9 +8,11 @@ import LogoMarquee from '@/components/ui/LogoMarquee';
 import CountdownTimer from '@/components/ui/CountdownTimer';
 import AnimatedCounter from '@/components/ui/AnimatedCounter';
 import { useThemeMode } from '@/context/ThemeModeContext';
+import { useI18n } from '@/context/I18nContext';
 
 export default function Home() {
   const { mode } = useThemeMode();
+  const { t } = useI18n();
 
   const isDay = mode === 'DAY';
 
@@ -91,7 +93,7 @@ export default function Home() {
       icon: <Eye size={24} />,
       title: 'Vue Plongeante',
       desc: 'Des moments volés, sans filtre. La Sphère de Milan recèle des archives jamais diffusées.',
-      story: "Né de la volonté de briser les codes du contenu digital classique, la 'Sphère' de Milan Sky regroupe des moments volés, des séances sans filtre et des archives jamais publiées sur les réseaux sociaux. C'est le cœur battant de l'interdit.",
+      story: "Né de la volonté de briser les codes du contenu digital classique, 'Mon Album' regroupe des moments volés, des séances sans filtre et des archives jamais publiées sur les réseaux sociaux. C'est le cœur battant de l'interdit.",
       specs: ['4K Native', 'Sans censure', 'Mises à jour quotidiennes', 'Accès Multi-support']
     },
     {
@@ -118,19 +120,19 @@ export default function Home() {
   ];
 
   const heroContent = isDay ? {
-    tag: "Intelligence & Éclat",
+    tag: t('hero.tag_day'),
     title1: "Milan",
     title2: "Sky",
-    desc: "L'élégance intellectuelle au service de ton quotidien. <br className='hidden md:block' /> Découvre la facette inspirante de Milan.",
-    btn1: "Découvrir",
-    btn2: "Mes contenus"
+    desc: t('hero.desc_day'),
+    btn1: t('hero.btn1_day'),
+    btn2: t('hero.btn2_day')
   } : {
-    tag: "Passion & Interdit",
+    tag: t('hero.tag_night'),
     title1: "Milan",
     title2: "Sky",
-    desc: "L'accès ultime à l'interdit. <br className='hidden md:block' /> Là où l'exclusivité n'a plus de limites.",
-    btn1: "S'abonner",
-    btn2: "La Sphère"
+    desc: t('hero.desc_night'),
+    btn1: t('hero.btn1_night'),
+    btn2: t('hero.btn2_night')
   };
   return (
     <main className="relative w-full bg-dark-500 overflow-hidden">
@@ -140,9 +142,37 @@ export default function Home() {
       <section className="relative min-h-screen flex flex-col items-center justify-center pt-20">
         {/* Vidéo et Overlays */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-          <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-80">
+          {/* Night Video */}
+          <motion.video
+            key="night-video"
+            autoPlay loop muted playsInline
+            animate={{ opacity: isDay ? 0 : 0.8 }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
+            className="absolute inset-0 w-full h-full object-cover"
+          >
             <source src="/video/hero.mp4" type="video/mp4" />
-          </video>
+          </motion.video>
+
+          {/* Day Video */}
+          <motion.video
+            key="day-video"
+            autoPlay loop muted playsInline
+            animate={{ opacity: isDay ? 0.8 : 0 }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
+            className="absolute inset-0 w-full h-full object-cover"
+          >
+            <source src="/video/videojour.mp4" type="video/mp4" />
+          </motion.video>
+
+          {/* Mode transition flash */}
+          <motion.div
+            key={`transition-${mode}`}
+            initial={{ opacity: 0.6 }}
+            animate={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+            className="absolute inset-0 bg-black z-[5]"
+          />
+
           <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px] z-10" />
           <div className="absolute inset-0 bg-gradient-to-t from-dark-500/80 via-dark-500/40 to-black/20 z-10" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(201,168,76,0.05)_0%,transparent_60%)] z-10" />
@@ -179,7 +209,7 @@ export default function Home() {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
             </span>
             <span className="text-red-400 text-[10px] uppercase tracking-widest font-bold">
-              <AnimatedCounter value={isDay ? 12 : 47} duration={2} /> membres actifs maintenant
+              <AnimatedCounter value={isDay ? 12 : 47} duration={2} /> {t('hero.members_active')}
             </span>
           </motion.div>
 
@@ -218,7 +248,15 @@ export default function Home() {
           >
             <Link href={isDay ? "/login" : "/subscriptions"} className="w-full sm:w-auto">
               <button className="w-full sm:w-auto group relative px-12 py-5 bg-gold rounded-full text-black font-bold tracking-widest uppercase text-[11px] hover:scale-105 active:scale-95 transition-all duration-500 outline-none gold-glow flex items-center justify-center gap-3 touch-manipulation min-h-[44px]">
-                {heroContent.btn1} <Crown size={14} className="group-hover:rotate-12 transition-transform" />
+                {heroContent.btn1}
+                {isDay ? (
+                  <Crown size={14} className="group-hover:rotate-12 transition-transform" />
+                ) : (
+                  <div className="relative flex items-center justify-center w-[18px] h-[18px] rounded-full border-[1.5px] border-dark group-hover:bg-red-500 group-hover:border-red-500 transition-colors duration-300 overflow-hidden">
+                    <span className="text-[8px] font-black leading-[1] mt-px group-hover:text-white transition-colors duration-300">18</span>
+                    <div className="absolute top-1/2 left-1/2 w-full h-[1.5px] bg-white -translate-x-1/2 -translate-y-1/2 -rotate-45 origin-center scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
+                  </div>
+                )}
               </button>
             </Link>
 
@@ -229,14 +267,36 @@ export default function Home() {
             </Link>
           </motion.div>
 
-          {/* Countdown d'Urgence (FOMO) */}
+          {/* Mode-specific bottom element */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.2, duration: 1 }}
             className="mt-16"
           >
-            <CountdownTimer offsetHours={3} label="Prochain Drop Exclusif Quotidirty dans :" variant="hero" />
+            {isDay ? (
+              /* Day Mode — New Content Notification */
+              <Link href="/library">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.5, duration: 0.8 }}
+                  className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-gold/10 border border-gold/20 backdrop-blur-md cursor-pointer hover:bg-gold/15 hover:border-gold/40 transition-all group"
+                >
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-gold" />
+                  </span>
+                  <span className="text-gold text-[10px] uppercase tracking-[0.2em] font-bold">
+                    {t('hero.new_content')}
+                  </span>
+                  <Play size={10} className="text-gold group-hover:translate-x-1 transition-transform" />
+                </motion.div>
+              </Link>
+            ) : (
+              /* Night Mode — Quotidirty Countdown */
+              <CountdownTimer offsetHours={3} label={t('hero.next_quotidirty')} variant="hero" />
+            )}
           </motion.div>
         </div>
 
@@ -247,7 +307,7 @@ export default function Home() {
           className="absolute bottom-12 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center"
         >
           <div className="w-[1px] h-16 bg-gradient-to-b from-gold/50 to-transparent mx-auto" />
-          <p className="text-gold/40 text-[8px] uppercase tracking-[0.4em] mt-4 font-bold">Scroll</p>
+          <p className="text-gold/40 text-[8px] uppercase tracking-[0.4em] mt-4 font-bold">{t('hero.scroll')}</p>
         </motion.div>
       </section>
 
@@ -260,8 +320,8 @@ export default function Home() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(201,168,76,0.03),transparent_70%)] pointer-events-none" />
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-16">
-            <h2 className="section-title mb-4">L&apos;Expérience <span className="gold-text italic">Premium</span></h2>
-            <p className="text-white/30 text-xs uppercase tracking-[0.2em] font-bold">Bien plus qu'une simple plateforme</p>
+            <h2 className="section-title mb-4">{t('features.title')} <span className="gold-text italic">{t('features.title_accent')}</span></h2>
+            <p className="text-white/30 text-xs uppercase tracking-[0.2em] font-bold">{t('features.subtitle')}</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((f, i) => (
@@ -286,9 +346,9 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="section-title mb-3">
-              Ce que <span className="gold-text italic">l'Élite</span> en dit
+              {t('testimonials.title')} <span className="gold-text italic">{t('testimonials.title_accent')}</span> {t('testimonials.title_end')}
             </h2>
-            <p className="text-white/20 text-[10px] font-bold tracking-[0.3em] uppercase">Rejoignez un cercle intime.</p>
+            <p className="text-white/20 text-[10px] font-bold tracking-[0.3em] uppercase">{t('testimonials.subtitle')}</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -330,9 +390,9 @@ export default function Home() {
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-16">
             <h2 className="section-title mb-4">
-              Choisissez votre <span className="gold-text italic">accès</span>
+              {t('pricing.title')} <span className="gold-text italic">{t('pricing.title_accent')}</span>
             </h2>
-            <p className="text-white/30 text-xs tracking-widest uppercase font-bold">Un investissement sur l'exclusivité.</p>
+            <p className="text-white/30 text-xs tracking-widest uppercase font-bold">{t('pricing.subtitle')}</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
@@ -357,7 +417,7 @@ export default function Home() {
                   <h3 className={`font-serif text-2xl tracking-[0.2em] uppercase mb-4 ${tier.accent}`}>{tier.name}</h3>
                   <div className="flex items-baseline justify-center gap-1">
                     <span className="text-5xl font-serif text-cream">{tier.price}</span>
-                    <span className="text-white/30 text-xs font-bold uppercase">€/mois</span>
+                    <span className="text-white/30 text-xs font-bold uppercase">{t('pricing.per_month')}</span>
                   </div>
                 </div>
 
@@ -372,7 +432,7 @@ export default function Home() {
 
                 <Link href="/subscriptions" className="w-full">
                   <button className={`w-full py-4 rounded-xl text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 touch-manipulation min-h-[44px] active:scale-95 ${i === 1 ? 'bg-gold text-dark hover:shadow-[0_0_20px_rgba(201,168,76,0.3)] hover:scale-[1.02]' : 'bg-white/5 border border-white/10 text-white/60 hover:border-gold/30 hover:text-gold'}`}>
-                    Sélectionner
+                    {t('pricing.select')}
                   </button>
                 </Link>
               </motion.div>
@@ -390,13 +450,13 @@ export default function Home() {
         </div>
         <div className="max-w-3xl mx-auto text-center relative z-10">
           <h2 className="text-5xl md:text-6xl font-serif text-cream mb-8 leading-tight tracking-tight">
-            Prêt à franchir <span className="gold-text italic block mt-2">la limite</span> ?
+            {t('cta.title')} <span className="gold-text italic block mt-2">{t('cta.title_accent')}</span> ?
           </h2>
-          <p className="text-white/40 mb-12 text-sm uppercase tracking-widest font-bold">L'accès n'est autorisé qu'aux membres validés.</p>
+          <p className="text-white/40 mb-12 text-sm uppercase tracking-widest font-bold">{t('cta.subtitle')}</p>
           <Link href="/register" className="inline-block relative w-full sm:w-auto px-4 sm:px-0">
             <div className="absolute -inset-1 bg-gold rounded-full opacity-30 blur-xl transition duration-500 hover:opacity-100 hidden sm:block" />
             <button className="relative px-12 sm:px-16 py-5 sm:py-6 bg-dark border border-gold/40 text-gold rounded-full font-bold tracking-[0.3em] uppercase text-[10px] sm:text-[11px] hover:bg-gold hover:text-dark active:scale-95 transition-all duration-500 flex items-center justify-center gap-3 shadow-[0_0_40px_rgba(201,168,76,0.2)] touch-manipulation min-h-[44px] w-full">
-              <Crown size={16} /> Rejoindre le Cercle
+              <Crown size={16} /> {t('cta.button')}
             </button>
           </Link>
         </div>
@@ -408,12 +468,12 @@ export default function Home() {
             <span className="inline-block font-serif text-2xl text-white tracking-[0.2em] uppercase italic py-2">Milan <span className="gold-text">Sky</span></span>
           </div>
           <div className="flex items-center gap-8 text-white/30 text-[10px] uppercase tracking-[0.2em] font-bold">
-            <Link href="/login" className="hover:text-gold transition-colors">Connexion</Link>
-            <Link href="/register" className="hover:text-gold transition-colors">Inscription</Link>
+            <Link href="/login" className="hover:text-gold transition-colors">{t('footer.login')}</Link>
+            <Link href="/register" className="hover:text-gold transition-colors">{t('footer.register')}</Link>
             <span className="font-light opacity-50">© {new Date().getFullYear()} MILAN SKY</span>
           </div>
           <div className="flex items-center gap-3 text-gold/40 text-[9px] uppercase tracking-widest font-bold">
-            <Shield size={14} className="opacity-70" /> DIGITAL LUXURY EXPERIENCE
+            <Shield size={14} className="opacity-70" /> {t('footer.luxury')}
           </div>
         </div>
       </footer>

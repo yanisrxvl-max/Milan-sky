@@ -7,6 +7,7 @@ import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { Lock, Eye, EyeOff, Sparkles } from 'lucide-react';
+import { useI18n } from '@/context/I18nContext';
 
 export default function LoginPage() {
   return (
@@ -19,6 +20,7 @@ export default function LoginPage() {
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useI18n();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -78,8 +80,8 @@ function LoginContent() {
             <div className="w-14 h-14 mx-auto rounded-full bg-gradient-to-br from-gold/20 to-gold/5 border border-gold/20 flex items-center justify-center mb-4">
               <Lock size={22} className="text-gold" />
             </div>
-            <h1 className="font-serif text-2xl text-cream tracking-wide mb-2">Accès Privé</h1>
-            <p className="text-white/30 text-sm">Entrez dans votre univers exclusif</p>
+            <h1 className="font-serif text-2xl text-cream tracking-wide mb-2">{t('login.title')}</h1>
+            <p className="text-white/30 text-sm">{t('login.subtitle')}</p>
           </div>
 
           {verified && (
@@ -88,13 +90,13 @@ function LoginContent() {
               animate={{ opacity: 1, scale: 1 }}
               className="mb-6 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm text-center"
             >
-              ✅ Email vérifié ! Connectez-vous maintenant.
+              ✅ {t('login.verified')}
             </motion.div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-xs text-white/40 mb-2 tracking-wide uppercase">Email</label>
+              <label className="block text-xs text-white/40 mb-2 tracking-wide uppercase">{t('login.email')}</label>
               <input
                 type="email"
                 value={email}
@@ -107,7 +109,7 @@ function LoginContent() {
             </div>
 
             <div>
-              <label className="block text-xs text-white/40 mb-2 tracking-wide uppercase">Mot de passe</label>
+              <label className="block text-xs text-white/40 mb-2 tracking-wide uppercase">{t('login.password')}</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -130,7 +132,7 @@ function LoginContent() {
 
             <div className="text-right">
               <Link href="/reset-password" className="text-xs text-gold/40 hover:text-gold transition-colors">
-                Mot de passe oublié ?
+                {t('login.forgot')}
               </Link>
             </div>
 
@@ -147,7 +149,7 @@ function LoginContent() {
                 ) : (
                   <>
                     <Lock size={16} />
-                    Entrer
+                    {t('login.enter')}
                   </>
                 )}
               </span>
@@ -158,9 +160,9 @@ function LoginContent() {
         {/* Bottom Links */}
         <div className="text-center mt-8 space-y-4">
           <p className="text-white/20 text-sm">
-            Pas encore dans le cercle ?{' '}
+            {t('login.no_account')}{' '}
             <Link href="/register" className="text-gold hover:text-gold-light transition-colors font-medium">
-              Demander l&apos;accès
+              {t('login.request_access')}
             </Link>
           </p>
 
@@ -172,7 +174,7 @@ function LoginContent() {
             className="flex items-center justify-center gap-2 text-white/15 text-xs"
           >
             <Sparkles size={12} className="text-gold/30" />
-            <span>2,847 membres dans le cercle privé</span>
+            <span>2,847 {t('login.members_count')}</span>
           </motion.div>
         </div>
       </motion.div>

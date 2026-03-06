@@ -8,7 +8,10 @@ import { PremiumButton } from '@/components/ui/PremiumButton';
 import { PaymentBridgeModal } from '@/components/PaymentBridgeModal';
 import { CheckCircle2, Shield, Zap, Info, Clock } from 'lucide-react';
 
-const plans = [
+import { useThemeMode } from '@/context/ThemeModeContext';
+import { useI18n } from '@/context/I18nContext';
+
+const nightPlans = [
   {
     id: 'VOYEUR',
     name: 'VOYEUR',
@@ -87,6 +90,88 @@ const plans = [
   },
 ];
 
+const dayPlans = [
+  {
+    id: 'VOYEUR',
+    name: 'CURIEUX',
+    emoji: '🌱',
+    price: '0.00',
+    period: '€ / mois',
+    subtitle: 'L\'Étincelle',
+    features: [
+      'Accès public Milan',
+      'Vlogs Hebdomadaires',
+      'Conseils Mode & Lifestyle',
+      'Accès aux Lives Publics',
+    ],
+    recommended: false,
+    limited: false,
+    color: 'border-white/10',
+    accent: 'text-white/40',
+  },
+  {
+    id: 'INITIE',
+    name: 'AMBITIEUX',
+    emoji: '⚡',
+    price: '9.90',
+    period: '€ / mois',
+    subtitle: 'Engagement Solidaire',
+    features: [
+      'Accès Premium Lumina (sans pub)',
+      'Workshops Intelligence Artificielle',
+      'Masterclass Style & Étiquette',
+      'Drops Pédagogiques Exclusifs',
+    ],
+    recommended: true,
+    limited: false,
+    color: 'border-gold shadow-[0_0_40px_rgba(201,168,76,0.15)] bg-dark-200/90',
+    accent: 'text-gold',
+    badge: 'PLUS CHOISI',
+    savings: '30% reversé à une cause',
+    charity: { icon: '🛡️', name: 'Lutte contre le trafic sexuel & protection des mineurs', percent: 30, color: 'text-blue-400', bg: 'bg-blue-500/10 border-blue-500/20' },
+  },
+  {
+    id: 'PRIVILEGE',
+    name: 'CRÉATEUR',
+    emoji: '🧠',
+    price: '29.90',
+    period: '€ / mois',
+    subtitle: 'Conscience & Impact',
+    features: [
+      'Tout de l\'abonnement Ambitieux',
+      'Coaching Privé (Sessions de Groupe)',
+      'Accès Direct au Mentorat',
+      'Priorité absolue sur le Chat Lumina',
+    ],
+    recommended: false,
+    limited: false,
+    color: 'border-gold/50',
+    accent: 'text-gold-light',
+    charity: { icon: '💜', name: 'Prévention des addictions au camsex & accompagnement psychologique', percent: 30, color: 'text-purple-400', bg: 'bg-purple-500/10 border-purple-500/20' },
+  },
+  {
+    id: 'SKYCLUB',
+    name: 'VISIONNAIRE',
+    emoji: '🌍',
+    price: '199',
+    period: '€',
+    subtitle: 'Impact Maximum',
+    features: [
+      'Accès complet à vie',
+      'Ligne Privée Prioritaire',
+      'Invitations Événements & Masterminds',
+      'Statut Visionnaire à Vie',
+    ],
+    recommended: false,
+    limited: true,
+    spotsLeft: 5,
+    color: 'border-emerald-500/50 shadow-[0_0_50px_rgba(16,185,129,0.15)] bg-emerald-900/10',
+    accent: 'text-emerald-400',
+    badge: 'IMPACT MAXIMUM',
+    charity: { icon: '📚', name: 'Éducation & fournitures scolaires pour enfants défavorisés en France', percent: 50, color: 'text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/20' },
+  },
+];
+
 export default function SubscriptionsPage() {
   return (
     <Suspense fallback={<div className="page-container flex items-center justify-center min-h-screen"><div className="animate-pulse text-gold/40 tracking-widest text-xs uppercase font-bold">Chargement de l'Interdit...</div></div>}>
@@ -97,14 +182,18 @@ export default function SubscriptionsPage() {
 
 function SubscriptionsContent() {
   const { data: session } = useSession();
+  const { mode } = useThemeMode();
+  const { t } = useI18n();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<typeof plans[0] | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<typeof nightPlans[0] | null>(null);
 
   const cancelled = searchParams.get('cancelled');
+  const isDay = mode === 'DAY';
+  const plans = isDay ? dayPlans : nightPlans;
 
-  function handleSubscribe(plan: typeof plans[0]) {
+  function handleSubscribe(plan: typeof nightPlans[0]) {
     if (!session) {
       router.push('/register');
       return;
@@ -120,27 +209,35 @@ function SubscriptionsContent() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(201,168,76,0.06),transparent_50%)] pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 text-center relative z-10">
           <motion.div
+            key={`shield-${mode}`}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold/10 border border-gold/20 text-gold text-[10px] uppercase tracking-[0.3em] font-bold mb-6"
           >
-            <Shield size={12} /> Choix de l&apos;Accès
+            <Shield size={12} /> {t('subs.tag')}
           </motion.div>
           <motion.h1
+            key={`title-${mode}`}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-5xl md:text-6xl font-serif text-cream mb-6 tracking-tight"
           >
-            Passez du côté <span className="gold-text italic">Privé</span>
+            {isDay ? (
+              <>{t('subs.title')} <span className="gold-text italic">{t('subs.title_accent')}</span></>
+            ) : (
+              <>Passez du côté <span className="gold-text italic">Privé</span></>
+            )}
           </motion.h1>
           <motion.p
+            key={`desc-${mode}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
             className="text-white/40 max-w-2xl mx-auto text-sm leading-relaxed"
           >
-            Rejoignez le cercle intime de Milan. Quatre niveaux de privilèges conçus pour vous
-            déconnecter du monde extérieur et vous plonger dans une exclusivité totale.
+            {isDay
+              ? t('subs.subtitle_day')
+              : t('subs.subtitle_night')}
           </motion.p>
         </div>
       </div>
@@ -219,6 +316,21 @@ function SubscriptionsContent() {
                     </li>
                   ))}
                 </ul>
+
+                {/* Charity Badge (Day Mode Only) */}
+                {isDay && (plan as any).charity && (
+                  <div className={`p-4 rounded-2xl border ${(plan as any).charity.bg} mb-6`}>
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-lg">{(plan as any).charity.icon}</span>
+                      <span className={`text-[10px] uppercase tracking-widest font-black ${(plan as any).charity.color}`}>
+                        {(plan as any).charity.percent}% reversé
+                      </span>
+                    </div>
+                    <p className="text-white/50 text-[11px] leading-relaxed">
+                      {(plan as any).charity.name}
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div className="mt-auto pt-6 border-t border-white/[0.04]">

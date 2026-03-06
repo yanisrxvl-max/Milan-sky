@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useThemeMode } from '@/context/ThemeModeContext';
+import { useI18n } from '@/context/I18nContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, CheckCircle2, X, Copy, Info, MessageCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -20,16 +21,17 @@ interface Muse {
     previewMessage?: string;
 }
 
-const CATEGORY_MAP: Record<string, { label: string; filter: string[] }> = {
-    ALL: { label: 'Toutes', filter: [] },
-    PERSONNALITES: { label: 'Personnalités', filter: ['MUSE'] },
-    MOODS: { label: 'Moods', filter: ['MOOD_PACK'] },
-    EXPERIENCES: { label: 'Expériences', filter: ['RITUAL'] },
-};
+const getCategoryMap = (t: (key: string) => string): Record<string, { label: string; filter: string[] }> => ({
+    ALL: { label: t('muses.all'), filter: [] },
+    PERSONNALITES: { label: t('muses.personalities'), filter: ['MUSE'] },
+    MOODS: { label: t('muses.moods'), filter: ['MOOD_PACK'] },
+    EXPERIENCES: { label: t('muses.experiences'), filter: ['RITUAL'] },
+});
 
 export default function MusesPage() {
     const { data: session } = useSession();
     const { mode } = useThemeMode();
+    const { t } = useI18n();
     const currentThemeMode = mode === 'DAY' ? 'LUMINA' : 'NOCTUA';
 
     const [muses, setMuses] = useState<Muse[]>([]);
@@ -107,9 +109,11 @@ export default function MusesPage() {
         toast.success('Prompt copié !');
     };
 
+    const categoryMap = getCategoryMap(t);
+
     const filteredMuses = activeFilter === 'ALL'
         ? muses
-        : muses.filter(m => CATEGORY_MAP[activeFilter]?.filter.includes(m.category));
+        : muses.filter(m => categoryMap[activeFilter]?.filter.includes(m.category));
 
     return (
         <div className="min-h-screen bg-dark-500 pb-32">
@@ -125,7 +129,7 @@ export default function MusesPage() {
                         animate={{ opacity: 1 }}
                         className="text-gold text-[10px] uppercase tracking-[0.5em] font-bold mb-6"
                     >
-                        Personnalités IA Exclusives
+                        {t('muses.tag')}
                     </motion.p>
                     <motion.h1
                         initial={{ opacity: 0, y: 15 }}
@@ -133,7 +137,7 @@ export default function MusesPage() {
                         transition={{ delay: 0.1 }}
                         className="font-serif text-5xl md:text-7xl text-cream mb-5 tracking-tight"
                     >
-                        Choisissez votre <span className="italic gold-text">Milan</span>
+                        {t('muses.title')} <span className="italic gold-text">{t('muses.title_accent')}</span>
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0 }}
@@ -141,9 +145,9 @@ export default function MusesPage() {
                         transition={{ delay: 0.2 }}
                         className="text-white/40 text-sm md:text-base max-w-xl mx-auto leading-relaxed"
                     >
-                        Transformez Milan en différentes versions de lui-même.
+                        {t('muses.desc')}
                         <br />
-                        Débloquez le prompt, injectez-le dans ChatGPT ou Claude.
+                        {t('muses.desc2')}
                     </motion.p>
                 </div>
             </section>
@@ -153,7 +157,7 @@ export default function MusesPage() {
             {/* ═══════════════════════════════════ */}
             <div className="max-w-4xl mx-auto px-4 mb-14">
                 <div className="flex flex-wrap justify-center gap-2 md:gap-3">
-                    {Object.entries(CATEGORY_MAP).map(([key, { label }]) => (
+                    {Object.entries(categoryMap).map(([key, { label }]) => (
                         <button
                             key={key}
                             onClick={() => setActiveFilter(key)}
@@ -174,11 +178,11 @@ export default function MusesPage() {
             <div className="max-w-6xl mx-auto px-4">
                 {isLoading ? (
                     <div className="flex justify-center py-20">
-                        <div className="animate-pulse text-gold/30 text-xs uppercase tracking-widest font-bold">Chargement…</div>
+                        <div className="animate-pulse text-gold/30 text-xs uppercase tracking-widest font-bold">{t('general.loading')}</div>
                     </div>
                 ) : filteredMuses.length === 0 ? (
                     <div className="text-center py-20">
-                        <p className="text-white/30 text-sm">Aucune Muse dans cette catégorie.</p>
+                        <p className="text-white/30 text-sm">{t('muses.no_muse')}</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -215,7 +219,7 @@ export default function MusesPage() {
                                         <div className="absolute top-4 right-4">
                                             {muse.isOwned ? (
                                                 <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gold text-dark text-[10px] font-bold tracking-wider uppercase shadow-lg">
-                                                    <CheckCircle2 size={11} /> Débloqué
+                                                    <CheckCircle2 size={11} /> {t('muses.unlocked')}
                                                 </span>
                                             ) : (
                                                 <span className="px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white text-[11px] font-bold tracking-wider">
@@ -278,7 +282,7 @@ export default function MusesPage() {
                                                         : 'bg-white/[0.04] border border-white/[0.08] text-white/50 hover:bg-white/[0.08] hover:text-white'
                                                         }`}
                                                 >
-                                                    {muse.isActive ? 'Désactiver' : 'Activer'}
+                                                    {muse.isActive ? t('muses.deactivate') : t('muses.activate')}
                                                 </button>
                                                 <button
                                                     onClick={() => setViewingPrompt(muse)}
@@ -293,7 +297,7 @@ export default function MusesPage() {
                                                 onClick={() => handlePurchase(muse.id)}
                                                 className="w-full py-3.5 rounded-xl bg-gold text-dark text-[10px] uppercase tracking-[0.2em] font-bold hover:shadow-[0_0_20px_rgba(201,168,76,0.25)] active:scale-[0.96] transition-all duration-300 mt-auto touch-manipulation min-h-[44px]"
                                             >
-                                                Débloquer la Muse
+                                                {t('muses.unlock_muse')}
                                             </button>
                                         )}
                                     </div>
@@ -328,7 +332,7 @@ export default function MusesPage() {
                             <div className="p-6 border-b border-white/[0.05] flex items-center justify-between shrink-0">
                                 <div>
                                     <p className="text-gold text-[9px] uppercase tracking-[0.4em] font-bold mb-1 flex items-center gap-1.5">
-                                        <Lock size={10} /> Prompt Déverrouillé
+                                        <Lock size={10} /> {t('muses.prompt_unlocked')}
                                     </p>
                                     <h2 className="font-serif text-2xl text-cream">{viewingPrompt.title}</h2>
                                 </div>
@@ -355,10 +359,10 @@ export default function MusesPage() {
                                     onClick={() => viewingPrompt.prompt && copyToClipboard(viewingPrompt.prompt)}
                                     className="w-full py-4 rounded-xl bg-gold text-dark text-[10px] uppercase tracking-[0.2em] font-bold hover:shadow-[0_0_20px_rgba(201,168,76,0.3)] min-h-[44px] active:scale-95 touch-manipulation transition-all flex items-center justify-center gap-2"
                                 >
-                                    <Copy size={14} /> Copier pour ChatGPT ou Claude
+                                    <Copy size={14} /> {t('muses.copy_prompt')}
                                 </button>
                                 <p className="mt-3 text-center text-[9px] text-white/20 uppercase tracking-[0.15em] flex items-center justify-center gap-1.5">
-                                    <Info size={10} /> Collez ce prompt au début d&apos;une nouvelle conversation IA
+                                    <Info size={10} /> {t('muses.paste_hint')}
                                 </p>
                             </div>
                         </motion.div>

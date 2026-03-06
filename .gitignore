@@ -39,3 +39,7 @@ prisma/migrations/
 
 # uploads
 /public/uploads/
+
+# Large Media Files
+*.mp4
+*.MP4

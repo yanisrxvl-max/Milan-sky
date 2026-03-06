@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { Sparkles, MessageSquare, ChevronRight, ChevronLeft, Lock, Image as ImageIcon, Video, Send, Heart, DollarSign } from 'lucide-react';
 import { MILAN_NAME, MILAN_AVATARS } from '@/lib/constants';
 import { useThemeMode } from '@/context/ThemeModeContext';
+import { useI18n } from '@/context/I18nContext';
 
 interface Message {
     id: string;
@@ -24,6 +25,7 @@ interface Message {
 export default function ChatInterface() {
     const { data: session } = useSession();
     const { mode } = useThemeMode();
+    const { t } = useI18n();
     const isDay = mode === 'DAY';
 
     const [messages, setMessages] = useState<Message[]>([]);
@@ -179,7 +181,7 @@ export default function ChatInterface() {
                         {isDay ? "Milan Lumina" : "Milan Sky"}
                     </h2>
                     <p className="text-white/40 text-[10px] uppercase tracking-[0.2em]">
-                        {isDay ? "Mentor & Visionnaire" : "Iconic Creator"}
+                        {isDay ? t('chat.companion') : t('chat.creator')}
                     </p>
                 </div>
                 <div className="text-right">
@@ -284,7 +286,7 @@ export default function ChatInterface() {
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                            placeholder={isDay ? "Posez une question à Lumina..." : "Envoyer un message à Milan..."}
+                            placeholder={isDay ? t('chat.placeholder_day') : t('chat.placeholder_night')}
                             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-cream placeholder:text-white/20 focus:outline-none focus:border-gold/30 transition-all"
                         />
                     </div>
