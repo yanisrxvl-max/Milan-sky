@@ -116,7 +116,8 @@ export default function GoogleTranslate() {
     setActiveLang(langCode);
     setIsOpen(false);
 
-    // Set the cookie so the language persists and applies on load
+    // Set the cookie so the language persists and applies on load.
+    // Explicitly set cookie without 'domain' first for aggressive iOS Safari ITP bypass.
     if (langCode === 'fr') {
       document.cookie = 'googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
       document.cookie = 'googtrans=; path=/; domain=' + window.location.hostname + '; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
@@ -125,8 +126,21 @@ export default function GoogleTranslate() {
       document.cookie = `googtrans=/fr/${langCode}; path=/; domain=${window.location.hostname}`;
     }
 
-    // Reload the page to guarantee the Google Translate script reads the new cookie and translates perfectly
-    window.location.reload();
+    // Attempt to change the language without a full reload by firing the combo box event.
+    // Our previous React crash (`insertBefore`) monkey-patch handles this safely now.
+    try {
+      const gtCombo = document.querySelector('.goog-te-combo') as HTMLSelectElement;
+      if (gtCombo) {
+        gtCombo.value = langCode;
+        gtCombo.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    } catch (err) { }
+
+    // Force a reliable hard navigation for iOS WebKit/Safari to pick up the cookie
+    // Safari aggressively caches `window.location.reload()` and ignores newly set cookies.
+    setTimeout(() => {
+      window.location.href = window.location.pathname + window.location.search;
+    }, 150);
   }
 
   const currentLang = LANGUAGES.find(l => l.code === activeLang) || LANGUAGES[0];

@@ -57,7 +57,7 @@ export default function Navbar() {
     <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${isScrolled ? 'bg-dark-500/80 backdrop-blur-xl border-b border-white/[0.04] py-2' : 'bg-transparent py-4'}`}>
       <div className="max-w-[90rem] mx-auto px-4 md:px-8">
         <div className={`flex items-center justify-between transition-all duration-500 ${isScrolled ? 'h-14' : 'h-20'}`}>
-          <div className="flex items-center gap-3 shrink-0 mr-10">
+          <div className="flex items-center gap-2 md:gap-3 shrink-0 md:mr-10">
             <Link href="/" className="flex flex-col items-center gap-0 group relative cursor-pointer shrink-0">
               <div className="flex flex-col items-center leading-none overflow-visible">
                 <div className={`bg-gold mb-1.5 transform group-hover:scale-x-150 transition-all duration-700 ${isScrolled ? 'w-4 h-[1px]' : 'w-6 h-[2px] opacity-60'}`} />
@@ -97,13 +97,13 @@ export default function Navbar() {
           </div>
 
           {/* Auth & Balance Section */}
-          <div className="flex items-center gap-6 md:gap-10 shrink-0 ml-10">
-            <div className="flex items-center px-2">
+          <div className="flex items-center gap-3 md:gap-10 shrink-0 md:ml-10">
+            <div className="flex items-center px-1 md:px-2">
               <ModeToggle />
             </div>
 
             {session ? (
-              <div className="flex items-center gap-5">
+              <div className="flex items-center gap-3 md:gap-5">
                 {/* Balance Display */}
                 {balance !== null && (
                   <Link href="/skycoins" className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gold/5 border border-gold/10 rounded-full hover:bg-gold/10 hover:border-gold/30 transition-all group">
@@ -112,7 +112,7 @@ export default function Navbar() {
                   </Link>
                 )}
 
-                <Link href="/chat" className="relative group flex items-center justify-center">
+                <Link href="/chat" className="hidden md:flex relative group items-center justify-center">
                   <div className="absolute inset-0 bg-gold rounded-full opacity-0 blur-md group-hover:opacity-40 transition-opacity" />
                   <div className={`rounded-full overflow-hidden border border-white/10 group-hover:border-gold transition-all duration-500 relative z-10 ${isScrolled ? 'w-8 h-8' : 'w-10 h-10'}`}>
                     <img
@@ -127,21 +127,21 @@ export default function Navbar() {
 
                 <Link
                   href="/dashboard"
-                  className={`btn-gold text-[9px] uppercase tracking-[0.2em] relative group overflow-hidden touch-manipulation flex-shrink-0 ${isScrolled ? '!py-2 !px-4' : '!py-3 !px-6'}`}
+                  className={`hidden md:flex btn-gold text-[9px] uppercase tracking-[0.2em] relative group overflow-hidden touch-manipulation flex-shrink-0 ${isScrolled ? '!py-2 !px-4' : '!py-3 !px-6'}`}
                 >
                   <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                   <span className="relative z-10">{t('nav.profile')}</span>
                 </Link>
               </div>
             ) : (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 md:gap-3">
                 <Link
                   href="/login"
-                  className="text-[10px] uppercase font-bold tracking-[0.2em] text-white/40 hover:text-white transition-colors px-4 py-3 min-h-[44px] flex items-center justify-center touch-manipulation"
+                  className="hidden xs:flex text-[10px] uppercase font-bold tracking-[0.2em] text-white/40 hover:text-white transition-colors px-2 md:px-4 py-3 min-h-[44px] items-center justify-center touch-manipulation"
                 >
                   {t('nav.login')}
                 </Link>
-                <Link href="/register" className={`btn-gold text-[10px] uppercase font-bold tracking-[0.2em] touch-manipulation ${isScrolled ? '!py-2 !px-5' : '!py-3 !px-6'}`}>
+                <Link href="/register" className={`btn-gold text-[9px] md:text-[10px] uppercase font-bold tracking-[0.1em] md:tracking-[0.2em] touch-manipulation ${isScrolled ? '!py-2 !px-3 md:!px-5' : '!py-2 md:!py-3 !px-3 md:!px-6'}`}>
                   {t('nav.register')}
                 </Link>
               </div>
