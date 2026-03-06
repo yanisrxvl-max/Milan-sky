@@ -7,17 +7,9 @@ const publicImagesDir = path.join(__dirname, '../public/images');
 const publicDir = path.join(__dirname, '../public');
 
 const targets = [
-    { name: 'milan_icon.png', width: 1024, height: 1024, dir: publicImagesDir },
-    { name: 'milan_icon.jpg', width: 1024, height: 1024, dir: publicImagesDir },
-    { name: 'milan_icon_alt.png', width: 1024, height: 1024, dir: publicImagesDir },
-    { name: 'milan_icon_192.png', width: 192, height: 192, dir: publicImagesDir },
-    { name: 'milan_icon_512.png', width: 512, height: 512, dir: publicImagesDir },
+    { name: 'app_icon_192.png', width: 192, height: 192, dir: publicImagesDir },
+    { name: 'app_icon_512.png', width: 512, height: 512, dir: publicImagesDir },
     { name: 'apple-touch-icon.png', width: 180, height: 180, dir: publicDir },
-    { name: 'milan_basic.jpg', width: 800, height: 800, dir: publicImagesDir },
-    { name: 'milan_basic.png', width: 800, height: 800, dir: publicImagesDir },
-    { name: 'milan_elite.jpg', width: 800, height: 800, dir: publicImagesDir },
-    { name: 'milan_elite.png', width: 800, height: 800, dir: publicImagesDir },
-    { name: 'milan_avatar.png', width: 800, height: 800, dir: publicImagesDir },
     { name: 'favicon.ico', width: 32, height: 32, dir: publicDir },
 ];
 
@@ -38,15 +30,13 @@ async function processLogo() {
 
             if (target.name.endsWith('.png')) {
                 await pipeline.png().toFile(path.join(target.dir, target.name));
-            } else if (target.name.endsWith('.jpg') || target.name.endsWith('.jpeg')) {
-                await pipeline.jpeg().toFile(path.join(target.dir, target.name));
             } else if (target.name.endsWith('.ico')) {
                 await pipeline.toFile(path.join(target.dir, target.name));
             }
             console.log(`Generated ${target.name} successfully.`);
         }
 
-        console.log('All logo assets updated successfully.');
+        console.log('App icon assets updated successfully.');
     } catch (error) {
         console.error('Error processing logo:', error);
     }

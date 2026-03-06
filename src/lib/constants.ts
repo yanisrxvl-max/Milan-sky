@@ -1,10 +1,10 @@
 export const MILAN_NAME = "Milan";
 
 export const MILAN_AVATARS = {
-    GUEST: "/images/milan_basic.png",
-    BASIC: "/images/milan_basic.png",
-    ELITE: "/images/milan_elite.png",
-    ICON: "/images/milan_icon.png",
+    GUEST: "/images/milan_basic.jpg", // The "Bite" photo
+    BASIC: "/images/milan_basic.jpg",
+    ELITE: "/images/milan_elite.jpg", // The "Face" photo
+    ICON: "/images/milan_icon.jpg",   // The "Semen" photo
 };
 
 export const REVOLUT_LINK = "https://revolut.me/milansky1";

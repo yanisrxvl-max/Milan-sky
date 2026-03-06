@@ -33,12 +33,12 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   icons: {
     icon: [
-      { url: '/favicon.ico?v=2' },
-      { url: '/images/milan_icon_192.png?v=2', sizes: '192x192', type: 'image/png' },
-      { url: '/images/milan_icon_512.png?v=2', sizes: '512x512', type: 'image/png' },
+      { url: '/favicon.ico?v=4' },
+      { url: '/images/app_icon_192.png?v=4', sizes: '192x192', type: 'image/png' },
+      { url: '/images/app_icon_512.png?v=4', sizes: '512x512', type: 'image/png' },
     ],
     apple: [
-      { url: '/apple-touch-icon.png?v=2' },
+      { url: '/apple-touch-icon.png?v=4' },
     ],
   },
   appleWebApp: {
