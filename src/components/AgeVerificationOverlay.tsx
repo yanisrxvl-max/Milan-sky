@@ -39,72 +39,42 @@ export default function AgeVerificationOverlay() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-dark/95 backdrop-blur-xl"
+                    transition={{ duration: 0.4 }}
+                    className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/95 backdrop-blur-md"
                 >
                     <motion.div
-                        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                        initial={{ scale: 0.95, opacity: 0, y: 10 }}
                         animate={{ scale: 1, opacity: 1, y: 0 }}
-                        className="max-w-md w-full glass p-8 rounded-3xl border border-gold/20 shadow-2xl relative overflow-hidden"
+                        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+                        className="max-w-sm w-full bg-dark-500/80 backdrop-blur-2xl p-8 md:p-10 rounded-3xl border border-white/10 shadow-[0_0_60px_rgba(0,0,0,0.8)] relative overflow-hidden text-center"
                     >
-                        {/* Background Accent */}
-                        <div className="absolute -top-24 -right-24 w-48 h-48 bg-gold/10 blur-[100px] rounded-full" />
+                        {/* Subtle glow */}
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-40 bg-gold/10 blur-[60px] rounded-full pointer-events-none" />
 
-                        <div className="relative z-10 text-center">
-                            <div className="w-20 h-20 bg-gold/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-gold/20">
-                                <span className="text-3xl font-serif gold-text">18+</span>
-                            </div>
-
-                            <h2 className="text-2xl font-serif gold-text mb-4 tracking-widest uppercase">
+                        <div className="relative z-10">
+                            <span className="text-4xl font-serif text-white mb-4 block">18+</span>
+                            <h2 className="text-sm font-serif text-white mb-3 tracking-[0.2em] uppercase">
                                 Contenu Sensible
                             </h2>
 
-                            <p className="text-white/60 text-sm leading-relaxed mb-8">
-                                Ce site contient du contenu visuel et verbal destiné à un public averti.
-                                En entrant, vous certifiez être majeur (18+) et acceptez nos conditions d&apos;utilisation.
+                            <p className="text-white/40 text-[11px] leading-relaxed mb-8 max-w-[240px] mx-auto">
+                                Ce site contient du contenu réservé aux adultes.
                             </p>
 
-                            <div className="space-y-6">
-                                <label className="flex items-start gap-3 cursor-pointer group text-left">
-                                    <div className="relative flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            checked={accepted}
-                                            onChange={(e) => setAccepted(e.target.checked)}
-                                            className="peer sr-only"
-                                        />
-                                        <div className="w-5 h-5 border border-gold/30 rounded bg-dark-200 peer-checked:bg-gold peer-checked:border-gold transition-all" />
-                                        <svg
-                                            className="absolute w-3.5 h-3.5 text-dark left-0.5 pointer-events-none hidden peer-checked:block"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                            strokeWidth={4}
-                                        >
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    <span className="text-[12px] text-white/40 leading-tight group-hover:text-white/60 transition-colors">
-                                        Je certifie avoir plus de 18 ans et j&apos;accepte les <a href="/legal/cgu" className="text-gold hover:underline">CGU</a> et la <a href="/legal/confidentialite" className="text-gold hover:underline">Politique de Confidentialité</a> de {MILAN_NAME} SKY.
-                                    </span>
-                                </label>
+                            <div className="flex flex-col gap-3">
+                                <button
+                                    onClick={handleVerify}
+                                    className="w-full py-4 bg-white text-black rounded-2xl text-[10px] uppercase font-bold tracking-[0.2em] hover:bg-white/90 transition-all active:scale-[0.98]"
+                                >
+                                    J&apos;ai plus de 18 ans
+                                </button>
 
-                                <div className="flex flex-col gap-3">
-                                    <button
-                                        onClick={handleVerify}
-                                        disabled={!accepted}
-                                        className="btn-gold w-full py-4 text-sm font-bold tracking-widest uppercase disabled:opacity-30 disabled:cursor-not-allowed group"
-                                    >
-                                        Entrer dans le Sky
-                                        <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
-                                    </button>
-
-                                    <button
-                                        onClick={() => window.location.href = 'https://google.com'}
-                                        className="text-white/30 text-[10px] uppercase tracking-widest hover:text-white/50 transition-colors"
-                                    >
-                                        Quitter le site
-                                    </button>
-                                </div>
+                                <button
+                                    onClick={() => window.location.href = 'https://google.com'}
+                                    className="w-full py-4 bg-transparent border border-white/10 text-white/50 rounded-2xl text-[10px] uppercase tracking-[0.2em] hover:text-white hover:bg-white/5 transition-all active:scale-[0.98]"
+                                >
+                                    Quitter
+                                </button>
                             </div>
                         </div>
                     </motion.div>

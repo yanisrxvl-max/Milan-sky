@@ -141,11 +141,18 @@ export default function Home() {
       {/* ═══════════════════════════════════════════════ */}
       <section className="relative min-h-screen flex flex-col items-center justify-center pt-20">
         {/* Vidéo et Overlays */}
-        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-dark-500">
+          {/* Day Mode Solid Fallback Background (prevents black screen if video fails on iOS) */}
+          <motion.div
+            animate={{ opacity: isDay ? 1 : 0 }}
+            transition={{ duration: 0.8 }}
+            className="absolute inset-0 bg-[#e6dfd5]"
+          />
+
           {/* Night Video */}
           <motion.video
             key="night-video"
-            autoPlay loop muted playsInline
+            autoPlay loop muted playsInline preload="auto"
             animate={{ opacity: isDay ? 0 : 0.8 }}
             transition={{ duration: 0.6, ease: 'easeInOut' }}
             className="absolute inset-0 w-full h-full object-cover"
@@ -156,7 +163,7 @@ export default function Home() {
           {/* Day Video */}
           <motion.video
             key="day-video"
-            autoPlay loop muted playsInline
+            autoPlay loop muted playsInline preload="auto"
             animate={{ opacity: isDay ? 0.8 : 0 }}
             transition={{ duration: 0.6, ease: 'easeInOut' }}
             className="absolute inset-0 w-full h-full object-cover"
@@ -231,14 +238,18 @@ export default function Home() {
             </h1>
           </motion.div>
 
-          <motion.p
+          <motion.div
             key={`desc-${mode}`}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 1 }}
-            className="text-milan-text/70 text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] mb-12 max-w-2xl leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: heroContent.desc }}
-          />
+            className={`mb-12 max-w-2xl mx-auto transition-all duration-700 ${isDay ? 'bg-white/10 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.05)] border border-white/20 p-5 md:p-6 rounded-3xl' : ''}`}
+          >
+            <p
+              className={`text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] leading-relaxed mx-auto ${isDay ? 'text-dark-500 drop-shadow-[0_2px_10px_rgba(255,255,255,0.8)]' : 'text-milan-text/70'}`}
+              dangerouslySetInnerHTML={{ __html: heroContent.desc }}
+            />
+          </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
