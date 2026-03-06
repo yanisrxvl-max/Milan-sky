@@ -239,42 +239,31 @@ export default function Home() {
           </motion.div>
 
           <motion.div
-            key={`desc-${mode}`}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 1 }}
-            className={`mb-12 max-w-2xl mx-auto transition-all duration-700 ${isDay ? 'bg-white/10 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.05)] border border-white/20 p-5 md:p-6 rounded-3xl' : ''}`}
-          >
-            <p
-              className={`text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] leading-relaxed mx-auto ${isDay ? 'text-dark-500 drop-shadow-[0_2px_10px_rgba(255,255,255,0.8)]' : 'text-milan-text/70'}`}
-              dangerouslySetInnerHTML={{ __html: heroContent.desc }}
-            />
-          </motion.div>
-
-          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 1 }}
             className="flex flex-col sm:flex-row items-center gap-5 w-full sm:w-auto"
           >
-            <Link href={isDay ? "/login" : "/subscriptions"} className="w-full sm:w-auto">
-              <button className="w-full sm:w-auto group relative px-12 py-5 bg-gold rounded-full text-black font-bold tracking-widest uppercase text-[11px] hover:scale-105 active:scale-95 transition-all duration-500 outline-none gold-glow flex items-center justify-center gap-3 touch-manipulation min-h-[44px]">
-                {heroContent.btn1}
-                {isDay ? (
-                  <Crown size={14} className="group-hover:rotate-12 transition-transform" />
-                ) : (
-                  <div className="relative flex items-center justify-center w-[18px] h-[18px] rounded-full border-[1.5px] border-dark group-hover:bg-red-500 group-hover:border-red-500 transition-colors duration-300 overflow-hidden">
-                    <span className="text-[8px] font-black leading-[1] mt-px group-hover:text-white transition-colors duration-300">18</span>
-                    <div className="absolute top-1/2 left-1/2 w-full h-[1.5px] bg-white -translate-x-1/2 -translate-y-1/2 -rotate-45 origin-center scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
-                  </div>
-                )}
-              </button>
+            <Link
+              href={isDay ? "/login" : "/subscriptions"}
+              className="w-full sm:w-auto group relative px-12 py-5 bg-gold rounded-full text-black font-bold tracking-widest uppercase text-[11px] hover:scale-105 active:scale-95 transition-all duration-500 outline-none gold-glow flex items-center justify-center gap-3 touch-manipulation min-h-[44px]"
+            >
+              {heroContent.btn1}
+              {isDay ? (
+                <Crown size={14} className="group-hover:rotate-12 transition-transform" />
+              ) : (
+                <div className="relative flex items-center justify-center w-[18px] h-[18px] rounded-full border-[1.5px] border-dark group-hover:bg-red-500 group-hover:border-red-500 transition-colors duration-300 overflow-hidden">
+                  <span className="text-[8px] font-black leading-[1] mt-px group-hover:text-white transition-colors duration-300">18</span>
+                  <div className="absolute top-1/2 left-1/2 w-full h-[1.5px] bg-white -translate-x-1/2 -translate-y-1/2 -rotate-45 origin-center scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
+                </div>
+              )}
             </Link>
 
-            <Link href="/library" className="w-full sm:w-auto">
-              <button className="w-full sm:w-auto px-12 py-5 glass rounded-full text-milan-text font-bold tracking-widest uppercase text-[11px] hover:bg-white/10 hover:border-gold/30 active:scale-95 transition-all duration-500 flex items-center justify-center gap-3 group touch-manipulation min-h-[44px]">
-                {heroContent.btn2} <Play size={12} className="text-gold group-hover:translate-x-1 transition-transform" />
-              </button>
+            <Link
+              href="/library"
+              className="w-full sm:w-auto px-12 py-5 glass rounded-full text-milan-text font-bold tracking-widest uppercase text-[11px] hover:bg-white/10 hover:border-gold/30 active:scale-95 transition-all duration-500 flex items-center justify-center gap-3 group touch-manipulation min-h-[44px]"
+            >
+              {heroContent.btn2} <Play size={12} className="text-gold group-hover:translate-x-1 transition-transform" />
             </Link>
           </motion.div>
 
