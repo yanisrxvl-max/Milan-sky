@@ -23,10 +23,6 @@ export const metadata: Metadata = {
     type: 'website',
   },
   manifest: '/manifest.json',
-  icons: {
-    icon: '/images/milan_icon.png',
-    apple: '/apple-touch-icon.png',
-  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
