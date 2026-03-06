@@ -8,9 +8,9 @@ import { Upload, MessageSquare, Video, Settings, Users, Plus, X, Image as ImageI
 import { PremiumButton } from '@/components/ui/PremiumButton';
 import { ContentType, SubscriptionTier } from '@prisma/client';
 import toast from 'react-hot-toast';
-import { Target, Flag, Rocket } from 'lucide-react'; // Added icons for Evolution
+import { Target, Flag, Rocket, Landmark, TrendingUp, DollarSign, Wallet, ArrowUpRight, ShieldCheck, Building, Globe } from 'lucide-react'; // Added icons for Evolution and Empire
 
-type AdminTab = 'content' | 'requests' | 'payments' | 'quotidirty' | 'analytics' | 'users' | 'settings' | 'evolution';
+type AdminTab = 'content' | 'requests' | 'payments' | 'quotidirty' | 'analytics' | 'users' | 'settings' | 'evolution' | 'empire';
 
 export default function AdminDashboardPage() {
     return (
@@ -205,6 +205,7 @@ function AdminContent() {
     }
 
     const tabs = [
+        { id: 'empire', label: 'Empire', icon: <Landmark size={18} /> },
         { id: 'analytics', label: 'Analytiques', icon: <Info size={18} /> },
         { id: 'evolution', label: 'J-14 Évolution', icon: <Target size={18} /> },
         { id: 'content', label: 'Bibliothèque', icon: <Video size={18} /> },
@@ -650,6 +651,10 @@ function AdminContent() {
                                 </div>
                             )}
 
+                            {activeTab === 'empire' && (
+                                <EmpireDashboard />
+                            )}
+
                             {activeTab === 'quotidirty' && (
                                 <div className="p-10">
                                     <div className="flex items-center justify-between mb-12">
@@ -928,5 +933,173 @@ function MissionCard({ mission, onUpdate }: { mission: any, onUpdate: (id: strin
                 )}
             </div>
         </motion.div>
+    );
+}
+
+// ----- Empire Financial Dashboard Component -----
+
+function EmpireDashboard() {
+    return (
+        <div className="bg-dark-600/50 min-h-[800px] relative overflow-hidden">
+            {/* Luxurious Background FX */}
+            <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gold-dark/10 blur-[150px] rounded-full pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-dark-400/50 blur-[150px] rounded-full pointer-events-none" />
+            <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 pointer-events-none mix-blend-overlay" />
+
+            {/* Header Section */}
+            <div className="p-10 border-b border-white/[0.05] relative z-10">
+                <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-8">
+                    <div>
+                        <div className="flex items-center gap-3 mb-3 text-gold/60">
+                            <Landmark size={20} />
+                            <h3 className="text-[10px] uppercase font-bold tracking-[0.4em]">Milan Sky Holdings LLC</h3>
+                        </div>
+                        <h2 className="font-serif text-5xl md:text-7xl text-cream italic tracking-tighter">
+                            L&apos;<span className="gold-text">Empire</span>
+                        </h2>
+                    </div>
+                    <div className="text-right">
+                        <p className="text-[10px] text-white/40 uppercase tracking-[0.3em] font-medium mb-2">Net Worth Global (Estimé)</p>
+                        <p className="font-serif text-4xl md:text-5xl text-gold tabular-nums tracking-tight">€ 14<span className="text-white/30 text-3xl">,500,000</span></p>
+                        <div className="flex items-center justify-end gap-2 mt-2 text-green-400">
+                            <TrendingUp size={14} />
+                            <span className="text-xs font-bold tracking-widest">+ 1.2M ce trimestre</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Primary Asset Allocation Cards */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+                    {[
+                        { label: 'Trésorerie Actuelle', amount: '€ 2.1M', icon: <Wallet size={16} />, color: 'text-white' },
+                        { label: 'Valorisation MilanSky', amount: '€ 8.5M', icon: <Rocket size={16} />, color: 'text-gold' },
+                        { label: 'Portefeuille Immobilier', amount: '€ 3.4M', icon: <Building size={16} />, color: 'text-blue-400' },
+                        { label: 'Crypto & Placements', amount: '€ 500k', icon: <Globe size={16} />, color: 'text-purple-400' },
+                    ].map((asset, i) => (
+                        <div key={i} className="bg-dark-400/40 border border-white/[0.05] p-5 rounded-2xl hover:border-white/10 transition-all group">
+                            <div className="flex items-center gap-3 mb-3 opacity-50 group-hover:opacity-100 transition-opacity">
+                                <span className={asset.color}>{asset.icon}</span>
+                                <p className="text-[9px] uppercase tracking-widest text-white">{asset.label}</p>
+                            </div>
+                            <p className="font-mono text-xl text-cream">{asset.amount}</p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <div className="grid lg:grid-cols-3 gap-0 relative z-10 divide-y lg:divide-y-0 lg:divide-x divide-white/[0.05]">
+
+                {/* Real Estate Showcase */}
+                <div className="lg:col-span-2 p-10">
+                    <div className="flex items-center justify-between mb-8">
+                        <h4 className="font-serif text-2xl text-cream">Acquisitions Immobilières</h4>
+                        <button className="text-[10px] text-gold uppercase tracking-[0.2em] font-bold hover:text-white transition-colors">Explorer</button>
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-6">
+                        {/* Paris Property */}
+                        <div className="group relative rounded-3xl overflow-hidden aspect-[3/4] border border-white/5 cursor-pointer">
+                            <div className="absolute inset-0 bg-black/40 z-10 group-hover:bg-black/20 transition-all duration-700" />
+                            <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=2073&auto=format&fit=crop" alt="Paris" className="absolute inset-0 w-full h-full object-cover grayscale opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" />
+                            <div className="absolute inset-0 z-20 p-6 flex flex-col justify-end bg-gradient-to-t from-black via-black/50 to-transparent">
+                                <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur flex items-center justify-center text-white mb-3">🇫🇷</div>
+                                <h5 className="font-serif text-xl text-cream mb-1">Paris 8ème</h5>
+                                <p className="text-[10px] text-white/50 tracking-widest uppercase mb-3">Penthouse Triangle d&apos;Or</p>
+                                <p className="text-gold font-mono text-lg">€ 2.1M <span className="text-[8px] text-white/30">+14%</span></p>
+                            </div>
+                        </div>
+
+                        {/* LA Property */}
+                        <div className="group relative rounded-3xl overflow-hidden aspect-[3/4] border border-white/5 cursor-pointer">
+                            <div className="absolute inset-0 bg-black/40 z-10 group-hover:bg-black/20 transition-all duration-700" />
+                            <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=1974&auto=format&fit=crop" alt="LA" className="absolute inset-0 w-full h-full object-cover grayscale opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" />
+                            <div className="absolute inset-0 z-20 p-6 flex flex-col justify-end bg-gradient-to-t from-black via-black/50 to-transparent">
+                                <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur flex items-center justify-center text-white mb-3">🇺🇸</div>
+                                <h5 className="font-serif text-xl text-cream mb-1">Los Angeles</h5>
+                                <p className="text-[10px] text-white/50 tracking-widest uppercase mb-3">Villa Hollywood Hills</p>
+                                <p className="text-gold font-mono text-lg">$ 5.8M <span className="text-[8px] text-white/30">(Lease)</span></p>
+                            </div>
+                        </div>
+
+                        {/* Dubai Property */}
+                        <div className="group relative rounded-3xl overflow-hidden aspect-[3/4] border border-white/5 cursor-pointer">
+                            <div className="absolute inset-0 bg-black/40 z-10 group-hover:bg-black/20 transition-all duration-700" />
+                            <img src="https://images.unsplash.com/photo-1512453979436-d1532f12f939?q=80&w=2070&auto=format&fit=crop" alt="Dubai" className="absolute inset-0 w-full h-full object-cover grayscale opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" />
+                            <div className="absolute inset-0 z-20 p-6 flex flex-col justify-end bg-gradient-to-t from-black via-black/50 to-transparent">
+                                <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur flex items-center justify-center text-white mb-3">🇦🇪</div>
+                                <h5 className="font-serif text-xl text-cream mb-1">Dubaï</h5>
+                                <p className="text-[10px] text-white/50 tracking-widest uppercase mb-3">Appartement Marina</p>
+                                <p className="text-gold font-mono text-lg">€ 1.3M <span className="text-[8px] text-green-400">+22%</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Secure Banking & Transaction Flow */}
+                <div className="p-10 bg-dark-400/30">
+                    <div className="flex items-center gap-3 mb-8">
+                        <ShieldCheck size={20} className="text-gold" />
+                        <h4 className="font-serif text-2xl text-cream">Comptes & Flux</h4>
+                    </div>
+
+                    <div className="space-y-4 mb-10">
+                        {/* Elite Bank Account */}
+                        <div className="bg-gradient-to-br from-dark-300 to-black border border-white/10 rounded-2xl p-5 relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                                <Landmark size={64} />
+                            </div>
+                            <div className="flex justify-between items-start mb-6">
+                                <div>
+                                    <p className="text-[8px] uppercase tracking-widest text-gold/60 mb-1">Compte Principal</p>
+                                    <p className="text-sm font-bold text-cream">Société Générale Elite</p>
+                                </div>
+                                <div className="w-8 h-5 bg-white/10 rounded overflow-hidden flex" />
+                            </div>
+                            <p className="font-mono text-2xl text-white tracking-tight">€ 1,845,200.00</p>
+                            <p className="text-[9px] font-mono text-white/30 mt-2">**** **** **** 0089</p>
+                        </div>
+
+                        {/* Offshore Account */}
+                        <div className="bg-gradient-to-br from-dark-300 to-black border border-white/5 rounded-2xl p-5 relative overflow-hidden">
+                            <div className="flex justify-between items-start mb-6">
+                                <div>
+                                    <p className="text-[8px] uppercase tracking-widest text-white/40 mb-1">Holding Offshore</p>
+                                    <p className="text-sm font-bold text-white/80">UBS Switzerland (CHF)</p>
+                                </div>
+                            </div>
+                            <p className="font-mono text-xl text-white/80 tracking-tight">₣ 420,500.00</p>
+                        </div>
+                    </div>
+
+                    <div className="mt-8">
+                        <h5 className="text-[10px] uppercase font-bold tracking-[0.2em] text-white/30 mb-6">Mouvements Récents</h5>
+                        <div className="space-y-5">
+                            {[
+                                { title: 'Virement MilanSky App', date: 'Aujourd\'hui', amount: '+ € 45,000', positive: true },
+                                { title: 'Architecte Los Angeles', date: 'Hier', amount: '- $ 12,000', positive: false },
+                                { title: 'Dividendes SASU', date: '28 Fév', amount: '+ € 250,000', positive: true },
+                                { title: 'Dîner d\'Affaires (Paris)', date: '27 Fév', amount: '- € 1,450', positive: false },
+                                { title: 'Achat Rolex Daytona', date: '14 Fév', amount: '- € 35,000', positive: false },
+                                { title: 'Royalties', date: '01 Fév', amount: '+ € 8,200', positive: true },
+                            ].map((tx, i) => (
+                                <div key={i} className="flex items-center justify-between pb-4 border-b border-white/[0.03] last:border-0 last:pb-0 group">
+                                    <div className="flex items-center gap-3">
+                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${tx.positive ? 'bg-green-500/10 text-green-400' : 'bg-white/5 text-white/40'}`}>
+                                            {tx.positive ? <TrendingUp size={12} /> : <DollarSign size={12} />}
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-cream font-medium group-hover:text-gold transition-colors">{tx.title}</p>
+                                            <p className="text-[9px] text-white/30 uppercase tracking-widest">{tx.date}</p>
+                                        </div>
+                                    </div>
+                                    <span className={`text-xs font-mono font-bold ${tx.positive ? 'text-green-400' : 'text-white/60'}`}>{tx.amount}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     );
 }
