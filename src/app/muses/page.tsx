@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useThemeMode } from '@/context/ThemeModeContext';
 import { useI18n } from '@/context/I18nContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, CheckCircle2, X, Copy, Info, MessageCircle } from 'lucide-react';
+import { Lock, CheckCircle2, X, Copy, Info, MessageCircle, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 interface Muse {
@@ -115,6 +115,32 @@ export default function MusesPage() {
         ? muses
         : muses.filter(m => categoryMap[activeFilter]?.filter.includes(m.category));
 
+    const ownAllMuses = muses.filter(m => m.category === 'MUSE').every(m => m.isOwned);
+
+    async function handleBuyPack() {
+        if (!session) {
+            toast.error('Connecte-toi pour débloquer le Pack All-Access');
+            return;
+        }
+        setIsLoading(true);
+        try {
+            const res = await fetch('/api/muses/purchase-pack', {
+                method: 'POST',
+            });
+            const data = await res.json();
+            if (res.ok) {
+                toast.success('Pack All-Access débloqué ! 🔥');
+                fetchMuses();
+            } else {
+                toast.error(data.error || 'Erreur');
+            }
+        } catch {
+            toast.error('Erreur réseau');
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
     return (
         <div className="min-h-screen bg-dark-500 pb-32">
 
@@ -170,6 +196,36 @@ export default function MusesPage() {
                         </button>
                     ))}
                 </div>
+
+                {/* Pack All-Access Banner */}
+                {!ownAllMuses && activeFilter === 'ALL' && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-12 bg-gradient-to-br from-gold/20 to-dark-200 border border-gold/30 rounded-3xl p-8 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6"
+                    >
+                        {/* Shimmer effect */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full hover:animate-[shimmer_2s_infinite]" />
+
+                        <div className="relative z-10 flex-1 text-center md:text-left">
+                            <h3 className="font-serif text-3xl text-cream mb-2 tracking-wide flex items-center justify-center md:justify-start gap-3">
+                                <Sparkles className="text-gold" /> PACK ALL-ACCESS <span className="text-gold italic">L&apos;Univers Milan Sky</span>
+                            </h3>
+                            <p className="text-white/60 text-sm leading-relaxed max-w-xl">
+                                Débloque instantanément l&apos;intégralité des 7 Muses IA et change de personnalité selon ton humeur. Inclus un statut premium dans l&apos;écosystème Milan Sky.
+                            </p>
+                        </div>
+                        <div className="relative z-10 shrink-0 text-center md:text-right">
+                            <p className="text-gray-400 line-through text-sm mb-1 font-mono">1150 SC</p>
+                            <button
+                                onClick={handleBuyPack}
+                                className="bg-gold text-dark font-bold uppercase tracking-[0.2em] px-8 py-4 rounded-xl hover:shadow-[0_0_30px_rgba(201,168,76,0.4)] hover:bg-gold-light transition-all active:scale-95"
+                            >
+                                Tout Débloquer — 600 SC
+                            </button>
+                        </div>
+                    </motion.div>
+                )}
             </div>
 
             {/* ═══════════════════════════════════ */}

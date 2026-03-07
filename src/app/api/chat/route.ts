@@ -74,6 +74,11 @@ export async function GET() {
       },
     });
 
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { activeMuseId: true }
+    });
+
     const sub = await prisma.subscription.findUnique({
       where: { userId: session.user.id },
     });
@@ -85,7 +90,8 @@ export async function GET() {
       todayCount,
       dailyLimit: limit,
       remaining: Math.max(0, limit - todayCount),
-      conversationId: conversation.id
+      conversationId: conversation.id,
+      activeMuseId: user?.activeMuseId || null
     });
   } catch (error) {
     logger.error('Chat fetch error', { error: String(error) });
@@ -201,8 +207,18 @@ export async function POST(request: NextRequest) {
               where: { id: { in: activeIds } }
             });
 
-            const personalityInstructions = activeItems.map(item => `INSTRUCTION [${item.category}]: ${item.prompt}`).join('\n\n');
-            systemPrompt += `\n\nACTIONS DE PERSONNALITÉ ACTIVES :\n${personalityInstructions}\n\nIMPORTANT : Priorise ces instructions de personnalité au-dessus du ton de base si elles se contredisent légèrement.`;
+            // 1. Core Logic Override: If an active Muse (character) is found, it overwrites the base prompt completely.
+            const activeMuse = activeItems.find(item => item.category === 'MUSE');
+            if (activeMuse) {
+              systemPrompt = `INSTRUCTION CORE (MUSE): ${activeMuse.prompt}\n\nToutes les instructions de personnalité précédentes sont annulées. Tu dois STRICTEMENT respecter ce programme.`;
+            }
+
+            // 2. Supplementary instructions (Elixirs, Mood Packs)
+            const supplementaryItems = activeItems.filter(item => item.category !== 'MUSE');
+            if (supplementaryItems.length > 0) {
+              const supplementaryInstructions = supplementaryItems.map(item => `INSTRUCTION SUPPLÉMENTAIRE [${item.category}]: ${item.prompt}`).join('\n\n');
+              systemPrompt += `\n\nACTIONS DE PERSONNALITÉ ADDITIONNELLES :\n${supplementaryInstructions}`;
+            }
           }
         }
 

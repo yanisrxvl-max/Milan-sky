@@ -35,6 +35,7 @@ export default function ChatInterface() {
     const [dailyLimit, setDailyLimit] = useState(5);
     const [showTipModal, setShowTipModal] = useState(false);
     const [tipAmount, setTipAmount] = useState(50);
+    const [activeMuseId, setActiveMuseId] = useState<string | null>(null);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const userTier = session?.user?.subscription?.tier || 'VOYEUR';
@@ -62,6 +63,7 @@ export default function ChatInterface() {
                 setMessages(data.messages);
                 setRemaining(data.remaining);
                 setDailyLimit(data.dailyLimit);
+                setActiveMuseId(data.activeMuseId);
             }
         } catch (e) {
             console.error(e);
@@ -177,10 +179,17 @@ export default function ChatInterface() {
                     <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-dark-300" />
                 </div>
                 <div className="flex-1">
-                    <h2 className="font-serif text-cream text-lg leading-tight">
-                        {isDay ? "Milan Lumina" : "Milan Sky"}
-                    </h2>
-                    <p className="text-white/40 text-[10px] uppercase tracking-[0.2em]">
+                    <div className="flex items-center gap-2">
+                        <h2 className="font-serif text-cream text-lg leading-tight">
+                            {isDay ? "Milan Lumina" : "Milan Sky"}
+                        </h2>
+                        {activeMuseId && !isDay && (
+                            <span className="px-2 py-0.5 rounded-full bg-gold/10 border border-gold/30 text-[9px] text-gold uppercase tracking-widest flex items-center gap-1">
+                                <Sparkles size={8} /> Programme Actif
+                            </span>
+                        )}
+                    </div>
+                    <p className="text-white/40 text-[10px] uppercase tracking-[0.2em] mt-0.5">
                         {isDay ? t('chat.companion') : t('chat.creator')}
                     </p>
                 </div>
