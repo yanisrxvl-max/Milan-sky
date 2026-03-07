@@ -12,7 +12,8 @@ export default function WelcomeOverlay() {
     const { toggleMode } = useThemeMode();
 
     useEffect(() => {
-        const visited = localStorage.getItem('milan_sky_visited');
+        // Use sessionStorage instead of localStorage so it appears on every new visit/tab
+        const visited = sessionStorage.getItem('milan_sky_visited');
         if (!visited) {
             setShow(true);
             document.body.style.overflow = 'hidden';
@@ -20,9 +21,7 @@ export default function WelcomeOverlay() {
     }, []);
 
     const handleSelectDay = () => {
-        localStorage.setItem('milan_sky_visited', 'true');
-        // Theme is DAY by default on load, so no need to toggle if it's already day, 
-        // but just to be sure we don't trigger transition unnecessarily.
+        sessionStorage.setItem('milan_sky_visited', 'true');
         setShow(false);
         document.body.style.overflow = 'unset';
     };
@@ -32,7 +31,7 @@ export default function WelcomeOverlay() {
     };
 
     const confirmAge = () => {
-        localStorage.setItem('milan_sky_visited', 'true');
+        sessionStorage.setItem('milan_sky_visited', 'true');
         localStorage.setItem('milan_age_verified', 'true'); // They clicked Night, so they see +18 and accept.
 
         // Trigger the theme switch to Night
@@ -70,17 +69,17 @@ export default function WelcomeOverlay() {
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 1, delay: 0.5 }}
-                            className="absolute top-12 md:top-20 text-center z-20 px-6"
+                            className="absolute top-8 md:top-20 text-center z-20 px-4 w-full"
                         >
-                            <h1 className="font-serif text-3xl md:text-5xl text-cream tracking-wide mb-3">
+                            <h1 className="font-serif text-2xl md:text-5xl text-cream tracking-wide mb-2 md:mb-3">
                                 <span className="italic font-light">Choisis ton</span> Univers
                             </h1>
-                            <p className="text-white/40 text-sm md:text-base max-w-lg mx-auto uppercase tracking-widest font-light">
+                            <p className="text-white/40 text-[10px] md:text-base max-w-[280px] md:max-w-lg mx-auto uppercase tracking-widest font-light">
                                 Le divertissement, l&apos;intelligence émotionnelle, ou le fruit défendu.
                             </p>
                         </motion.div>
 
-                        <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-center h-full gap-8 md:gap-4 px-6 pt-24 md:pt-0">
+                        <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col md:flex-row items-stretch justify-center h-full gap-4 md:gap-4 px-4 pt-32 pb-16 md:py-0 overflow-y-auto">
 
                             {/* DAY MODE CHOICE */}
                             <motion.div
@@ -90,20 +89,20 @@ export default function WelcomeOverlay() {
                                 onHoverStart={() => setHoveredSide('DAY')}
                                 onHoverEnd={() => setHoveredSide(null)}
                                 onClick={handleSelectDay}
-                                className="flex-1 w-full flex flex-col items-center justify-center cursor-pointer group p-8 rounded-3xl transition-all duration-700 hover:bg-white/[0.02]"
+                                className="flex-1 w-full flex flex-col items-center justify-center cursor-pointer group p-4 md:p-8 rounded-[2rem] md:rounded-3xl transition-all duration-700 bg-white/[0.03] md:bg-transparent hover:bg-white/[0.05] border border-white/5 md:border-transparent active:scale-[0.98] md:active:scale-100"
                             >
-                                <div className="relative w-32 h-32 md:w-48 md:h-48 mb-8 drop-shadow-[0_0_30px_rgba(201,168,76,0.2)] group-hover:drop-shadow-[0_0_60px_rgba(201,168,76,0.6)] transition-all duration-700 group-hover:scale-105">
-                                    <div className="absolute inset-0 bg-gold/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                                <div className="relative w-20 h-20 md:w-48 md:h-48 mb-3 md:mb-8 drop-shadow-[0_0_20px_rgba(201,168,76,0.3)] md:drop-shadow-[0_0_30px_rgba(201,168,76,0.2)] group-hover:drop-shadow-[0_0_60px_rgba(201,168,76,0.6)] transition-all duration-700 group-hover:scale-105 pointer-events-none">
+                                    <div className="absolute inset-0 bg-gold/10 rounded-full blur-3xl opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                                     <img src="/images/milan_logo_transparent.png" alt="Pomme Intacte" className="w-full h-full object-contain relative z-10" />
                                 </div>
-                                <div className="text-center">
-                                    <h2 className="text-2xl md:text-3xl font-serif text-gold mb-3 flex items-center justify-center gap-2">
-                                        <Sparkles size={20} className="text-gold" />
+                                <div className="text-center pointer-events-none">
+                                    <h2 className="text-lg md:text-3xl font-serif text-gold mb-1 md:mb-3 flex items-center justify-center gap-2">
+                                        <Sparkles size={16} className="text-gold md:w-5 md:h-5" />
                                         Le Sanctuaire
                                     </h2>
-                                    <h3 className="text-xs tracking-[0.3em] uppercase text-white/60 mb-4 font-bold">Lumina — Mode Jour</h3>
-                                    <p className="text-white/40 text-sm leading-relaxed max-w-sm mx-auto group-hover:text-white/70 transition-colors">
-                                        Un espace bienveillant dédié à l&apos;évolution personnelle. Lifestyle, confidences, et accompagnement psychologique.
+                                    <h3 className="text-[9px] md:text-xs tracking-[0.3em] uppercase text-white/60 mb-2 md:mb-4 font-bold">Lumina — Mode Jour</h3>
+                                    <p className="hidden md:block text-white/40 text-[11px] md:text-sm leading-relaxed max-w-[260px] md:max-w-sm mx-auto md:group-hover:text-white/70 transition-colors">
+                                        Un espace bienveillant dédié à l&apos;évolution personnelle. Lifestyle, et confidences.
                                     </p>
                                 </div>
                             </motion.div>
@@ -113,7 +112,7 @@ export default function WelcomeOverlay() {
                                 initial={{ opacity: 0, scaleY: 0 }}
                                 animate={{ opacity: 1, scaleY: 1 }}
                                 transition={{ duration: 1.5, delay: 1 }}
-                                className="hidden md:block w-px h-[40vh] bg-gradient-to-b from-transparent via-white/10 to-transparent"
+                                className="hidden md:block w-px h-[40vh] bg-gradient-to-b from-transparent via-white/10 to-transparent shrink-0"
                             />
 
                             {/* NIGHT MODE CHOICE */}
@@ -124,20 +123,20 @@ export default function WelcomeOverlay() {
                                 onHoverStart={() => setHoveredSide('NIGHT')}
                                 onHoverEnd={() => setHoveredSide(null)}
                                 onClick={handleSelectNight}
-                                className="flex-1 w-full flex flex-col items-center justify-center cursor-pointer group p-8 rounded-3xl transition-all duration-700 hover:bg-white/[0.02]"
+                                className="flex-1 w-full flex flex-col items-center justify-center cursor-pointer group p-4 md:p-8 rounded-[2rem] md:rounded-3xl transition-all duration-700 bg-white/[0.03] md:bg-transparent hover:bg-white/[0.05] border border-red-500/10 md:border-transparent active:scale-[0.98] md:active:scale-100"
                             >
-                                <div className="relative w-32 h-32 md:w-48 md:h-48 mb-8 drop-shadow-[0_0_30px_rgba(255,0,0,0.1)] group-hover:drop-shadow-[0_0_60px_rgba(255,0,0,0.4)] transition-all duration-700 group-hover:scale-105">
-                                    <div className="absolute inset-0 bg-red-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                                <div className="relative w-20 h-20 md:w-48 md:h-48 mb-3 md:mb-8 drop-shadow-[0_0_20px_rgba(255,0,0,0.3)] md:drop-shadow-[0_0_30px_rgba(255,0,0,0.1)] group-hover:drop-shadow-[0_0_60px_rgba(255,0,0,0.4)] transition-all duration-700 group-hover:scale-105 pointer-events-none">
+                                    <div className="absolute inset-0 bg-red-500/10 rounded-full blur-3xl opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                                     <img src="/images/milan_logo_bitten.png" alt="Pomme Croquée" className="w-full h-full object-contain relative z-10" />
                                 </div>
-                                <div className="text-center">
-                                    <h2 className="text-2xl md:text-3xl font-serif text-[#ff4d4d] mb-3 flex items-center justify-center gap-2">
+                                <div className="text-center pointer-events-none">
+                                    <h2 className="text-lg md:text-3xl font-serif text-[#ff4d4d] mb-1 md:mb-3 flex items-center justify-center gap-2">
                                         Le Fruit Défendu
-                                        <Flame size={20} className="text-[#ff4d4d]" />
+                                        <Flame size={16} className="text-[#ff4d4d] md:w-5 md:h-5" />
                                     </h2>
-                                    <h3 className="text-xs tracking-[0.3em] uppercase text-white/60 mb-4 font-bold">Noctua — Mode Nuit</h3>
-                                    <p className="text-white/40 text-sm leading-relaxed max-w-sm mx-auto group-hover:text-white/70 transition-colors">
-                                        Succombez à la tentation. Séduction, contenu exclusif interactif et personnages sulfureux. Réservé aux initiés.
+                                    <h3 className="text-[9px] md:text-xs tracking-[0.3em] uppercase text-white/60 mb-2 md:mb-4 font-bold">Noctua — Mode Nuit</h3>
+                                    <p className="hidden md:block text-white/40 text-[11px] md:text-sm leading-relaxed max-w-[260px] md:max-w-sm mx-auto md:group-hover:text-white/70 transition-colors">
+                                        Succombez à la tentation. Séduction, et contenu exclusif & interactif.
                                     </p>
                                 </div>
                             </motion.div>
@@ -148,9 +147,9 @@ export default function WelcomeOverlay() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 1, delay: 2 }}
-                            className="absolute bottom-8 md:bottom-12 text-center z-20 w-full"
+                            className="absolute bottom-4 md:bottom-12 text-center z-20 w-full bg-gradient-to-t from-black via-black/80 to-transparent p-4"
                         >
-                            <p className="text-[10px] text-white/20 uppercase tracking-[0.3em]">Vous pourrez changer de mode à tout moment via le menu.</p>
+                            <p className="text-[8px] md:text-[10px] text-white/40 uppercase tracking-[0.3em] font-bold">Vous pourrez changer de mode à tout moment via le menu.</p>
                         </motion.div>
                     </>
                 ) : (
