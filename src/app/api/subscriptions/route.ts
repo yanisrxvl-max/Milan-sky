@@ -22,10 +22,10 @@ export async function GET() {
     return NextResponse.json({
       subscription: subscription
         ? {
-            tier: subscription.tier,
-            status: subscription.status,
-            currentPeriodEnd: subscription.currentPeriodEnd,
-          }
+          tier: subscription.tier,
+          status: subscription.status,
+          currentPeriodEnd: subscription.currentPeriodEnd,
+        }
         : null,
       plans: SUBSCRIPTION_PLANS,
     });
@@ -78,8 +78,8 @@ export async function POST(request: NextRequest) {
       email: session.user.email,
       tier: plan.tier,
       priceAmount: plan.price,
-      successUrl: `${appUrl}/dashboard?subscribed=true&tier=${plan.tier}`,
-      cancelUrl: `${appUrl}/subscriptions?cancelled=true`,
+      successUrl: `${appUrl}/success?type=subscription&tier=${plan.tier}`,
+      cancelUrl: `${appUrl}/cancel?type=subscription`,
     });
 
     logger.info('Subscription checkout created', {
@@ -88,8 +88,11 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ url: checkoutSession.url });
-  } catch (error) {
+  } catch (error: any) {
     logger.error('Subscription error', { error: String(error) });
+    if (error?.message?.includes('Invalid API Key')) {
+      return NextResponse.json({ error: 'Clé d\'API Stripe non configurée (.env)' }, { status: 500 });
+    }
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
   }
 }

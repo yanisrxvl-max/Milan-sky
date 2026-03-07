@@ -11,6 +11,21 @@ export async function POST(request: NextRequest) {
   const headersList = headers();
   const signature = headersList.get('stripe-signature');
 
+  const POINTS_MULTIPLIER = {
+    'VOYEUR': 1,
+    'INITIÉ': 1.5,
+    'INITIE': 1.5,
+    'PRIVILÈGE': 2,
+    'PRIVILEGE': 2,
+    'SKYCLUB': 3
+  };
+
+  const getPoints = (euroAmount: number, tier?: string) => {
+    const t = tier || 'VOYEUR';
+    const multiplier = POINTS_MULTIPLIER[t as keyof typeof POINTS_MULTIPLIER] || 1;
+    return Math.floor(euroAmount * multiplier * 10); // 10 base points per euro
+  };
+
   if (!signature) {
     return NextResponse.json({ error: 'Missing signature' }, { status: 400 });
   }
@@ -59,6 +74,13 @@ export async function POST(request: NextRequest) {
             },
           });
 
+          // Reward loyalty points
+          const euroAmount = (session.amount_total || 0) / 100;
+          await prisma.user.update({
+            where: { id: metadata.userId },
+            data: { skyPoints: { increment: getPoints(euroAmount) } },
+          });
+
           logger.info('SkyCoins credited via webhook', {
             userId: metadata.userId,
             coins,
@@ -105,10 +127,70 @@ export async function POST(request: NextRequest) {
             },
           });
 
+          // Reward loyalty points
+          const euroAmount = (session.amount_total || 0) / 100;
+          await prisma.user.update({
+            where: { id: metadata.userId },
+            data: { skyPoints: { increment: getPoints(euroAmount, tier) } },
+          });
+
           logger.info('Subscription activated via webhook', {
             userId: metadata.userId,
             tier,
           });
+        }
+        break;
+      }
+
+      case 'invoice.paid': {
+        const invoice = event.data.object as Stripe.Invoice;
+        const subscriptionId = invoice.subscription as string;
+
+        if (subscriptionId) {
+          // Stripe periods are in seconds (UNIX timestamp)
+          const lines = invoice.lines.data;
+          let periodEnd = new Date();
+          if (lines.length > 0 && lines[0].period) {
+            periodEnd = new Date(lines[0].period.end * 1000);
+          } else {
+            // Fallback
+            periodEnd = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+          }
+
+          await prisma.subscription.updateMany({
+            where: { stripeSubscriptionId: subscriptionId },
+            data: {
+              status: 'ACTIVE',
+              currentPeriodEnd: periodEnd
+            },
+          });
+
+          // Record renewal transaction
+          const existingSub = await prisma.subscription.findFirst({
+            where: { stripeSubscriptionId: subscriptionId }
+          });
+
+          if (existingSub) {
+            await prisma.transaction.create({
+              data: {
+                userId: existingSub.userId,
+                type: 'SUBSCRIPTION_PAYMENT',
+                amount: 0,
+                euroAmount: (invoice.amount_paid || 0) / 100,
+                stripePaymentId: invoice.payment_intent as string || invoice.id,
+                description: `Renouvellement Abonnement ${existingSub.tier}`,
+              },
+            });
+
+            // Reward loyalty points
+            const euroAmount = (invoice.amount_paid || 0) / 100;
+            await prisma.user.update({
+              where: { id: existingSub.userId },
+              data: { skyPoints: { increment: getPoints(euroAmount, existingSub.tier) } },
+            });
+          }
+
+          logger.info('Subscription renewed (invoice.paid)', { subscriptionId, periodEnd });
         }
         break;
       }

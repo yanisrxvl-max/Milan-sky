@@ -5,9 +5,8 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PremiumButton } from '@/components/ui/PremiumButton';
-import { PaymentBridgeModal } from '@/components/PaymentBridgeModal';
 import { useI18n } from '@/context/I18nContext';
-import { Crown, Sparkles, Trophy, Zap, Gift, CheckCircle2, Star, Shield, Play, Ticket } from 'lucide-react';
+import { Crown, Sparkles, Trophy, Zap, Gift, CheckCircle2, Star, Shield, Play, Ticket, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const PACKS = [
@@ -37,8 +36,7 @@ function SkyCoinsContent() {
     const [userRank, setUserRank] = useState<any>(null);
     const [rewards, setRewards] = useState<any[]>([]);
     const [claimingDaily, setClaimingDaily] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedPack, setSelectedPack] = useState<typeof PACKS[0] | null>(null);
+    const [loadingPack, setLoadingPack] = useState<string | null>(null);
 
     useEffect(() => {
         if (session) {
@@ -145,13 +143,30 @@ function SkyCoinsContent() {
         }
     };
 
-    function handleBuyPack(pack: typeof PACKS[0]) {
+    async function handleBuyPack(pack: typeof PACKS[0]) {
         if (!session) {
             router.push('/register');
             return;
         }
-        setSelectedPack(pack);
-        setIsModalOpen(true);
+
+        setLoadingPack(pack.id);
+        try {
+            const res = await fetch('/api/skycoins', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ packId: pack.id }),
+            });
+            const data = await res.json();
+            if (res.ok && data.url) {
+                window.location.href = data.url;
+            } else {
+                toast.error(data.error || 'Erreur lors de la redirection');
+            }
+        } catch (err) {
+            toast.error('Erreur de connexion');
+        } finally {
+            setLoadingPack(null);
+        }
     }
 
     return (
@@ -350,26 +365,24 @@ function SkyCoinsContent() {
                                 {pack.name}
                             </h3>
 
-                            <div className="flex flex-col items-center mb-8">
+                            <div className="flex flex-col items-center mb-4">
                                 <p className="font-serif text-4xl gold-text mb-2 tracking-tight">{pack.coins} SC</p>
                                 <p className="text-white/60 text-sm font-light">{pack.price}</p>
                             </div>
 
-                            <PremiumButton variant={pack.popular ? 'gold' : 'outline'} fullWidth className="!py-3 uppercase text-[10px] tracking-widest mt-auto">Sélectionner</PremiumButton>
+                            <PremiumButton
+                                onClick={() => handleBuyPack(pack)}
+                                disabled={loadingPack === pack.id}
+                                variant={pack.popular ? 'gold' : 'outline'}
+                                fullWidth
+                                className="!py-3 uppercase text-[10px] tracking-widest mt-auto z-20 relative"
+                            >
+                                {loadingPack === pack.id ? <Loader2 size={16} className="animate-spin mx-auto" /> : 'Sélectionner'}
+                            </PremiumButton>
                         </motion.div>
                     ))}
                 </div>
             </div>
-
-            {selectedPack && (
-                <PaymentBridgeModal
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    tierName={`${selectedPack.name} (${selectedPack.coins} SC)`}
-                    price={selectedPack.price}
-                    type="skycoins"
-                />
-            )}
 
             {/* Multiplier Info Card */}
             <div className="max-w-3xl mx-auto card-premium !p-8 border-gold/20 flex flex-col md:flex-row gap-8 items-center bg-[url('/images/noise.png')]">
@@ -390,6 +403,6 @@ function SkyCoinsContent() {
                 </div>
             </div>
 
-        </div>
+        </div >
     );
 }

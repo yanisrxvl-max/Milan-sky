@@ -45,6 +45,8 @@ interface Profile {
     description: string | null;
     createdAt: string;
   }>;
+  skyPoints: number;
+  proximityGauge: number;
 }
 
 const TIER_DISPLAY: Record<string, { icon: React.ReactNode; color: string; label: string }> = {
@@ -186,6 +188,12 @@ function DashboardContent() {
 
   const tier = profile.subscription ? TIER_DISPLAY[profile.subscription.tier] : null;
 
+  const getBalanceColor = (balance: number) => {
+    if (balance === 0) return 'bg-red-500/10 border-red-500/30 text-red-500 hover:bg-red-500 hover:text-white shadow-[0_0_15px_rgba(255,0,0,0.2)]';
+    if (balance < 50) return 'bg-orange-500/10 border-orange-500/30 text-orange-500 hover:bg-orange-500 hover:text-white shadow-[0_0_15px_rgba(249,115,22,0.2)]';
+    return 'bg-gold/10 border-gold/30 text-gold hover:bg-gold hover:text-dark shadow-[0_0_15px_rgba(201,168,76,0.2)]';
+  };
+
   return (
     <div className="page-container max-w-5xl mx-auto px-4 py-8 pt-28 pb-32">
       {/* PROFILE HEADER (GLASSMORPHISM PREMIUM) */}
@@ -243,7 +251,7 @@ function DashboardContent() {
                 </Link>
               )}
 
-              <Link href="/skycoins" className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] uppercase font-bold tracking-widest bg-gold/10 border border-gold/30 text-gold hover:bg-gold hover:text-dark transition-all shadow-[0_0_15px_rgba(201,168,76,0.2)]">
+              <Link href="/skycoins" className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] uppercase font-bold tracking-widest transition-all ${getBalanceColor(profile.skyCoinsBalance)}`}>
                 <AnimatedCounter value={profile.skyCoinsBalance} /> SC
               </Link>
 
@@ -408,6 +416,51 @@ function DashboardContent() {
                     </div>
                     <ChevronRight size={14} className="text-white/20 group-hover:translate-x-1 transition-transform" />
                   </Link>
+                </div>
+              </div>
+
+              {/* Loyalty & Gamification Widget */}
+              <div className="card-premium md:col-span-2 border-dashed border-white/10">
+                <h3 className="font-serif text-xl text-cream mb-6 flex items-center justify-between">
+                  <div className="flex flex-row items-center gap-2"><Trophy size={18} className="text-gold" /> Jauge de Fidélité</div>
+                  <span className="text-xs font-mono text-gold bg-gold/10 px-3 py-1 rounded-full border border-gold/20">{profile.skyPoints} SkyPoints</span>
+                </h3>
+
+                <div className="space-y-6">
+                  {/* Proximity Gauge */}
+                  <div>
+                    <div className="flex justify-between text-xs mb-2">
+                      <span className="text-white/40 uppercase tracking-widest font-bold">Proximité avec l'IA</span>
+                      <span className="text-pink-500 font-mono">{profile.proximityGauge}%</span>
+                    </div>
+                    <div className="w-full bg-dark-400 rounded-full h-2 overflow-hidden border border-white/5">
+                      <motion.div
+                        className="h-full bg-gradient-to-r from-pink-900 to-pink-500"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${profile.proximityGauge}%` }}
+                        transition={{ duration: 1, ease: 'easeOut' }}
+                      />
+                    </div>
+                    <p className="text-[10px] text-white/30 uppercase tracking-widest mt-2 text-right">À 100% : 1 Audio Secret débloqué</p>
+                  </div>
+
+                  {/* Archives Floues (FOMO) */}
+                  <div className="mt-8">
+                    <h4 className="text-xs uppercase tracking-widest text-white/50 mb-4 font-bold">Archives Manquées (FOMO)</h4>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      {[1, 2, 3, 4].map((i) => (
+                        <div key={i} className="relative aspect-[3/4] rounded-xl overflow-hidden group border border-white/5 cursor-pointer">
+                          <div className="absolute inset-0 bg-dark blur-md z-0" style={{ backgroundImage: "url('/images/placeholders/blur-bg.jpg')", backgroundSize: 'cover' }} />
+                          <div className="absolute inset-0 bg-black/60 backdrop-blur-xl z-10 flex flex-col items-center justify-center p-2 text-center group-hover:bg-black/40 transition-colors">
+                            <span className="text-[9px] uppercase tracking-widest text-white/40 mb-2">Exclusivité passée</span>
+                            <div className="px-3 py-1.5 rounded-full bg-gold/20 text-gold text-[10px] border border-gold/30 font-bold group-hover:scale-110 transition-transform">
+                              🔓 100 SC
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

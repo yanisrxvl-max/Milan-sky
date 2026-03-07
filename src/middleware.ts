@@ -6,6 +6,21 @@ const protectedRoutes = ['/dashboard', '/chat', '/private-requests', '/library']
 const authRoutes = ['/login', '/register'];
 const adminRoutes = ['/admin'];
 
+const TIER_LEVELS = {
+  'NONE': 0,
+  'VOYEUR': 1,
+  'INITIE': 2,
+  'PRIVILEGE': 3,
+  'SKYCLUB': 4,
+};
+
+// Define minimum tier required for specific routes
+const routeRequirements: Record<string, number> = {
+  '/chat': 1, // Accessible from VOYEUR
+  '/library': 1, // Accessible from VOYEUR
+  '/private-requests': 3, // Requires PRIVILEGE or higher
+};
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -43,6 +58,27 @@ export async function middleware(request: NextRequest) {
       const loginUrl = new URL('/login', request.url);
       loginUrl.searchParams.set('callbackUrl', pathname);
       return NextResponse.redirect(loginUrl);
+    }
+
+    // TIER CHECK FOR PREMIUM ROUTES (Zero-Leak Logic)
+    let requiredTier = 0;
+    for (const [route, level] of Object.entries(routeRequirements)) {
+      if (pathname.startsWith(route)) {
+        requiredTier = level;
+        break;
+      }
+    }
+
+    if (requiredTier > 0) {
+      const userTier = token.subscription?.tier as keyof typeof TIER_LEVELS | undefined;
+      const userLevel = userTier ? TIER_LEVELS[userTier] || 0 : 0;
+
+      if (userLevel < requiredTier) {
+        // User does not have high enough tier, redirect to subscriptions
+        const upgradeUrl = new URL('/subscriptions', request.url);
+        upgradeUrl.searchParams.set('reason', 'upgrade_required');
+        return NextResponse.redirect(upgradeUrl);
+      }
     }
   }
 

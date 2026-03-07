@@ -46,6 +46,8 @@ model User {
 
   // Gamification & Loyalty
   totalSkyCoinsEarned Int   @default(0)
+  skyPoints           Int   @default(0)
+  proximityGauge      Int   @default(0)
   dailyLogins         DailyLogin[]
   missionCompletions  MissionCompletion[]
 

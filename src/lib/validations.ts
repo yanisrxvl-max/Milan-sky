@@ -47,7 +47,7 @@ export const chatMessageSchema = z.object({
 });
 
 export const skycoinsPurchaseSchema = z.object({
-  packId: z.enum(['pack_35', 'pack_100', 'pack_250', 'pack_600']),
+  packId: z.enum(['starter', 'plus', 'premium', 'vip']),
 });
 
 export const subscriptionSchema = z.object({

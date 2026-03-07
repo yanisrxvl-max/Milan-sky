@@ -5,11 +5,12 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { PremiumButton } from '@/components/ui/PremiumButton';
-import { PaymentBridgeModal } from '@/components/PaymentBridgeModal';
-import { CheckCircle2, Shield, Zap, Info, Clock } from 'lucide-react';
+import { CheckCircle2, Shield, Zap, Info, Clock, Loader2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 import { useThemeMode } from '@/context/ThemeModeContext';
 import { useI18n } from '@/context/I18nContext';
+import { useEffect } from 'react';
 
 const nightPlans = [
   {
@@ -186,20 +187,53 @@ function SubscriptionsContent() {
   const { t } = useI18n();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<typeof nightPlans[0] | null>(null);
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (searchParams.get('reason') === 'upgrade_required') {
+      toast('Ton rang actuel ne te permet pas encore cette proximité.', {
+        icon: '🔒',
+        style: {
+          background: 'rgba(20, 20, 20, 0.9)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          color: '#fff',
+        },
+      });
+      // Try to clean the URL silently
+      try {
+        window.history.replaceState({}, document.title, '/subscriptions');
+      } catch (e) { }
+    }
+  }, [searchParams]);
 
   const cancelled = searchParams.get('cancelled');
   const isDay = mode === 'DAY';
   const plans = isDay ? dayPlans : nightPlans;
 
-  function handleSubscribe(plan: typeof nightPlans[0]) {
+  async function handleSubscribe(plan: typeof nightPlans[0]) {
     if (!session) {
       router.push('/register');
       return;
     }
-    setSelectedPlan(plan);
-    setIsModalOpen(true);
+
+    setLoadingPlan(plan.id);
+    try {
+      const res = await fetch('/api/subscriptions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tier: plan.id }),
+      });
+      const data = await res.json();
+      if (res.ok && data.url) {
+        window.location.href = data.url;
+      } else {
+        toast.error(data.error || 'Erreur lors de la redirection');
+      }
+    } catch (err) {
+      toast.error('Erreur de connexion');
+    } finally {
+      setLoadingPlan(null);
+    }
   }
 
   return (
@@ -244,7 +278,7 @@ function SubscriptionsContent() {
 
       {cancelled && (
         <div className="max-w-md mx-auto mt-8 p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs text-center font-bold uppercase tracking-widest backdrop-blur-md">
-          Paiement annulé. Nous vous attendons.
+          Paiement annulé. Vous n'avez pas été débité.
         </div>
       )}
 
@@ -337,10 +371,11 @@ function SubscriptionsContent() {
                 <PremiumButton
                   onClick={() => handleSubscribe(plan)}
                   variant={plan.recommended ? 'gold' : 'outline'}
+                  disabled={loadingPlan === plan.id}
                   fullWidth
                   className={`py-5 font-bold tracking-[0.2em] uppercase text-[10px] rounded-2xl ${plan.id === 'SKYCLUB' ? 'border-purple-500/40 text-purple-400 hover:bg-purple-500 hover:text-white' : ''}`}
                 >
-                  Sélectionner
+                  {loadingPlan === plan.id ? <Loader2 size={16} className="animate-spin mx-auto" /> : 'Sélectionner'}
                 </PremiumButton>
               </div>
             </motion.div>
@@ -357,10 +392,9 @@ function SubscriptionsContent() {
               <Zap size={24} />
             </div>
             <div>
-              <h4 className="text-white font-serif tracking-widest uppercase mb-1">Activation Flash</h4>
+              <h4 className="text-white font-serif tracking-widest uppercase mb-1">Activation Instantanée</h4>
               <p className="text-white/40 text-xs leading-relaxed">
-                Le paiement se fait manuellement (Revolut, PayPal, Crypto) pour garantir un anonymat total.
-                Validation express en moins de 10 minutes par notre équipe dédiée (H24).
+                Le paiement est géré de façon 100% sécurisée via Stripe. Votre accès sera débloqué immédiatement après la validation de la transaction.
               </p>
             </div>
           </div>
@@ -376,16 +410,6 @@ function SubscriptionsContent() {
         </div>
       </div>
 
-      {/* Payment Bridge Modal */}
-      {selectedPlan && (
-        <PaymentBridgeModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          tierName={selectedPlan.name}
-          price={`${selectedPlan.price}${selectedPlan.period.replace('mois', 'mo')}`}
-          type="subscription"
-        />
-      )}
     </div>
   );
 }

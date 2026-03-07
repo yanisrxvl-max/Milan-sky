@@ -58,8 +58,8 @@ export async function POST(request: NextRequest) {
       packId: pack.id,
       coins: pack.coins,
       price: pack.price,
-      successUrl: `${appUrl}/skycoins?success=true&coins=${pack.coins}`,
-      cancelUrl: `${appUrl}/skycoins?cancelled=true`,
+      successUrl: `${appUrl}/success?type=skycoins&coins=${pack.coins}`,
+      cancelUrl: `${appUrl}/cancel?type=skycoins`,
     });
 
     logger.info('SkyCoins checkout created', {
@@ -68,8 +68,11 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ url: checkoutSession.url });
-  } catch (error) {
+  } catch (error: any) {
     logger.error('SkyCoins purchase error', { error: String(error) });
+    if (error?.message?.includes('Invalid API Key')) {
+      return NextResponse.json({ error: 'Clé d\'API Stripe non configurée (.env)' }, { status: 500 });
+    }
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
   }
 }

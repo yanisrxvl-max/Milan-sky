@@ -6,10 +6,10 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 
 export const SKYCOINS_PACKS = [
-  { id: 'pack_35', name: 'Pack Découverte', coins: 35, price: 900, priceDisplay: '9€', bonus: null },
-  { id: 'pack_100', name: 'Pack Essentiel', coins: 100, price: 2400, priceDisplay: '24€', bonus: null },
-  { id: 'pack_250', name: 'Pack Immersion', coins: 250, price: 4900, priceDisplay: '49€', bonus: null },
-  { id: 'pack_600', name: 'Pack Ultimate', coins: 600, price: 9900, priceDisplay: '99€', bonus: 'Bonus inclus' },
+  { id: 'starter', name: 'STARTER', coins: 100, price: 999, priceDisplay: '9,99€', bonus: null },
+  { id: 'plus', name: 'PLUS', coins: 350, price: 2999, priceDisplay: '29,99€', bonus: 50 },
+  { id: 'premium', name: 'PREMIUM', coins: 900, price: 6999, priceDisplay: '69,99€', bonus: 200 },
+  { id: 'vip', name: 'VIP', coins: 2500, price: 17999, priceDisplay: '179,99€', bonus: 700 },
 ] as const;
 
 export const SUBSCRIPTION_PLANS = [
@@ -126,6 +126,8 @@ export async function createSubscriptionCheckout(params: {
   successUrl: string;
   cancelUrl: string;
 }) {
+  const isOneTime = params.tier === 'SKYCLUB';
+
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
     line_items: [
@@ -133,16 +135,16 @@ export async function createSubscriptionCheckout(params: {
         price_data: {
           currency: 'eur',
           product_data: {
-            name: `Abonnement ${params.tier}`,
-            description: `Abonnement mensuel Milan Sky — ${params.tier}`,
+            name: isOneTime ? `Accès à Vie ${params.tier}` : `Abonnement ${params.tier}`,
+            description: isOneTime ? `Accès perpétuel Milan Sky — ${params.tier}` : `Abonnement mensuel Milan Sky — ${params.tier}`,
           },
           unit_amount: params.priceAmount,
-          recurring: { interval: 'month' },
+          ...(isOneTime ? {} : { recurring: { interval: 'month' } }),
         },
         quantity: 1,
       },
     ],
-    mode: 'subscription',
+    mode: isOneTime ? 'payment' : 'subscription',
     success_url: params.successUrl,
     cancel_url: params.cancelUrl,
     customer_email: params.email,
