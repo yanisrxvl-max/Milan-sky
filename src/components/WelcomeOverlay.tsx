@@ -100,7 +100,7 @@ export default function WelcomeOverlay() {
                                         <Sparkles size={16} className="text-gold md:w-5 md:h-5" />
                                         Le Sanctuaire
                                     </h2>
-                                    <h3 className="text-[9px] md:text-xs tracking-[0.3em] uppercase text-white/60 mb-2 md:mb-4 font-bold">Lumina — Mode Jour</h3>
+                                    <h3 className="text-[9px] md:text-xs tracking-[0.3em] uppercase text-white/60 mb-2 md:mb-4 font-bold">Contenu à regarder entre 10h et 19h</h3>
                                     <p className="hidden md:block text-white/40 text-[11px] md:text-sm leading-relaxed max-w-[260px] md:max-w-sm mx-auto md:group-hover:text-white/70 transition-colors">
                                         Un espace bienveillant dédié à l&apos;évolution personnelle. Lifestyle, et confidences.
                                     </p>
@@ -131,10 +131,10 @@ export default function WelcomeOverlay() {
                                 </div>
                                 <div className="text-center pointer-events-none">
                                     <h2 className="text-lg md:text-3xl font-serif text-[#ff4d4d] mb-1 md:mb-3 flex items-center justify-center gap-2">
-                                        Le Fruit Défendu
+                                        Milan Sky
                                         <Flame size={16} className="text-[#ff4d4d] md:w-5 md:h-5" />
                                     </h2>
-                                    <h3 className="text-[9px] md:text-xs tracking-[0.3em] uppercase text-white/60 mb-2 md:mb-4 font-bold">Noctua — Mode Nuit</h3>
+                                    <h3 className="text-[9px] md:text-xs tracking-[0.3em] uppercase text-white/60 mb-2 md:mb-4 font-bold">Contenu à regarder entre 19h et 3h du matin</h3>
                                     <p className="hidden md:block text-white/40 text-[11px] md:text-sm leading-relaxed max-w-[260px] md:max-w-sm mx-auto md:group-hover:text-white/70 transition-colors">
                                         Succombez à la tentation. Séduction, et contenu exclusif & interactif.
                                     </p>
