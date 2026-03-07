@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
-import { Sparkles, MessageSquare, ChevronRight, ChevronLeft, Lock, Image as ImageIcon, Video, Send, Heart, DollarSign } from 'lucide-react';
+import { Sparkles, MessageSquare, ChevronRight, ChevronLeft, Lock, Image as ImageIcon, Video, Send, Heart, DollarSign, Library } from 'lucide-react';
 import { MILAN_NAME, MILAN_AVATARS } from '@/lib/constants';
 import { useThemeMode } from '@/context/ThemeModeContext';
 import { useI18n } from '@/context/I18nContext';
@@ -193,11 +193,16 @@ export default function ChatInterface() {
                         {isDay ? t('chat.companion') : t('chat.creator')}
                     </p>
                 </div>
-                <div className="text-right">
-                    <p className="text-gold/60 text-[10px] uppercase tracking-widest leading-none mb-1">
+                <div className="text-right flex flex-col items-end">
+                    <p className="text-gold/60 text-[10px] uppercase tracking-widest leading-none mb-1.5 flex items-center gap-1.5 justify-end">
                         {remaining !== null ? `${remaining}/${dailyLimit} messages` : ''}
                     </p>
-                    <Link href="/subscriptions" className="text-[10px] text-white/20 hover:text-gold transition-colors">Upgrade Tier</Link>
+                    <div className="flex items-center gap-3">
+                        <Link href="/subscriptions" className="text-[10px] text-white/20 hover:text-gold transition-colors">Upgrade Tier</Link>
+                        <Link href="/muses" className="w-8 h-8 rounded-full bg-gold/10 border border-gold/20 flex flex-col items-center justify-center text-gold hover:bg-gold/20 hover:scale-105 transition-all group" title="Boutique des Muses">
+                            <Library size={14} className="group-hover:text-white transition-colors" />
+                        </Link>
+                    </div>
                 </div>
             </div>
 
