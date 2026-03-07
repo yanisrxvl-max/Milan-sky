@@ -29,10 +29,10 @@ const translations: Record<Locale, Record<string, string>> = {
         'nav.profile': 'Profil',
 
         // Hero
-        'hero.tag_day': 'Intelligence & Éclat',
-        'hero.tag_night': 'Passion & Interdit',
-        'hero.desc_day': 'Bienvenue dans mon univers personnel.',
-        'hero.desc_night': 'L\'accès ultime à l\'interdit.',
+        'hero.tag_day': 'Contenu à regarder entre 10h et 19h',
+        'hero.tag_night': 'Contenu à regarder entre 19h et 3h du matin',
+        'hero.desc_day': 'Le fruit défendu',
+        'hero.desc_night': 'Milan Sky',
         'hero.btn1_day': 'Découvrir l\'univers',
         'hero.btn1_night': 'Accès privé',
         'hero.btn2_day': 'Mes contenus',

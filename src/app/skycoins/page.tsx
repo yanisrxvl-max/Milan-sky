@@ -8,6 +8,7 @@ import { PremiumButton } from '@/components/ui/PremiumButton';
 import { useI18n } from '@/context/I18nContext';
 import { Crown, Sparkles, Trophy, Zap, Gift, CheckCircle2, Star, Shield, Play, Ticket, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import SkyCoinsShop from '@/components/ui/SkyCoinsShop';
 
 const PACKS = [
     { id: 'starter', name: 'STARTER', coins: 100, price: '9,99€', bonus: 0, popular: false, glow: 'from-white/10 to-transparent' },
@@ -332,57 +333,7 @@ function SkyCoinsContent() {
             )}
 
             {/* 5. PACKS D'ACHAT */}
-            <div className="mb-20">
-                <div className="flex items-center gap-3 justify-center mb-12">
-                    <Ticket className="text-gold" />
-                    <h2 className="text-3xl font-serif text-cream text-center">Acheter des SkyCoins <span className="gold-text italic">Instantanés</span></h2>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {PACKS.map((pack) => (
-                        <motion.div
-                            key={pack.id}
-                            onClick={() => handleBuyPack(pack)}
-                            className={`group relative cursor-pointer overflow-hidden rounded-[2.5rem] border transition-all duration-500 p-8 flex flex-col items-center ${pack.popular ? 'bg-gold/5 border-gold/40 shadow-[0_15px_40px_rgba(201,168,76,0.15)] scale-[1.02] z-10' : 'bg-dark-200/40 border-white/5 hover:border-white/20'
-                                }`}
-                        >
-                            {pack.badge && (
-                                <div className="absolute top-5 inset-x-0 flex justify-center z-20">
-                                    <span className={`text-[8px] uppercase tracking-[0.3em] px-3 py-1 rounded-full font-black ${pack.id === 'vip' ? 'bg-purple-600 text-white' : 'bg-gold text-dark'}`}>
-                                        {pack.badge}
-                                    </span>
-                                </div>
-                            )}
-
-                            <div className="relative mb-8 mt-6">
-                                <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-3xl group-hover:scale-110 group-hover:rotate-12 transition-all duration-500">
-                                    {pack.id === 'starter' ? '⭐' : pack.id === 'plus' ? '🔥' : pack.id === 'premium' ? '💎' : '👑'}
-                                </div>
-                                {pack.bonus > 0 && <div className="absolute -bottom-2 -right-3 bg-gold px-2.5 py-1 rounded-md text-[9px] font-black text-dark shadow-xl">+{pack.bonus}</div>}
-                            </div>
-
-                            <h3 className="font-serif text-lg text-white/40 mb-1 uppercase tracking-[0.3em] group-hover:text-white transition-colors">
-                                {pack.name}
-                            </h3>
-
-                            <div className="flex flex-col items-center mb-4">
-                                <p className="font-serif text-4xl gold-text mb-2 tracking-tight">{pack.coins} SC</p>
-                                <p className="text-white/60 text-sm font-light">{pack.price}</p>
-                            </div>
-
-                            <PremiumButton
-                                onClick={() => handleBuyPack(pack)}
-                                disabled={loadingPack === pack.id}
-                                variant={pack.popular ? 'gold' : 'outline'}
-                                fullWidth
-                                className="!py-3 uppercase text-[10px] tracking-widest mt-auto z-20 relative"
-                            >
-                                {loadingPack === pack.id ? <Loader2 size={16} className="animate-spin mx-auto" /> : 'Sélectionner'}
-                            </PremiumButton>
-                        </motion.div>
-                    ))}
-                </div>
-            </div>
+            <SkyCoinsShop />
 
             {/* Multiplier Info Card */}
             <div className="max-w-3xl mx-auto card-premium !p-8 border-gold/20 flex flex-col md:flex-row gap-8 items-center bg-[url('/images/noise.png')]">

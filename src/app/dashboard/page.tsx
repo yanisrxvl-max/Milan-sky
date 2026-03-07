@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Crown, Zap, Clock, Shield, Upload, LogOut, ChevronRight, CheckCircle2, ShoppingCart, Send, CreditCard, Camera, Trophy, Gift } from 'lucide-react';
 import AnimatedCounter from '@/components/ui/AnimatedCounter';
 import StudioUpload from '@/components/admin/StudioUpload';
+import SkyCoinsShop from '@/components/ui/SkyCoinsShop';
 
 interface Profile {
   id: string;
@@ -277,6 +278,11 @@ function DashboardContent() {
           </div>
         </div>
       </motion.div>
+
+      {/* SECTION BOUTIQUE SKYCOINS (TOP Priority) */}
+      <section className="mb-12">
+        <SkyCoinsShop />
+      </section>
 
       {/* TABS NAVIGATION */}
       <div className="flex gap-2 mb-8 overflow-x-auto pb-4 custom-scrollbar lg:justify-center">

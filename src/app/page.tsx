@@ -5,6 +5,7 @@ import { Crown, Shield, Eye, Heart, Star, ArrowRight, Play, Sparkles, MessageCir
 import Link from 'next/link';
 import AnimatedCounter from '@/components/ui/AnimatedCounter';
 import CountdownTimer from '@/components/ui/CountdownTimer';
+import SkyCoinsShop from '@/components/ui/SkyCoinsShop';
 import { useThemeMode } from '@/context/ThemeModeContext';
 import { useI18n } from '@/context/I18nContext';
 
@@ -234,6 +235,13 @@ export default function Home() {
           <div className="w-[1px] h-16 bg-gradient-to-b from-gold/50 to-transparent mx-auto" />
           <p className="text-gold/40 text-[8px] uppercase tracking-[0.4em] mt-4 font-bold">{t('hero.scroll')}</p>
         </motion.div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════ */}
+      {/* SECTION BOUTIQUE SKYCOINS (TOP Priority)       */}
+      {/* ═══════════════════════════════════════════════ */}
+      <section className="relative py-12 px-4 bg-dark-500 border-t border-white/[0.03]">
+        <SkyCoinsShop />
       </section>
 
       {/* ═══════════════════════════════════════════════ */}
