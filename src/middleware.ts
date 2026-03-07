@@ -61,23 +61,25 @@ export async function middleware(request: NextRequest) {
     }
 
     // TIER CHECK FOR PREMIUM ROUTES (Zero-Leak Logic)
-    let requiredTier = 0;
-    for (const [route, level] of Object.entries(routeRequirements)) {
-      if (pathname.startsWith(route)) {
-        requiredTier = level;
-        break;
+    if (token.role !== 'ADMIN') {
+      let requiredTier = 0;
+      for (const [route, level] of Object.entries(routeRequirements)) {
+        if (pathname.startsWith(route)) {
+          requiredTier = level;
+          break;
+        }
       }
-    }
 
-    if (requiredTier > 0) {
-      const userTier = token.subscription?.tier as keyof typeof TIER_LEVELS | undefined;
-      const userLevel = userTier ? TIER_LEVELS[userTier] || 0 : 0;
+      if (requiredTier > 0) {
+        const userTier = token.subscription?.tier as keyof typeof TIER_LEVELS | undefined;
+        const userLevel = userTier ? TIER_LEVELS[userTier] || 0 : 0;
 
-      if (userLevel < requiredTier) {
-        // User does not have high enough tier, redirect to subscriptions
-        const upgradeUrl = new URL('/subscriptions', request.url);
-        upgradeUrl.searchParams.set('reason', 'upgrade_required');
-        return NextResponse.redirect(upgradeUrl);
+        if (userLevel < requiredTier) {
+          // User does not have high enough tier, redirect to subscriptions
+          const upgradeUrl = new URL('/subscriptions', request.url);
+          upgradeUrl.searchParams.set('reason', 'upgrade_required');
+          return NextResponse.redirect(upgradeUrl);
+        }
       }
     }
   }
