@@ -7,6 +7,7 @@ import AnimatedCounter from '@/components/ui/AnimatedCounter';
 import CountdownTimer from '@/components/ui/CountdownTimer';
 import SkyCoinsShop from '@/components/ui/SkyCoinsShop';
 import { useThemeMode } from '@/context/ThemeModeContext';
+import { MILAN_NAME } from '@/lib/constants';
 import { useI18n } from '@/context/I18nContext';
 
 export default function Home() {
@@ -16,13 +17,13 @@ export default function Home() {
   const isDay = mode === 'DAY';
 
   const TESTIMONIALS = isDay ? [
-    { text: "Milan Lumina a changé ma façon de voir l'IA. Ses conseils mode sont aussi très pointus.", name: 'Clara B.', tier: 'INITIÉ' },
-    { text: "Enfin un contenu intelligent et inspirant. Sa vision du futur est fascinante.", name: 'Julien S.', tier: 'PRIVILÈGE' },
-    { text: "Le Mentor Club m'accompagne dans ma transformation personnelle. Une pépite.", name: 'Marc A.', tier: 'SKYCLUB' },
+    { text: t('home.testi1_text_day'), name: 'Clara B.', tier: t('home.testi1_tier_day') },
+    { text: t('home.testi2_text_day'), name: 'Julien S.', tier: t('home.testi2_tier_day') },
+    { text: t('home.testi3_text_day'), name: 'Marc A.', tier: t('home.testi3_tier_day') },
   ] : [
-    { text: "Les Muses IA sont incroyables. J'ai copié 'Milan Possessif' sur mon ChatGPT, c'est saisissant de réalisme.", name: 'Sarah M.', tier: 'INITIÉ' },
-    { text: "Le chat avec Milan c'est quelque chose... On se sent vraiment privilégié, surtout avec les notes vocales.", name: 'Thomas D.', tier: 'PRIVILÈGE' },
-    { text: "L'esthétique de la plateforme est folle. Le contenu Quotidirty vaut largement l'abonnement.", name: 'Alex R.', tier: 'SKYCLUB' },
+    { text: t('home.testi1_text_night'), name: 'Sarah M.', tier: t('home.testi1_tier_night') },
+    { text: t('home.testi2_text_night'), name: 'Thomas D.', tier: t('home.testi2_tier_night') },
+    { text: t('home.testi3_text_night'), name: 'Alex R.', tier: t('home.testi3_tier_night') },
   ];
 
   const heroContent = isDay ? {
@@ -117,16 +118,7 @@ export default function Home() {
 
         {/* Contenu Hero */}
         <div className="relative z-30 flex flex-col items-center justify-center text-center px-4 max-w-5xl mx-auto mt-[-5vh]">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className={`mb-4 px-6 py-2 rounded-full border ${isDay ? 'bg-gold/10 border-gold/20 text-gold' : 'bg-silver/10 border-silver/20 text-cream'} backdrop-blur-md`}
-          >
-            <span className="text-[10px] uppercase tracking-[0.3em] font-bold">
-              {heroContent.tag}
-            </span>
-          </motion.div>
+
 
           {/* Social Proof Live Badge */}
           <motion.div
@@ -156,7 +148,7 @@ export default function Home() {
               <span className="font-serif italic text-6xl sm:text-7xl md:text-[140px] text-white leading-tight tracking-tight drop-shadow-[0_10px_35px_rgba(0,0,0,0.5)]">
                 {heroContent.title1}
               </span>
-              <span className={`${isDay ? 'gold-text-glow' : 'silver-text'} font-serif font-bold text-5xl sm:text-6xl md:text-[120px] leading-tight tracking-tighter md:mt-6 pb-4 transition-all duration-700`}>
+              <span className={`${isDay ? 'gold-text-glow' : 'silver-text'} font-serif font-bold text-5xl sm:text-6xl md:text-[120px] leading-tight tracking-normal md:mt-6 pb-4 transition-all duration-700`}>
                 {heroContent.title2}
               </span>
             </h1>
@@ -168,7 +160,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="text-white/50 text-sm md:text-base font-light tracking-wide mb-6 max-w-lg mx-auto"
+            className="text-white/40 text-[10px] md:text-xs font-bold tracking-[0.4em] uppercase mb-10 max-w-2xl mx-auto leading-relaxed"
           >
             {isDay ? t('hero.desc_day') : t('hero.desc_night')}
           </motion.p>
@@ -235,6 +227,11 @@ export default function Home() {
           </motion.div>
         </div>
 
+        {/* Decorative background orbs (The "cercless" the user mentioned) */}
+        <div className={`absolute top-1/4 -left-20 w-96 h-96 ${isDay ? 'bg-gold/10' : 'bg-silver/10'} rounded-full blur-[120px] pointer-events-none animate-pulse`} />
+        <div className={`absolute bottom-1/4 -right-20 w-[30rem] h-[30rem] ${isDay ? 'bg-gold/5' : 'bg-silver/5'} rounded-full blur-[150px] pointer-events-none`} />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[40rem] h-[40rem] bg-white/[0.02] rounded-full blur-[180px] pointer-events-none" />
+
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -260,14 +257,14 @@ export default function Home() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(201,168,76,0.04),transparent_70%)] pointer-events-none" />
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-20">
-            <p className="text-white/30 text-[10px] uppercase tracking-[0.3em] font-bold mb-4">Mon Univers</p>
+            <p className="text-white/30 text-[10px] uppercase tracking-[0.3em] font-bold mb-4">{t('home.piliers_tag')}</p>
             <h2 className="section-title mb-4">
-              {isDay ? 'Tout ce dont tu' : 'Tout ce dont tu'} <span className="gold-text italic">as besoin</span>
+              {t('home.piliers_title')} <span className="gold-text italic">{t('home.piliers_title_accent')}</span>
             </h2>
             <p className="text-white/40 text-sm max-w-xl mx-auto">
               {isDay
-                ? 'Mon univers est bâti autour de 3 piliers qui ensemble créent une expérience unique.'
-                : 'Trois espaces. Un univers. Une connexion sans filtre.'}
+                ? t('home.piliers_desc_day')
+                : t('home.piliers_desc_night')}
             </p>
           </div>
 
@@ -285,19 +282,19 @@ export default function Home() {
                 {isDay ? <Sparkles size={24} className="text-gold" /> : <Eye size={24} className="text-gold" />}
               </div>
               <div className="mb-2">
-                <span className="text-[9px] text-gold/60 uppercase tracking-widest font-bold">Pilier 01</span>
+                <span className="text-[9px] text-gold/60 uppercase tracking-widest font-bold">{t('home.pilier1_tag')}</span>
               </div>
-              <h3 className="font-serif text-2xl text-cream mb-4">Contenu Exclusif</h3>
+              <h3 className="font-serif text-2xl text-cream mb-4">{t('home.pilier1_title')}</h3>
               <p className="text-white/40 text-sm leading-relaxed mb-8 flex-1">
                 {isDay
-                  ? 'Vlogs, masterclass, conseils de style et contenu pédagogique. Un univers pensé pour t\'inspirer.'
-                  : 'Bibliothèque sans censure, drops quotidiens à 19h et archives jamais publiées nulle part ailleurs.'}
+                  ? t('home.pilier1_desc_day')
+                  : t('home.pilier1_desc_night')}
               </p>
               <Link
                 href="/library"
                 className="inline-flex items-center gap-2 text-gold text-[10px] uppercase tracking-widest font-bold hover:gap-4 transition-all"
               >
-                {isDay ? 'Découvrir le Contenu' : 'Accéder à la Bibliothèque'} <ArrowRight size={14} />
+                {isDay ? t('home.pilier1_btn_day') : t('home.pilier1_btn_night')} <ArrowRight size={14} />
               </Link>
             </motion.div>
 
@@ -311,25 +308,25 @@ export default function Home() {
             >
               <div className="absolute top-0 right-0 w-40 h-40 bg-gold/10 rounded-full blur-[60px] opacity-60 group-hover:opacity-100 transition-opacity duration-700 -mr-10 -mt-10" />
               <div className="absolute -top-2 -right-2 bg-gold text-dark text-[8px] uppercase tracking-widest font-black px-3 py-1.5 rounded-full">
-                Le Cœur
+                {t('home.pilier2_badge')}
               </div>
               <div className="w-14 h-14 rounded-2xl bg-gold/20 border border-gold/30 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500">
                 <MessageCircle size={24} className="text-gold" />
               </div>
               <div className="mb-2">
-                <span className="text-[9px] text-gold/60 uppercase tracking-widest font-bold">Pilier 02</span>
+                <span className="text-[9px] text-gold/60 uppercase tracking-widest font-bold">{t('home.pilier2_tag')}</span>
               </div>
-              <h3 className="font-serif text-2xl text-cream mb-4">Chat & IA Milan</h3>
+              <h3 className="font-serif text-2xl text-cream mb-4">{t('home.pilier2_title')}</h3>
               <p className="text-white/40 text-sm leading-relaxed mb-8 flex-1">
                 {isDay
-                  ? 'Conversations authentiques, Q&A, et mon IA personnelle — ton accès direct à mon univers.'
-                  : 'Messages privés, notes vocales, Muses IA et réponses personnalisées. L\'illusion de proximité devient réelle.'}
+                  ? t('home.pilier2_desc_day')
+                  : t('home.pilier2_desc_night')}
               </p>
               <Link
                 href="/chat"
                 className="inline-flex items-center gap-2 text-gold text-[10px] uppercase tracking-widest font-bold hover:gap-4 transition-all"
               >
-                Ouvrir le Chat <ArrowRight size={14} />
+                {t('home.pilier2_btn')} <ArrowRight size={14} />
               </Link>
             </motion.div>
 
@@ -346,17 +343,17 @@ export default function Home() {
                 <Crown size={24} className="text-purple-400" />
               </div>
               <div className="mb-2">
-                <span className="text-[9px] text-purple-400/60 uppercase tracking-widest font-bold">Pilier 03</span>
+                <span className="text-[9px] text-purple-400/60 uppercase tracking-widest font-bold">{t('home.pilier3_tag')}</span>
               </div>
-              <h3 className="font-serif text-2xl text-cream mb-4">SkyCoins & Statut</h3>
+              <h3 className="font-serif text-2xl text-cream mb-4">{t('home.pilier3_title')}</h3>
               <p className="text-white/40 text-sm leading-relaxed mb-8 flex-1">
-                Gagne des SkyCoins chaque jour. Monte dans le classement des fans. Débloque des récompenses exclusives que personne d&apos;autre ne peut avoir.
+                {t('home.pilier3_desc')}
               </p>
               <Link
                 href="/skycoins"
                 className="inline-flex items-center gap-2 text-purple-400 text-[10px] uppercase tracking-widest font-bold hover:gap-4 transition-all"
               >
-                Voir mon Statut <ArrowRight size={14} />
+                {t('home.pilier3_btn')} <ArrowRight size={14} />
               </Link>
             </motion.div>
           </div>
@@ -371,20 +368,20 @@ export default function Home() {
         <section className="py-32 px-4 relative border-t border-white/[0.03]">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              <p className="text-white/30 text-[10px] uppercase tracking-[0.3em] font-bold mb-4">Un engagement concret</p>
+              <p className="text-white/30 text-[10px] uppercase tracking-[0.3em] font-bold mb-4">{t('home.causes_tag')}</p>
               <h2 className="section-title mb-4">
-                Mes <span className="gold-text italic">causes</span>
+                {t('home.causes_title')} <span className="gold-text italic">{t('home.causes_title_accent')}</span>
               </h2>
               <p className="text-white/40 text-sm max-w-xl mx-auto">
-                Je reverse une partie de mes revenus à des causes qui me tiennent à cœur. Chaque abonnement a un impact direct.
+                {t('home.causes_desc')}
               </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8 mb-12">
               {[
-                { icon: Shield, slug: 'lutte-exploitation', title: 'Protection des mineurs', desc: 'Lutte contre le trafic sexuel et l\'exploitation. 30% de l\'abonnement Ambitieux reversé.', color: 'text-blue-400', border: 'border-blue-500/20 hover:border-blue-500/40', bg: 'bg-blue-500/5' },
-                { icon: Brain, slug: 'prevention-addictions', title: 'Prévention des addictions', desc: 'Accompagnement psychologique et prévention. 30% de l\'abonnement Créateur reversé.', color: 'text-purple-400', border: 'border-purple-500/20 hover:border-purple-500/40', bg: 'bg-purple-500/5' },
-                { icon: BookOpen, slug: 'education-pour-tous', title: 'Éducation pour tous', desc: 'Soutien scolaire et accès à la culture pour les enfants défavorisés. 30% de l\'abonnement Visionnaire.', color: 'text-emerald-400', border: 'border-emerald-500/20 hover:border-emerald-500/40', bg: 'bg-emerald-500/5' },
+                { icon: Shield, slug: 'lutte-exploitation', title: t('home.cause1_title'), desc: t('home.cause1_desc'), color: 'text-blue-400', border: 'border-blue-500/20 hover:border-blue-500/40', bg: 'bg-blue-500/5' },
+                { icon: Brain, slug: 'prevention-addictions', title: t('home.cause2_title'), desc: t('home.cause2_desc'), color: 'text-purple-400', border: 'border-purple-500/20 hover:border-purple-500/40', bg: 'bg-purple-500/5' },
+                { icon: BookOpen, slug: 'education-pour-tous', title: t('home.cause3_title'), desc: t('home.cause3_desc'), color: 'text-emerald-400', border: 'border-emerald-500/20 hover:border-emerald-500/40', bg: 'bg-emerald-500/5' },
               ].map((cause, i) => {
                 const Icon = cause.icon;
                 return (
@@ -415,10 +412,10 @@ export default function Home() {
               transition={{ duration: 0.7, delay: 0.3 }}
               className="mb-12 mx-auto max-w-2xl p-8 rounded-[2rem] bg-gradient-to-r from-gold/[0.06] to-transparent border border-gold/15 text-center"
             >
-              <p className="font-serif text-3xl text-gold mb-2">2,5%</p>
-              <p className="text-[9px] uppercase tracking-[0.3em] text-white/30 font-bold mb-4">de mes revenus annuels reversés</p>
+              <p className="font-serif text-3xl text-gold mb-2">{t('home.annual_commitment_title')}</p>
+              <p className="text-[9px] uppercase tracking-[0.3em] text-white/30 font-bold mb-4">{t('home.annual_commitment_tag')}</p>
               <p className="text-white/40 text-sm leading-relaxed max-w-md mx-auto">
-                Chaque année, je m&apos;engage à reverser 2,5% de mes revenus annuels aux associations et aux personnes dans le besoin. Un engagement personnel et inconditionnel.
+                {t('home.annual_commitment_desc')}
               </p>
             </motion.div>
 
@@ -427,7 +424,7 @@ export default function Home() {
                 href="/engagement"
                 className="inline-flex items-center gap-3 px-8 py-4 rounded-full border border-gold/30 bg-gold/5 text-gold text-[10px] uppercase tracking-widest font-bold hover:bg-gold hover:text-dark transition-all duration-300"
               >
-                <Heart size={14} /> Découvrir mes engagements <ArrowRight size={14} />
+                <Heart size={14} /> {t('home.causes_btn')} <ArrowRight size={14} />
               </Link>
             </div>
           </div>
@@ -497,21 +494,6 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="border-t border-white/[0.04] py-16 px-4 pb-32 relative z-10">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
-          <div className="flex items-center gap-4 py-8 overflow-visible">
-            <span className="inline-block font-serif text-2xl text-white tracking-[0.2em] uppercase italic py-2">Milan <span className="gold-text">Sky</span></span>
-          </div>
-          <div className="flex items-center gap-8 text-white/30 text-[10px] uppercase tracking-[0.2em] font-bold">
-            <Link href="/login" className="hover:text-gold transition-colors">{t('footer.login')}</Link>
-            <Link href="/register" className="hover:text-gold transition-colors">{t('footer.register')}</Link>
-            <span className="font-light opacity-50">© {new Date().getFullYear()} MILAN SKY</span>
-          </div>
-          <div className="flex items-center gap-3 text-gold/40 text-[9px] uppercase tracking-widest font-bold">
-            <Shield size={14} className="opacity-70" /> {t('footer.luxury')}
-          </div>
-        </div>
-      </footer>
     </main>
   );
 }

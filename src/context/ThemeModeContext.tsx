@@ -1,7 +1,6 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import AgeVerificationModal from '@/components/ui/AgeVerificationModal';
 
 type Mode = 'DAY' | 'NIGHT';
 
@@ -17,8 +16,6 @@ export function ThemeModeProvider({ children }: { children: React.ReactNode }) {
     const [transitioning, setTransitioning] = useState(false);
     const [transitionTarget, setTransitionTarget] = useState<Mode | null>(null);
 
-    const [isAgeModalOpen, setIsAgeModalOpen] = useState(false);
-
     useEffect(() => {
         let initialMode: Mode = 'DAY';
 
@@ -26,12 +23,14 @@ export function ThemeModeProvider({ children }: { children: React.ReactNode }) {
             const params = new URLSearchParams(window.location.search);
             if (params.get('mode') === 'night') {
                 initialMode = 'NIGHT';
+            } else {
+                const saved = localStorage.getItem('milan-mode') as Mode;
+                if (saved) initialMode = saved;
             }
         }
 
         setMode(initialMode);
         document.documentElement.setAttribute('data-mode', initialMode);
-        localStorage.setItem('milan-mode', initialMode);
     }, []);
 
     const executeTransition = useCallback((newMode: Mode) => {
@@ -54,10 +53,10 @@ export function ThemeModeProvider({ children }: { children: React.ReactNode }) {
         const newMode = mode === 'DAY' ? 'NIGHT' : 'DAY';
 
         if (newMode === 'NIGHT') {
-            const isVerified = localStorage.getItem('age_verified') === 'true';
+            const isVerified = localStorage.getItem('milan_age_verified') === 'true';
             if (!isVerified) {
-                setIsAgeModalOpen(true);
-                return;
+                // The AgeVerificationOverlay in layout.tsx will handle showing the block
+                // if the mode becomes NIGHT but not verified.
             }
         }
 
@@ -67,16 +66,6 @@ export function ThemeModeProvider({ children }: { children: React.ReactNode }) {
     return (
         <ThemeModeContext.Provider value={{ mode, toggleMode }}>
             {children}
-
-            <AgeVerificationModal
-                isOpen={isAgeModalOpen}
-                onClose={() => setIsAgeModalOpen(false)}
-                onSuccess={() => {
-                    localStorage.setItem('age_verified', 'true');
-                    setIsAgeModalOpen(false);
-                    executeTransition('NIGHT');
-                }}
-            />
 
             {/* Cinematic Transition Overlay */}
             {transitioning && (

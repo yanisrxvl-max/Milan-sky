@@ -44,11 +44,11 @@ export default function Navbar() {
 
   const links = [
     { href: '/', label: t('nav.home') },
-    { href: '/library', label: isDay ? 'Contenu de jour' : 'Contenu de nuit' },
-    { href: '/chat', label: 'Chat' },
-    { href: '/skycoins', label: 'SkyCoins' },
-    { href: '/subscriptions', label: isDay ? t('nav.subscriptions') : 'Accès' },
-    ...(isDay ? [{ href: '/engagement', label: 'Engagements' }] : []),
+    { href: '/library', label: isDay ? t('nav.content_day') : t('nav.content_night') },
+    { href: '/chat', label: t('nav.chat') },
+    { href: '/skycoins', label: t('nav.skycoins') },
+    { href: '/subscriptions', label: isDay ? t('nav.subscriptions') : t('nav.access') },
+    ...(isDay ? [{ href: '/engagement', label: t('nav.engagements') }] : []),
     ...(isAdmin ? [{ href: '/admin', label: t('nav.admin') }] : []),
   ];
 
@@ -65,6 +65,7 @@ export default function Navbar() {
                   <span className={`text-[10px] uppercase tracking-[0.8em] font-black italic ml-[0.8em] ${isDay ? 'gold-text-glow' : 'silver-text'}`}>SKY</span>
                   <div className={`h-[0.5px] flex-1 bg-gradient-to-r ${isDay ? 'from-gold/40' : 'from-gray-400/40'} to-transparent`} />
                 </div>
+
               </div>
               <div className="absolute -inset-4" /> {/* Click target */}
             </Link>

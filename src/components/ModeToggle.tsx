@@ -1,17 +1,19 @@
 'use client';
 
 import { useThemeMode } from '@/context/ThemeModeContext';
+import { useI18n } from '@/context/I18nContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ModeToggle() {
     const { mode, toggleMode } = useThemeMode();
+    const { t } = useI18n();
     const isDay = mode === 'DAY';
 
     return (
         <button
             onClick={toggleMode}
             className="relative w-12 h-12 flex items-center justify-center rounded-full hover:bg-white/5 active:scale-95 transition-all duration-300 touch-manipulation group"
-            aria-label={isDay ? 'Passer en mode Nuit' : 'Passer en mode Jour'}
+            aria-label={isDay ? t('nav.switch_to_night') : t('nav.switch_to_day')}
         >
             <div className="absolute inset-0 bg-gold/10 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <AnimatePresence mode="wait">

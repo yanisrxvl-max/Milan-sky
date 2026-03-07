@@ -85,15 +85,43 @@ export default function WelcomeOverlay() {
                         >
                             <motion.div
                                 initial={{ scale: 0.8, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                transition={{ delay: 0.2 }}
-                                className="w-20 h-20 mb-10 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center shadow-2xl"
+                                animate={{
+                                    scale: 1,
+                                    opacity: 1,
+                                    y: [0, -10, 0]
+                                }}
+                                transition={{
+                                    opacity: { delay: 0.2, duration: 1 },
+                                    scale: { delay: 0.2, duration: 1 },
+                                    y: { duration: 5, repeat: Infinity, ease: "easeInOut" }
+                                }}
+                                className="relative w-32 h-32 mb-10 flex items-center justify-center group"
                             >
-                                <Globe size={40} className="text-white/80" />
+                                {/* Animated Apple Sequence */}
+                                <div className="relative w-20 h-20">
+                                    <motion.img
+                                        src="/images/milan_logo_transparent.png"
+                                        alt="Milan Sky Lumina"
+                                        className="absolute inset-0 w-full h-full object-contain drop-shadow-[0_0_25px_rgba(201,168,76,0.3)]"
+                                        animate={{
+                                            opacity: [1, 1, 0, 0, 1],
+                                        }}
+                                        transition={{ duration: 8, repeat: Infinity, times: [0, 0.45, 0.5, 0.95, 1], ease: "easeInOut" }}
+                                    />
+                                    <motion.img
+                                        src="/images/milan_logo_bitten.png"
+                                        alt="Milan Sky Noctua"
+                                        className="absolute inset-0 w-full h-full object-contain drop-shadow-[0_0_25px_rgba(255,0,50,0.3)]"
+                                        animate={{
+                                            opacity: [0, 0, 1, 1, 0],
+                                        }}
+                                        transition={{ duration: 8, repeat: Infinity, times: [0, 0.45, 0.5, 0.95, 1], ease: "easeInOut" }}
+                                    />
+                                </div>
                             </motion.div>
 
-                            <h1 className="font-serif text-3xl md:text-5xl text-cream mb-4 text-center">Language</h1>
-                            <p className="text-white/40 text-xs md:text-sm uppercase tracking-[0.3em] mb-12 text-center">Sélectionnez votre langue d&apos;entrée</p>
+                            <h1 className="font-serif text-3xl md:text-5xl text-cream mb-4 text-center">{t('welcome.lang_title')}</h1>
+                            <p className="text-white/40 text-xs md:text-sm uppercase tracking-[0.3em] mb-12 text-center">{t('welcome.lang_subtitle')}</p>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
                                 {languages.map((lang, idx) => (
@@ -133,10 +161,10 @@ export default function WelcomeOverlay() {
                                 className="absolute top-8 md:top-20 text-center z-20 px-4 w-full"
                             >
                                 <h1 className="font-serif text-2xl md:text-5xl text-cream tracking-wide mb-2 md:mb-3">
-                                    <span className="italic font-light">Choisis ton</span> Univers
+                                    <span className="italic font-light">{t('welcome.title').split(' ').slice(0, 2).join(' ')}</span> {t('welcome.title').split(' ').slice(2).join(' ')}
                                 </h1>
                                 <p className="text-white/40 text-[10px] md:text-base max-w-[280px] md:max-w-lg mx-auto uppercase tracking-widest font-light">
-                                    L&apos;intelligence émotionnelle ou le fruit défendu.
+                                    {t('welcome.subtitle')}
                                 </p>
                             </motion.div>
 
@@ -158,11 +186,11 @@ export default function WelcomeOverlay() {
                                     <div className="text-center pointer-events-none">
                                         <h2 className="text-lg md:text-3xl font-serif text-gold mb-1 md:mb-3 flex items-center justify-center gap-2">
                                             <Sparkles size={16} className="text-gold md:w-5 md:h-5" />
-                                            Mode Jour
+                                            {t('welcome.day_title')}
                                         </h2>
-                                        <h3 className="text-[9px] md:text-xs tracking-[0.3em] uppercase text-white/60 mb-2 md:mb-4 font-bold">Contenu à regarder entre 10h et 19h</h3>
+                                        <h3 className="text-[9px] md:text-xs tracking-[0.3em] uppercase text-white/60 mb-2 md:mb-4 font-bold">{t('welcome.day_subtitle')}</h3>
                                         <p className="hidden md:block text-white/40 text-[11px] md:text-sm leading-relaxed max-w-[260px] md:max-w-sm mx-auto md:group-hover:text-white/70 transition-colors">
-                                            Un espace bienveillant dédié à l&apos;évolution personnelle. Lifestyle, et confidences.
+                                            {t('welcome.day_desc')}
                                         </p>
                                     </div>
                                 </motion.div>
@@ -191,12 +219,12 @@ export default function WelcomeOverlay() {
                                     </div>
                                     <div className="text-center pointer-events-none">
                                         <h2 className="text-lg md:text-3xl font-serif text-[#ff4d4d] mb-1 md:mb-3 flex items-center justify-center gap-2">
-                                            Mode Nuit
+                                            {t('welcome.night_title')}
                                             <Flame size={16} className="text-[#ff4d4d] md:w-5 md:h-5" />
                                         </h2>
-                                        <h3 className="text-[9px] md:text-xs tracking-[0.3em] uppercase text-white/60 mb-2 md:mb-4 font-bold">Contenu à regarder entre 19h et 3h du matin</h3>
+                                        <h3 className="text-[9px] md:text-xs tracking-[0.3em] uppercase text-white/60 mb-2 md:mb-4 font-bold">{t('welcome.night_subtitle')}</h3>
                                         <p className="hidden md:block text-white/40 text-[11px] md:text-sm leading-relaxed max-w-[260px] md:max-w-sm mx-auto md:group-hover:text-white/70 transition-colors">
-                                            Succombez à la tentation. Séduction, et contenu exclusif & interactif.
+                                            {t('welcome.night_desc')}
                                         </p>
                                     </div>
                                 </motion.div>
@@ -208,7 +236,7 @@ export default function WelcomeOverlay() {
                                 transition={{ duration: 1, delay: 1 }}
                                 className="absolute bottom-4 md:bottom-12 text-center z-20 w-full bg-gradient-to-t from-black via-black/80 to-transparent p-4"
                             >
-                                <p className="text-[8px] md:text-[10px] text-white/40 uppercase tracking-[0.3em] font-bold">Vous pourrez changer de mode à tout moment via le menu.</p>
+                                <p className="text-[8px] md:text-[10px] text-white/40 uppercase tracking-[0.3em] font-bold">{t('welcome.change_hint')}</p>
                             </motion.div>
                         </motion.div>
                     )}
@@ -223,13 +251,13 @@ export default function WelcomeOverlay() {
                         >
                             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-40 bg-red-500/10 blur-[60px] rounded-full pointer-events-none" />
 
-                            <span className="text-5xl font-serif text-[#ff4d4d] mb-4 block drop-shadow-[0_0_15px_rgba(255,0,0,0.3)]">18+</span>
+                            <span className="text-5xl font-serif text-[#ff4d4d] mb-4 block drop-shadow-[0_0_15px_rgba(255,0,0,0.3)]">{t('welcome.age_title')}</span>
                             <h2 className="text-sm font-serif text-white mb-3 tracking-[0.2em] uppercase">
-                                Avertissement
+                                {t('welcome.age_warning')}
                             </h2>
 
                             <p className="text-white/50 text-[12px] leading-relaxed mb-10 max-w-[240px] mx-auto">
-                                L&apos;univers Noctua contient du contenu mature et exclusif strictement réservé aux adultes.
+                                {t('welcome.age_desc')}
                             </p>
 
                             <div className="flex flex-col gap-3">
@@ -237,14 +265,14 @@ export default function WelcomeOverlay() {
                                     onClick={confirmAge}
                                     className="w-full py-4 bg-[#ff4d4d] text-white rounded-2xl text-[10px] uppercase font-black tracking-[0.2em] hover:bg-[#ff3333] hover:shadow-[0_0_30px_rgba(255,0,0,0.4)] transition-all active:scale-[0.98]"
                                 >
-                                    J&apos;accepte et je rentre
+                                    {t('welcome.age_confirm')}
                                 </button>
 
                                 <button
                                     onClick={cancelAge}
                                     className="w-full py-4 bg-transparent border border-white/10 text-white/50 rounded-2xl text-[10px] uppercase tracking-[0.2em] hover:text-white hover:bg-white/5 transition-all active:scale-[0.98]"
                                 >
-                                    Revenir au choix
+                                    {t('welcome.age_cancel')}
                                 </button>
                             </div>
                         </motion.div>

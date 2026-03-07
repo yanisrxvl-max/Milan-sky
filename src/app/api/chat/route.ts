@@ -101,7 +101,7 @@ export async function GET() {
 
 // Send message
 export async function POST(request: NextRequest) {
-  console.log('--- Chat Request Received ---');
+
 
   try {
     const ip = getClientIp(request);
