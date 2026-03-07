@@ -117,6 +117,17 @@ export default function Home() {
 
         {/* Contenu Hero */}
         <div className="relative z-30 flex flex-col items-center justify-center text-center px-4 max-w-5xl mx-auto mt-[-5vh]">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className={`mb-4 px-6 py-2 rounded-full border ${isDay ? 'bg-gold/10 border-gold/20 text-gold' : 'bg-silver/10 border-silver/20 text-cream'} backdrop-blur-md`}
+          >
+            <span className="text-[10px] uppercase tracking-[0.3em] font-bold">
+              {heroContent.tag}
+            </span>
+          </motion.div>
+
           {/* Social Proof Live Badge */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -159,9 +170,7 @@ export default function Home() {
             transition={{ delay: 0.6, duration: 0.8 }}
             className="text-white/50 text-sm md:text-base font-light tracking-wide mb-6 max-w-lg mx-auto"
           >
-            {isDay
-              ? 'Le créateur de contenu qui construit son propre univers.'
-              : "L'accès ultime à l'interdit."}
+            {isDay ? t('hero.desc_day') : t('hero.desc_night')}
           </motion.p>
 
           <motion.div
