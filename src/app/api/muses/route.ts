@@ -13,10 +13,11 @@ export async function GET(request: NextRequest) {
         const session = await getServerSession(authOptions);
         const userId = session?.user?.id;
 
-        // Get all active muses regardless of the current mode
+        // Get all active muses for the current mode
         const muses = await prisma.muse.findMany({
             where: {
                 isActive: true,
+                mode: mode as any // Cast to ThemeMode
             },
             orderBy: { price: 'asc' },
         });

@@ -126,6 +126,8 @@ export default function MusesPage() {
         try {
             const res = await fetch('/api/muses/purchase-pack', {
                 method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mode: currentThemeMode }),
             });
             const data = await res.json();
             if (res.ok) {
@@ -209,19 +211,22 @@ export default function MusesPage() {
 
                         <div className="relative z-10 flex-1 text-center md:text-left">
                             <h3 className="font-serif text-3xl text-cream mb-2 tracking-wide flex items-center justify-center md:justify-start gap-3">
-                                <Sparkles className="text-gold" /> PACK ALL-ACCESS <span className="text-gold italic">L&apos;Univers Milan Sky</span>
+                                <Sparkles className="text-gold" /> {currentThemeMode === 'NOCTUA' ? 'PACK ALL-ACCESS' : 'PACK GUÉRISON'} <span className="text-gold italic">{currentThemeMode === 'NOCTUA' ? "L'Univers Milan Sky" : "Le Sanctuaire Lumina"}</span>
                             </h3>
                             <p className="text-white/60 text-sm leading-relaxed max-w-xl">
-                                Débloque instantanément l&apos;intégralité des 7 Muses IA et change de personnalité selon ton humeur. Inclus un statut premium dans l&apos;écosystème Milan Sky.
+                                {currentThemeMode === 'NOCTUA'
+                                    ? "Débloque instantanément l'intégralité des 7 Muses IA privées et change de personnalité selon ton humeur. Inclus un statut premium dans l'écosystème Milan Sky."
+                                    : "Débloque instantanément les 5 Guides IA et Confidents pour t'accompagner (Trauma, Addiction, Dépendance...). Un espace thérapeutique bienveillant, disponible 24/7."
+                                }
                             </p>
                         </div>
                         <div className="relative z-10 shrink-0 text-center md:text-right">
-                            <p className="text-gray-400 line-through text-sm mb-1 font-mono">1150 SC</p>
+                            <p className="text-gray-400 line-through text-sm mb-1 font-mono">{currentThemeMode === 'NOCTUA' ? '1150 SC' : '250 SC'}</p>
                             <button
                                 onClick={handleBuyPack}
-                                className="bg-gold text-dark font-bold uppercase tracking-[0.2em] px-8 py-4 rounded-xl hover:shadow-[0_0_30px_rgba(201,168,76,0.4)] hover:bg-gold-light transition-all active:scale-95"
+                                className="bg-gold text-dark font-bold uppercase tracking-[0.2em] px-8 py-4 rounded-xl hover:shadow-[0_0_30px_rgba(201,168,76,0.4)] hover:bg-gold-light transition-all active:scale-95 whitespace-nowrap"
                             >
-                                Tout Débloquer — 600 SC
+                                Tout Débloquer — {currentThemeMode === 'NOCTUA' ? '600 SC' : '200 SC'}
                             </button>
                         </div>
                     </motion.div>

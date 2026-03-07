@@ -4,7 +4,8 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
 
-const PACK_PRICE = 600;
+const NOCTUA_PACK_PRICE = 600;  // 7 Muses Nuit
+const LUMINA_PACK_PRICE = 200;  // 5 Muses Jour
 
 export async function POST(req: NextRequest) {
     try {
@@ -14,6 +15,9 @@ export async function POST(req: NextRequest) {
         }
 
         const userId = session.user.id;
+        const { mode } = await req.json().catch(() => ({ mode: 'NOCTUA' }));
+        const targetMode = mode === 'LUMINA' ? 'LUMINA' : 'NOCTUA';
+        const PACK_PRICE = targetMode === 'LUMINA' ? LUMINA_PACK_PRICE : NOCTUA_PACK_PRICE;
 
         // Verify balance
         const wallet = await prisma.skyCoinsBalance.findUnique({
@@ -27,9 +31,9 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        // Get all Muses
+        // Get Muses for the requested mode
         const allMuses = await prisma.muse.findMany({
-            where: { category: 'MUSE', isActive: true },
+            where: { category: 'MUSE', isActive: true, mode: targetMode as any },
         });
 
         if (allMuses.length === 0) {
