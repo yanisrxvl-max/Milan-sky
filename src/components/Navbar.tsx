@@ -10,6 +10,7 @@ import { useI18n } from '@/context/I18nContext';
 import AnimatedCounter from './ui/AnimatedCounter';
 import ModeToggle from './ModeToggle';
 import GoogleTranslate from './GoogleTranslate';
+import AuthDropdown from './AuthDropdown';
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -132,15 +133,7 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="flex items-center gap-2 md:gap-3">
-                <Link
-                  href="/login"
-                  className="hidden xs:flex text-[10px] uppercase font-bold tracking-[0.2em] text-white/40 hover:text-white transition-colors px-2 md:px-4 py-3 min-h-[44px] items-center justify-center touch-manipulation"
-                >
-                  {t('nav.login')}
-                </Link>
-                <Link href="/register" className={`btn-gold text-[9px] md:text-[10px] uppercase font-bold tracking-[0.1em] md:tracking-[0.2em] touch-manipulation ${isScrolled ? '!py-2 !px-3 md:!px-5' : '!py-2 md:!py-3 !px-3 md:!px-6'}`}>
-                  {t('nav.register')}
-                </Link>
+                <AuthDropdown />
               </div>
             )}
           </div>

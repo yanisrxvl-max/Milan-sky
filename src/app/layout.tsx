@@ -13,6 +13,7 @@ import Navbar from '@/components/Navbar';
 import BottomNav from '@/components/BottomNav';
 import Footer from '@/components/Footer';
 import AgeVerificationOverlay from '@/components/AgeVerificationOverlay';
+import WelcomeOverlay from '@/components/WelcomeOverlay';
 import InstallBanner from '@/components/pwa/InstallBanner';
 
 export const metadata: Metadata = {
@@ -65,6 +66,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-dark font-sans">
         <Providers>
           <InstallBanner />
+          <WelcomeOverlay />
           <AgeVerificationOverlay />
           <Navbar />
           <main className="min-h-[80vh]">

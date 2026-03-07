@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MILAN_NAME } from '@/lib/constants';
+import { useThemeMode } from '@/context/ThemeModeContext';
 
 export default function AgeVerificationOverlay() {
+    const { mode } = useThemeMode();
     const [show, setShow] = useState(false);
     const pathname = usePathname();
 
@@ -13,14 +14,15 @@ export default function AgeVerificationOverlay() {
 
     useEffect(() => {
         const verified = localStorage.getItem('milan_age_verified');
-        if (!verified && !isLegalPage) {
+        // Only show if it's NIGHT mode, not verified, and not a legal page
+        if (mode === 'NIGHT' && !verified && !isLegalPage) {
             setShow(true);
             document.body.style.overflow = 'hidden';
         } else {
             setShow(false);
             document.body.style.overflow = 'unset';
         }
-    }, [isLegalPage]);
+    }, [isLegalPage, mode]);
 
     const handleVerify = () => {
         localStorage.setItem('milan_age_verified', 'true');
@@ -68,7 +70,11 @@ export default function AgeVerificationOverlay() {
                                 </button>
 
                                 <button
-                                    onClick={() => window.location.href = 'https://google.com'}
+                                    onClick={() => {
+                                        // If they decline, we force them back to DAY mode, or they can leave.
+                                        // Realistically, we just redirect or switch mode. Let's redirect to home and clear local storage to restart.
+                                        window.location.href = '/?mode=day';
+                                    }}
                                     className="w-full py-4 bg-transparent border border-white/10 text-white/50 rounded-2xl text-[10px] uppercase tracking-[0.2em] hover:text-white hover:bg-white/5 transition-all active:scale-[0.98]"
                                 >
                                     Quitter
