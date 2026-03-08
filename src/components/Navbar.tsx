@@ -19,6 +19,11 @@ export default function Navbar() {
   const isDay = mode === 'DAY';
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isActive = (path: string) => pathname === path;
   const isAdmin = session?.user?.role === 'ADMIN';
@@ -90,7 +95,7 @@ export default function Navbar() {
                 {isActive(link.href) && (
                   <div className="absolute inset-0 bg-gold/10 rounded-xl border border-gold/20" />
                 )}
-                <span className="relative z-10">{link.label}</span>
+                <span className="relative z-10">{mounted ? link.label : ''}</span>
               </Link>
             ))}
           </div>
@@ -129,7 +134,7 @@ export default function Navbar() {
                   className={`hidden md:flex btn-gold text-[9px] uppercase tracking-[0.2em] relative group overflow-hidden touch-manipulation flex-shrink-0 ${isScrolled ? '!py-2 !px-4' : '!py-3 !px-6'}`}
                 >
                   <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                  <span className="relative z-10">{t('nav.profile')}</span>
+                  <span className="relative z-10">{mounted ? t('nav.profile') : ''}</span>
                 </Link>
               </div>
             ) : (

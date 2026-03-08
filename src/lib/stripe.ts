@@ -6,10 +6,10 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 
 export const SKYCOINS_PACKS = [
-  { id: 'starter', name: 'STARTER', coins: 100, price: 999, priceDisplay: '9,99€', bonus: null },
-  { id: 'plus', name: 'PLUS', coins: 350, price: 2999, priceDisplay: '29,99€', bonus: 50 },
-  { id: 'premium', name: 'PREMIUM', coins: 900, price: 6999, priceDisplay: '69,99€', bonus: 200 },
-  { id: 'vip', name: 'VIP', coins: 2500, price: 17999, priceDisplay: '179,99€', bonus: 700 },
+  { id: 'starter', name: 'Pack Découverte', coins: 50, price: 990, priceDisplay: '9,90€', bonus: 0 },
+  { id: 'plus', name: 'Pack Habitué', coins: 120, price: 1990, priceDisplay: '19,90€', bonus: 10 },
+  { id: 'premium', name: 'Pack Collectionneur', coins: 350, price: 4990, priceDisplay: '49,90€', bonus: 50 },
+  { id: 'vip', name: 'Pack Investisseur', coins: 800, price: 9990, priceDisplay: '99,90€', bonus: 150 },
 ] as const;
 
 export const SUBSCRIPTION_PLANS = [
@@ -83,6 +83,7 @@ export async function createCheckoutSession(params: {
   userId: string;
   email: string;
   packId: string;
+  packName: string;
   coins: number;
   price: number;
   successUrl: string;
@@ -95,7 +96,7 @@ export async function createCheckoutSession(params: {
         price_data: {
           currency: 'eur',
           product_data: {
-            name: `${params.coins} SkyCoins`,
+            name: `${params.packName} — ${params.coins} SkyCoins`,
             description: `Pack de ${params.coins} SkyCoins pour Milan Sky`,
           },
           unit_amount: params.price,

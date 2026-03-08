@@ -92,7 +92,7 @@ export default function AgeVerificationOverlay() {
                             </h2>
 
                             <p className="text-white/40 text-[11px] leading-relaxed mb-8 max-w-[240px] mx-auto uppercase tracking-widest">
-                                L&apos;accès au mode Noctua nécessite une confirmation légale de votre majorité.
+                                L&apos;accès au Mode Nuit (+18) nécessite une confirmation légale de votre majorité.
                             </p>
 
                             <form onSubmit={handleVerify} className="flex flex-col gap-4">
@@ -128,7 +128,7 @@ export default function AgeVerificationOverlay() {
                                     }}
                                     className="w-full py-4 bg-transparent border border-white/10 text-white/50 rounded-2xl text-[10px] uppercase tracking-[0.2em] hover:text-white hover:bg-white/5 transition-all active:scale-[0.98]"
                                 >
-                                    Retour au mode Lumina
+                                    Retour au mode Jour
                                 </button>
                             </form>
                         </div>

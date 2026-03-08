@@ -56,6 +56,7 @@ export async function POST(request: NextRequest) {
       userId: session.user.id,
       email: session.user.email,
       packId: pack.id,
+      packName: pack.name,
       coins: pack.coins,
       price: pack.price,
       successUrl: `${appUrl}/success?type=skycoins&coins=${pack.coins}`,

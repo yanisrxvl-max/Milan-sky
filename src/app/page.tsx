@@ -8,11 +8,17 @@ import CountdownTimer from '@/components/ui/CountdownTimer';
 import SkyCoinsShop from '@/components/ui/SkyCoinsShop';
 import { useThemeMode } from '@/context/ThemeModeContext';
 import { MILAN_NAME } from '@/lib/constants';
+import { useState, useEffect } from 'react';
 import { useI18n } from '@/context/I18nContext';
 
 export default function Home() {
   const { mode } = useThemeMode();
   const { t } = useI18n();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isDay = mode === 'DAY';
 
@@ -100,7 +106,7 @@ export default function Home() {
 
           {/* Particules CSS */}
           <div className="absolute inset-0 z-20 overflow-hidden">
-            {[...Array(20)].map((_, i) => (
+            {mounted && [...Array(20)].map((_, i) => (
               <div
                 key={i}
                 className="particle"

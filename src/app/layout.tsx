@@ -62,7 +62,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr" className={`dark ${inter.variable} ${playfair.variable}`}>
+    <html lang="fr" className={`dark ${inter.variable} ${playfair.variable}`} suppressHydrationWarning>
       <body className="min-h-screen bg-dark font-sans">
         <Providers>
           <InstallBanner />

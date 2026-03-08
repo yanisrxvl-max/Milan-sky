@@ -254,7 +254,7 @@ export default function WelcomeOverlay() {
                                     <div className="text-center pointer-events-none transition-all duration-700 group-hover:translate-y-[-5px]">
                                         <h2 className="text-xl md:text-4xl font-serif text-[#ff4d4d] mb-2 md:mb-4 flex items-center justify-center gap-3">
                                             {t('welcome.night_title')}
-                                            <span className="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border-2 border-[#ff4d4d] text-[10px] md:text-[12px] font-black tracking-tighter">18+</span>
+                                            <span className="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border-2 border-[#ff4d4d] text-[10px] md:text-[12px] font-black tracking-tighter ml-2">18+</span>
                                         </h2>
                                         <h3 className="text-[10px] md:text-sm tracking-[0.4em] uppercase text-white/40 group-hover:text-white/80 mb-3 md:mb-6 font-bold transition-colors">{t('welcome.night_subtitle')}</h3>
                                         <p className="hidden md:block text-white/30 text-[11px] md:text-sm leading-relaxed max-w-[280px] md:max-w-md mx-auto group-hover:text-white/60 transition-colors">

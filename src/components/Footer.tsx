@@ -1,11 +1,18 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { MILAN_NAME } from '@/lib/constants';
 import { useI18n } from '@/context/I18nContext';
 
 export default function Footer() {
     const { t } = useI18n();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
     const currentYear = new Date().getFullYear();
 
     const links = [
@@ -43,10 +50,10 @@ export default function Footer() {
                 {/* Disclaimer / Copyright */}
                 <div className="text-center space-y-4">
                     <div className="flex items-center justify-center gap-3 text-red-500/60 text-[10px] uppercase tracking-[0.2em] font-bold border border-red-500/10 px-4 py-2 rounded-xl bg-red-500/5 mx-auto w-fit">
-                        {t('footer.age_legal')}
+                        {mounted ? t('footer.age_legal') : ''}
                     </div>
                     <p className="text-[9px] text-white/10 tracking-[0.2em] font-light uppercase">
-                        © {currentYear} {MILAN_NAME} SKY — LUXURY DIGITAL EXPERIENCE
+                        © {mounted ? currentYear : ''} {MILAN_NAME} SKY — LUXURY DIGITAL EXPERIENCE
                     </p>
                 </div>
             </div>
