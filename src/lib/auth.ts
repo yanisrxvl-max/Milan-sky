@@ -18,7 +18,10 @@ export const authOptions: NextAuthOptions = {
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email.toLowerCase().trim() },
-          include: { subscription: true, skyCoinsBalance: true },
+          include: {
+            subscription: true,
+            skyCoinsBalance: true
+          },
         });
 
         if (!user) {
@@ -40,6 +43,7 @@ export const authOptions: NextAuthOptions = {
           name: user.name,
           image: user.avatarUrl,
           role: user.role,
+          ageVerified: user.ageVerified,
           subscription: user.subscription ? {
             tier: user.subscription.tier,
             status: user.subscription.status,
@@ -57,12 +61,19 @@ export const authOptions: NextAuthOptions = {
     error: '/login',
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.role = (user as any).role;
         token.subscription = (user as any).subscription;
+        token.ageVerified = (user as any).ageVerified;
       }
+
+      // Handle session update (manual trigger)
+      if (trigger === "update" && session?.ageVerified !== undefined) {
+        token.ageVerified = session.ageVerified;
+      }
+
       return token;
     },
     async session({ session, token }) {
@@ -70,6 +81,7 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string;
         session.user.role = token.role as 'USER' | 'ADMIN';
         session.user.subscription = token.subscription as any;
+        session.user.ageVerified = token.ageVerified as boolean;
       }
       return session;
     },

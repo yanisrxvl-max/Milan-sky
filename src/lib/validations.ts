@@ -53,3 +53,7 @@ export const skycoinsPurchaseSchema = z.object({
 export const subscriptionSchema = z.object({
   tier: z.enum(['VOYEUR', 'INITIE', 'PRIVILEGE', 'SKYCLUB']),
 });
+
+export const ageVerificationSchema = z.object({
+  birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Format de date invalide (AAAA-MM-JJ)'),
+});

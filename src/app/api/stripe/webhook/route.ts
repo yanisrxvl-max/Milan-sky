@@ -13,11 +13,11 @@ export async function POST(request: NextRequest) {
 
   const POINTS_MULTIPLIER = {
     'VOYEUR': 1,
-    'INITIÉ': 1.5,
-    'INITIE': 1.5,
-    'PRIVILÈGE': 2,
-    'PRIVILEGE': 2,
-    'SKYCLUB': 3
+    'INITIÉ': 2,
+    'INITIE': 2,
+    'PRIVILÈGE': 3,
+    'PRIVILEGE': 3,
+    'SKYCLUB': 5
   };
 
   const getPoints = (euroAmount: number, tier?: string) => {
@@ -55,33 +55,37 @@ export async function POST(request: NextRequest) {
           const coins = parseInt(metadata.coins || '0');
           if (coins <= 0) break;
 
-          // Credit SkyCoins
-          await prisma.skyCoinsBalance.upsert({
-            where: { userId: metadata.userId },
-            update: { balance: { increment: coins } },
-            create: { userId: metadata.userId, balance: coins },
-          });
-
-          // Record transaction
-          await prisma.transaction.create({
-            data: {
-              userId: metadata.userId,
-              type: 'SKYCOINS_PURCHASE',
-              amount: coins,
-              euroAmount: (session.amount_total || 0) / 100,
-              stripePaymentId: session.payment_intent as string,
-              description: `Achat de ${coins} SkyCoins`,
-            },
-          });
-
-          // Reward loyalty points
           const euroAmount = (session.amount_total || 0) / 100;
-          await prisma.user.update({
-            where: { id: metadata.userId },
-            data: { skyPoints: { increment: getPoints(euroAmount) } },
+
+          // ATOMIC TRANSACTION: Credit balance, record transaction, and reward points
+          await prisma.$transaction(async (tx) => {
+            // 1. Credit SkyCoins
+            await tx.skyCoinsBalance.upsert({
+              where: { userId: metadata.userId },
+              update: { balance: { increment: coins } },
+              create: { userId: metadata.userId, balance: coins },
+            });
+
+            // 2. Record transaction
+            await tx.transaction.create({
+              data: {
+                userId: metadata.userId,
+                type: 'SKYCOINS_PURCHASE',
+                amount: coins,
+                euroAmount: euroAmount,
+                stripePaymentId: session.payment_intent as string,
+                description: `Achat de ${coins} SkyCoins`,
+              },
+            });
+
+            // 3. Reward loyalty points
+            await tx.user.update({
+              where: { id: metadata.userId },
+              data: { skyPoints: { increment: getPoints(euroAmount) } } as any,
+            });
           });
 
-          logger.info('SkyCoins credited via webhook', {
+          logger.info('SkyCoins credited via atomic transaction', {
             userId: metadata.userId,
             coins,
           });
@@ -90,51 +94,53 @@ export async function POST(request: NextRequest) {
         if (session.mode === 'subscription' || metadata.type === 'subscription') {
           const tier = (metadata.tier || 'BASIC') as SubscriptionTier;
           const now = new Date();
-
-          // Better period end calculation (fallback to 30 days if Stripe data missing)
           const periodEnd = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
-
-          await prisma.subscription.upsert({
-            where: { userId: metadata.userId },
-            update: {
-              tier,
-              status: 'ACTIVE',
-              stripeSubscriptionId: session.subscription as string,
-              stripeCustomerId: session.customer as string,
-              currentPeriodStart: now,
-              currentPeriodEnd: periodEnd,
-            },
-            create: {
-              userId: metadata.userId,
-              tier,
-              status: 'ACTIVE',
-              stripeSubscriptionId: session.subscription as string,
-              stripeCustomerId: session.customer as string,
-              currentPeriodStart: now,
-              currentPeriodEnd: periodEnd,
-            },
-          });
-
-          // Record transaction
-          await prisma.transaction.create({
-            data: {
-              userId: metadata.userId,
-              type: 'SUBSCRIPTION_PAYMENT',
-              amount: 0,
-              euroAmount: (session.amount_total || 0) / 100,
-              stripePaymentId: (session.payment_intent as string) || (session.subscription as string),
-              description: `Abonnement ${tier}`,
-            },
-          });
-
-          // Reward loyalty points
           const euroAmount = (session.amount_total || 0) / 100;
-          await prisma.user.update({
-            where: { id: metadata.userId },
-            data: { skyPoints: { increment: getPoints(euroAmount, tier) } },
+
+          // ATOMIC TRANSACTION: Activate subscription, record payment, and reward points
+          await prisma.$transaction(async (tx) => {
+            // 1. Upsert Subscription
+            await tx.subscription.upsert({
+              where: { userId: metadata.userId },
+              update: {
+                tier,
+                status: 'ACTIVE',
+                stripeSubscriptionId: session.subscription as string,
+                stripeCustomerId: session.customer as string,
+                currentPeriodStart: now,
+                currentPeriodEnd: periodEnd,
+              },
+              create: {
+                userId: metadata.userId,
+                tier,
+                status: 'ACTIVE',
+                stripeSubscriptionId: session.subscription as string,
+                stripeCustomerId: session.customer as string,
+                currentPeriodStart: now,
+                currentPeriodEnd: periodEnd,
+              },
+            });
+
+            // 2. Record transaction
+            await tx.transaction.create({
+              data: {
+                userId: metadata.userId,
+                type: 'SUBSCRIPTION_PAYMENT',
+                amount: 0,
+                euroAmount: euroAmount,
+                stripePaymentId: (session.payment_intent as string) || (session.subscription as string),
+                description: `Abonnement ${tier}`,
+              },
+            });
+
+            // 3. Reward loyalty points
+            await tx.user.update({
+              where: { id: metadata.userId },
+              data: { skyPoints: { increment: getPoints(euroAmount, tier) } } as any,
+            });
           });
 
-          logger.info('Subscription activated via webhook', {
+          logger.info('Subscription activated via atomic transaction', {
             userId: metadata.userId,
             tier,
           });
@@ -157,38 +163,44 @@ export async function POST(request: NextRequest) {
             periodEnd = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
           }
 
-          await prisma.subscription.updateMany({
-            where: { stripeSubscriptionId: subscriptionId },
-            data: {
-              status: 'ACTIVE',
-              currentPeriodEnd: periodEnd
-            },
-          });
+          const euroAmount = (invoice.amount_paid || 0) / 100;
 
-          // Record renewal transaction
-          const existingSub = await prisma.subscription.findFirst({
-            where: { stripeSubscriptionId: subscriptionId }
-          });
+          // ATOMIC TRANSACTION: Renew subscription, record payment, and reward points
+          await prisma.$transaction(async (tx) => {
+            // 1. Find existing subscription
+            const existingSub = await tx.subscription.findFirst({
+              where: { stripeSubscriptionId: subscriptionId }
+            });
 
-          if (existingSub) {
-            await prisma.transaction.create({
+            if (!existingSub) return;
+
+            // 2. Update Subscription
+            await tx.subscription.updateMany({
+              where: { stripeSubscriptionId: subscriptionId },
+              data: {
+                status: 'ACTIVE',
+                currentPeriodEnd: periodEnd
+              },
+            });
+
+            // 3. Record transaction
+            await tx.transaction.create({
               data: {
                 userId: existingSub.userId,
                 type: 'SUBSCRIPTION_PAYMENT',
                 amount: 0,
-                euroAmount: (invoice.amount_paid || 0) / 100,
+                euroAmount: euroAmount,
                 stripePaymentId: invoice.payment_intent as string || invoice.id,
                 description: `Renouvellement Abonnement ${existingSub.tier}`,
               },
             });
 
-            // Reward loyalty points
-            const euroAmount = (invoice.amount_paid || 0) / 100;
-            await prisma.user.update({
+            // 4. Reward loyalty points
+            await tx.user.update({
               where: { id: existingSub.userId },
-              data: { skyPoints: { increment: getPoints(euroAmount, existingSub.tier) } },
+              data: { skyPoints: { increment: getPoints(euroAmount, existingSub.tier) } } as any,
             });
-          }
+          });
 
           logger.info('Subscription renewed (invoice.paid)', { subscriptionId, periodEnd });
         }

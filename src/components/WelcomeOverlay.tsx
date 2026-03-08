@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useThemeMode } from '@/context/ThemeModeContext';
 import { useI18n, Locale } from '@/context/I18nContext';
-import { Sparkles, Flame, Globe, ChevronRight } from 'lucide-react';
+import { Play, Globe, ChevronRight } from 'lucide-react';
 
 export default function WelcomeOverlay() {
     const [show, setShow] = useState(false);
@@ -12,6 +13,7 @@ export default function WelcomeOverlay() {
     const [hoveredSide, setHoveredSide] = useState<'DAY' | 'NIGHT' | null>(null);
     const { toggleMode } = useThemeMode();
     const { setLocale, t } = useI18n();
+    const { update } = useSession();
 
     const languages: { code: Locale; label: string; flag: string }[] = [
         { code: 'fr', label: 'Français', flag: '🇫🇷' },
@@ -43,12 +45,44 @@ export default function WelcomeOverlay() {
         setStep(2);
     };
 
-    const confirmAge = () => {
-        sessionStorage.setItem('milan_sky_visited', 'true');
-        localStorage.setItem('milan_age_verified', 'true');
-        toggleMode();
-        setShow(false);
-        document.body.style.overflow = 'unset';
+    const [birthDate, setBirthDate] = useState('');
+    const [isVerifying, setIsVerifying] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const confirmAge = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError(null);
+        setIsVerifying(true);
+
+        try {
+            const res = await fetch('/api/auth/age-verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ birthDate }),
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+
+                // Update session state only if authenticated
+                if (data.authenticated) {
+                    await update({ ageVerified: true });
+                }
+
+                sessionStorage.setItem('milan_sky_visited', 'true');
+                localStorage.setItem('milan_age_verified', 'true');
+                toggleMode();
+                setShow(false);
+                document.body.style.overflow = 'unset';
+            } else {
+                const data = await res.json();
+                setError(data.error || 'Erreur de vérification');
+            }
+        } catch (err) {
+            setError('Erreur de connexion au serveur');
+        } finally {
+            setIsVerifying(false);
+        }
     };
 
     const cancelAge = () => {
@@ -177,19 +211,19 @@ export default function WelcomeOverlay() {
                                     onHoverStart={() => setHoveredSide('DAY')}
                                     onHoverEnd={() => setHoveredSide(null)}
                                     onClick={handleSelectDay}
-                                    className="flex-1 w-full flex flex-col items-center justify-center cursor-pointer group p-4 md:p-8 rounded-[2rem] md:rounded-3xl transition-all duration-700 bg-white/[0.03] md:bg-transparent hover:bg-white/[0.05] border border-white/5 md:border-transparent active:scale-[0.98] md:active:scale-100"
+                                    className="flex-1 w-full flex flex-col items-center justify-center cursor-pointer group p-4 md:p-8 rounded-[2rem] md:rounded-3xl transition-all duration-700 md:bg-transparent active:scale-[0.98] md:active:scale-100"
                                 >
-                                    <div className="relative w-20 h-20 md:w-48 md:h-48 mb-3 md:mb-8 drop-shadow-[0_0_20px_rgba(201,168,76,0.3)] md:drop-shadow-[0_0_30px_rgba(201,168,76,0.2)] group-hover:drop-shadow-[0_0_60px_rgba(201,168,76,0.6)] transition-all duration-700 group-hover:scale-105 pointer-events-none">
-                                        <div className="absolute inset-0 bg-gold/10 rounded-full blur-3xl opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                                        <img src="/images/milan_logo_transparent.png" alt="Pomme Intacte" className="w-full h-full object-contain relative z-10" />
+                                    <div className="relative w-24 h-24 md:w-56 md:h-56 mb-4 md:mb-10 transition-all duration-1000 group-hover:scale-110 pointer-events-none">
+                                        <div className="absolute inset-0 bg-gold/10 rounded-full blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+                                        <img src="/images/milan_logo_transparent.png" alt="Pomme Intacte" className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_30px_rgba(201,168,76,0.2)] group-hover:drop-shadow-[0_0_60px_rgba(201,168,76,0.6)] transition-all duration-1000" />
                                     </div>
-                                    <div className="text-center pointer-events-none">
-                                        <h2 className="text-lg md:text-3xl font-serif text-gold mb-1 md:mb-3 flex items-center justify-center gap-2">
-                                            <Sparkles size={16} className="text-gold md:w-5 md:h-5" />
+                                    <div className="text-center pointer-events-none transition-all duration-700 group-hover:translate-y-[-5px]">
+                                        <h2 className="text-xl md:text-4xl font-serif text-gold mb-2 md:mb-4 flex items-center justify-center gap-3">
+                                            <Play size={20} fill="currentColor" className="text-gold md:w-6 md:h-6" />
                                             {t('welcome.day_title')}
                                         </h2>
-                                        <h3 className="text-[9px] md:text-xs tracking-[0.3em] uppercase text-white/60 mb-2 md:mb-4 font-bold">{t('welcome.day_subtitle')}</h3>
-                                        <p className="hidden md:block text-white/40 text-[11px] md:text-sm leading-relaxed max-w-[260px] md:max-w-sm mx-auto md:group-hover:text-white/70 transition-colors">
+                                        <h3 className="text-[10px] md:text-sm tracking-[0.4em] uppercase text-white/40 group-hover:text-white/80 mb-3 md:mb-6 font-bold transition-colors">{t('welcome.day_subtitle')}</h3>
+                                        <p className="hidden md:block text-white/30 text-[11px] md:text-sm leading-relaxed max-w-[280px] md:max-w-md mx-auto group-hover:text-white/60 transition-colors">
                                             {t('welcome.day_desc')}
                                         </p>
                                     </div>
@@ -200,7 +234,7 @@ export default function WelcomeOverlay() {
                                     initial={{ opacity: 0, scaleY: 0 }}
                                     animate={{ opacity: 1, scaleY: 1 }}
                                     transition={{ duration: 1.5, delay: 0.5 }}
-                                    className="hidden md:block w-px h-[40vh] bg-gradient-to-b from-transparent via-white/10 to-transparent shrink-0"
+                                    className="hidden md:block w-px h-[50vh] bg-gradient-to-b from-transparent via-white/10 to-transparent shrink-0 mx-8"
                                 />
 
                                 {/* NIGHT MODE CHOICE */}
@@ -211,19 +245,19 @@ export default function WelcomeOverlay() {
                                     onHoverStart={() => setHoveredSide('NIGHT')}
                                     onHoverEnd={() => setHoveredSide(null)}
                                     onClick={handleSelectNight}
-                                    className="flex-1 w-full flex flex-col items-center justify-center cursor-pointer group p-4 md:p-8 rounded-[2rem] md:rounded-3xl transition-all duration-700 bg-white/[0.03] md:bg-transparent hover:bg-white/[0.05] border border-red-500/10 md:border-transparent active:scale-[0.98] md:active:scale-100"
+                                    className="flex-1 w-full flex flex-col items-center justify-center cursor-pointer group p-4 md:p-8 rounded-[2rem] md:rounded-3xl transition-all duration-700 md:bg-transparent active:scale-[0.98] md:active:scale-100"
                                 >
-                                    <div className="relative w-20 h-20 md:w-48 md:h-48 mb-3 md:mb-8 drop-shadow-[0_0_20px_rgba(255,0,0,0.3)] md:drop-shadow-[0_0_30px_rgba(255,0,0,0.1)] group-hover:drop-shadow-[0_0_60px_rgba(255,0,0,0.4)] transition-all duration-700 group-hover:scale-105 pointer-events-none">
-                                        <div className="absolute inset-0 bg-red-500/10 rounded-full blur-3xl opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                                        <img src="/images/milan_logo_bitten.png" alt="Pomme Croquée" className="w-full h-full object-contain relative z-10" />
+                                    <div className="relative w-24 h-24 md:w-56 md:h-56 mb-4 md:mb-10 transition-all duration-1000 group-hover:scale-110 pointer-events-none">
+                                        <div className="absolute inset-0 bg-red-500/10 rounded-full blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+                                        <img src="/images/milan_logo_bitten.png" alt="Pomme Croquée" className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_30px_rgba(255,0,0,0.1)] group-hover:drop-shadow-[0_0_60px_rgba(255,0,0,0.4)] transition-all duration-1000" />
                                     </div>
-                                    <div className="text-center pointer-events-none">
-                                        <h2 className="text-lg md:text-3xl font-serif text-[#ff4d4d] mb-1 md:mb-3 flex items-center justify-center gap-2">
+                                    <div className="text-center pointer-events-none transition-all duration-700 group-hover:translate-y-[-5px]">
+                                        <h2 className="text-xl md:text-4xl font-serif text-[#ff4d4d] mb-2 md:mb-4 flex items-center justify-center gap-3">
                                             {t('welcome.night_title')}
-                                            <Flame size={16} className="text-[#ff4d4d] md:w-5 md:h-5" />
+                                            <span className="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 rounded-full border-2 border-[#ff4d4d] text-[10px] md:text-[12px] font-black tracking-tighter">18+</span>
                                         </h2>
-                                        <h3 className="text-[9px] md:text-xs tracking-[0.3em] uppercase text-white/60 mb-2 md:mb-4 font-bold">{t('welcome.night_subtitle')}</h3>
-                                        <p className="hidden md:block text-white/40 text-[11px] md:text-sm leading-relaxed max-w-[260px] md:max-w-sm mx-auto md:group-hover:text-white/70 transition-colors">
+                                        <h3 className="text-[10px] md:text-sm tracking-[0.4em] uppercase text-white/40 group-hover:text-white/80 mb-3 md:mb-6 font-bold transition-colors">{t('welcome.night_subtitle')}</h3>
+                                        <p className="hidden md:block text-white/30 text-[11px] md:text-sm leading-relaxed max-w-[280px] md:max-w-md mx-auto group-hover:text-white/60 transition-colors">
                                             {t('welcome.night_desc')}
                                         </p>
                                     </div>
@@ -256,25 +290,42 @@ export default function WelcomeOverlay() {
                                 {t('welcome.age_warning')}
                             </h2>
 
-                            <p className="text-white/50 text-[12px] leading-relaxed mb-10 max-w-[240px] mx-auto">
+                            <p className="text-white/50 text-[12px] leading-relaxed mb-6 max-w-[240px] mx-auto">
                                 {t('welcome.age_desc')}
                             </p>
 
-                            <div className="flex flex-col gap-3">
+                            <form onSubmit={confirmAge} className="flex flex-col gap-4">
+                                <div className="space-y-2">
+                                    <label className="text-[10px] uppercase tracking-widest text-white/30 block text-left ml-1">Date de naissance</label>
+                                    <input
+                                        type="date"
+                                        required
+                                        value={birthDate}
+                                        onChange={(e) => setBirthDate(e.target.value)}
+                                        className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-red-500/50 outline-none transition-all"
+                                    />
+                                </div>
+
+                                {error && (
+                                    <p className="text-red-500 text-[10px] uppercase tracking-widest bg-red-500/10 p-2 rounded-lg">{error}</p>
+                                )}
+
                                 <button
-                                    onClick={confirmAge}
-                                    className="w-full py-4 bg-[#ff4d4d] text-white rounded-2xl text-[10px] uppercase font-black tracking-[0.2em] hover:bg-[#ff3333] hover:shadow-[0_0_30px_rgba(255,0,0,0.4)] transition-all active:scale-[0.98]"
+                                    type="submit"
+                                    disabled={isVerifying || !birthDate}
+                                    className="w-full py-4 bg-[#ff4d4d] text-white rounded-2xl text-[10px] uppercase font-black tracking-[0.2em] hover:bg-[#ff3333] hover:shadow-[0_0_30px_rgba(255,0,0,0.4)] transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    {t('welcome.age_confirm')}
+                                    {isVerifying ? 'Vérification...' : t('welcome.age_confirm')}
                                 </button>
 
                                 <button
+                                    type="button"
                                     onClick={cancelAge}
                                     className="w-full py-4 bg-transparent border border-white/10 text-white/50 rounded-2xl text-[10px] uppercase tracking-[0.2em] hover:text-white hover:bg-white/5 transition-all active:scale-[0.98]"
                                 >
                                     {t('welcome.age_cancel')}
                                 </button>
-                            </div>
+                            </form>
                         </motion.div>
                     )}
                 </AnimatePresence>

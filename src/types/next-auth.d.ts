@@ -8,6 +8,7 @@ declare module 'next-auth' {
       name?: string | null;
       image?: string | null;
       role: 'USER' | 'ADMIN';
+      ageVerified: boolean;
       subscription?: {
         tier: string;
         status: string;
@@ -20,6 +21,7 @@ declare module 'next-auth/jwt' {
   interface JWT {
     id: string;
     role: 'USER' | 'ADMIN';
+    ageVerified: boolean;
     subscription?: {
       tier: string;
       status: string;

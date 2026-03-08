@@ -52,7 +52,14 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
             return NextResponse.json({ error: 'Accès refusé. Achetez ce contenu ou mettez votre abonnement à niveau.' }, { status: 403 });
         }
 
-        return NextResponse.json({ content });
+        const responseData = {
+            ...(content as any),
+            streamUrl: (content as any).bunnyStreamId
+                ? `https://iframe.mediadelivery.net/embed/${process.env.BUNNY_STREAM_LIBRARY_ID}/${(content as any).bunnyStreamId}?autoplay=true&preload=true`
+                : null
+        };
+
+        return NextResponse.json({ content: responseData });
     } catch (error) {
         logger.error('API /content/[id] GET error', { error: String(error) });
         return NextResponse.json({ error: 'Erreur Serveur' }, { status: 500 });

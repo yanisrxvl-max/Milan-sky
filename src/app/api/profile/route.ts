@@ -61,8 +61,9 @@ export async function GET() {
         }
         : null,
       skyCoinsBalance: user.skyCoinsBalance?.balance ?? 0,
-      skyPoints: user.skyPoints ?? 0,
-      proximityGauge: user.proximityGauge ?? 0,
+      skyPoints: (user as any).skyPoints ?? 0,
+      ageVerified: (user as any).ageVerified,
+      proximityGauge: (user as any).proximityGauge ?? 0,
       purchases: user.purchases.map((p) => ({
         id: p.id,
         contentTitle: p.content.title,

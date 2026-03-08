@@ -48,6 +48,7 @@ interface Profile {
   }>;
   skyPoints: number;
   proximityGauge: number;
+  ageVerified: boolean;
 }
 
 const TIER_DISPLAY: Record<string, { icon: React.ReactNode; color: string; label: string }> = {
@@ -260,6 +261,12 @@ function DashboardContent() {
                 <Link href="/skycoins" className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[10px] uppercase font-bold tracking-widest bg-dark-400 border border-gold/20 text-cream hover:bg-gold/10 transition-all cursor-pointer">
                   <Trophy size={14} className="text-gold" /> {profile.fanRank}
                 </Link>
+              )}
+
+              {profile.ageVerified && (
+                <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[10px] uppercase font-bold tracking-widest bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                  <Shield size={14} /> Majeur Vérifié
+                </span>
               )}
             </div>
           </div>

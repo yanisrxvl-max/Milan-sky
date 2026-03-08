@@ -51,6 +51,10 @@ model User {
   dailyLogins         DailyLogin[]
   missionCompletions  MissionCompletion[]
 
+  // Legal & Verification
+  birthDate       DateTime?
+  ageVerified     Boolean   @default(false)
+
   @@index([email])
 }
 
@@ -177,6 +181,7 @@ model Content {
   price       Int         // SkyCoins price
   imageUrl    String?
   mediaUrl    String?
+  bunnyStreamId String?   // High-end 4K Streaming ID
   isActive    Boolean     @default(true)
   mode        ThemeMode   @default(NOCTUA)
   createdAt   DateTime    @default(now())

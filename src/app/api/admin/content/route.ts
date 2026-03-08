@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
-import { cloudinary } from '@/lib/cloudinary';
+import { bunny } from '@/lib/bunny';
 import { logger } from '@/lib/logger';
 import { ContentType, SubscriptionTier } from '@prisma/client';
 
@@ -28,30 +28,24 @@ export async function POST(request: NextRequest) {
 
         const price = parseInt(priceStr, 10);
 
-        // Convert file to base64 for Cloudinary upload
+        // Convert file to buffer
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
+        const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
 
-        // Upload to Cloudinary with 'auto' resource type to handle videos/images correctly
-        const uploadResult = await new Promise((resolve, reject) => {
-            const uploadStream = cloudinary.uploader.upload_stream(
-                {
-                    folder: 'milan_sky_content',
-                    resource_type: 'auto', // Detect automatically
-                },
-                (error, result) => {
-                    if (error) {
-                        console.error('CLOUDINARY UPLOAD ERROR:', error);
-                        return reject(error);
-                    }
-                    resolve(result);
-                }
-            );
+        let mediaUrl = '';
+        let imageUrl = '';
+        let bunnyStreamId = null;
 
-            uploadStream.end(buffer);
-        });
-
-        const typedResult = uploadResult as any;
+        if (type === 'VIDEO') {
+            // Upload to Bunny Stream for 4K / HLS
+            bunnyStreamId = await bunny.uploadToStream(buffer, title);
+            imageUrl = bunny.getThumbnailUrl(bunnyStreamId);
+        } else {
+            // Upload Image to Bunny Storage
+            mediaUrl = await bunny.uploadToStorage(buffer, fileName);
+            imageUrl = mediaUrl;
+        }
 
         // Create db record
         const content = await prisma.content.create({
@@ -61,10 +55,10 @@ export async function POST(request: NextRequest) {
                 type,
                 tier,
                 price,
-                mediaUrl: typedResult.secure_url,
-                // Using same url as thumbnail if it's an image, or use cloudinary auto-generated thumb if video
-                imageUrl: type === 'VIDEO' ? typedResult.secure_url.replace(/\.[^/.]+$/, '.jpg') : typedResult.secure_url,
-            }
+                mediaUrl: mediaUrl || '',
+                imageUrl,
+                bunnyStreamId,
+            } as any
         });
 
         logger.info('Admin uploaded new content', { contentId: content.id, type, tier });

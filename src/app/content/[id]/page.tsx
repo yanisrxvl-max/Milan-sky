@@ -83,14 +83,25 @@ function ContentViewer() {
             >
                 <div className="aspect-video bg-black relative flex items-center justify-center">
                     {content.type === 'VIDEO' || content.type === 'SERIES' ? (
-                        <video
-                            src={content.mediaUrl}
-                            poster={content.imageUrl}
-                            controls
-                            controlsList="nodownload"
-                            className="w-full h-full object-contain"
-                            autoPlay
-                        />
+                        content.streamUrl ? (
+                            <iframe
+                                src={content.streamUrl}
+                                loading="lazy"
+                                className="absolute inset-0 w-full h-full"
+                                style={{ border: 'none' }}
+                                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+                                allowFullScreen
+                            />
+                        ) : (
+                            <video
+                                src={content.mediaUrl}
+                                poster={content.imageUrl}
+                                controls
+                                controlsList="nodownload"
+                                className="w-full h-full object-contain"
+                                autoPlay
+                            />
+                        )
                     ) : content.type === 'PHOTO' ? (
                         <img
                             src={content.mediaUrl}

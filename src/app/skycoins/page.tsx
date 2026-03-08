@@ -9,6 +9,7 @@ import { useI18n } from '@/context/I18nContext';
 import { Crown, Sparkles, Trophy, Zap, Gift, CheckCircle2, Star, Shield, Play, Ticket, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import SkyCoinsShop from '@/components/ui/SkyCoinsShop';
+import FidelityShowcase from '@/components/ui/FidelityShowcase';
 
 const PACKS = [
     { id: 'starter', name: 'STARTER', coins: 100, price: '9,99€', bonus: 0, popular: false, glow: 'from-white/10 to-transparent' },
@@ -335,25 +336,8 @@ function SkyCoinsContent() {
             {/* 5. PACKS D'ACHAT */}
             <SkyCoinsShop />
 
-            {/* Multiplier Info Card */}
-            <div className="max-w-3xl mx-auto card-premium !p-8 border-gold/20 flex flex-col md:flex-row gap-8 items-center bg-[url('/images/noise.png')]">
-                <div className="w-24 h-24 shrink-0 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center">
-                    <Crown className="text-gold w-10 h-10" />
-                </div>
-                <div>
-                    <h3 className="text-xl font-serif text-cream mb-2">Avantage Abonnés</h3>
-                    <p className="text-white/50 text-sm leading-relaxed mb-4">
-                        Avoir un abonnement actif te permet de multiplier tes gains lors de tes connexions et accomplissements.
-                    </p>
-                    <div className="flex flex-wrap gap-3">
-                        <span className="text-[10px] px-3 py-1.5 bg-white/5 border border-white/10 rounded uppercase font-bold text-white/40">Voyeur : x1</span>
-                        <span className="text-[10px] px-3 py-1.5 bg-white/5 border border-white/10 rounded uppercase font-bold text-white/60">Initié : x2</span>
-                        <span className="text-[10px] px-3 py-1.5 bg-gold/10 border border-gold/30 rounded uppercase font-bold text-gold">Privilège : x3</span>
-                        <span className="text-[10px] px-3 py-1.5 bg-purple-500/20 border border-purple-500/40 rounded uppercase font-bold text-purple-400">SkyClub : x5</span>
-                    </div>
-                </div>
-            </div>
-
+            {/* 6. FIDELITY MARKETING */}
+            <FidelityShowcase />
         </div >
     );
 }

@@ -60,6 +60,16 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
+    // AGE VERIFICATION CHECK (Hard-Gate Legal Requirement)
+    const sensitiveRoutes = ['/library', '/chat', '/private-requests', '/quotidirty'];
+    if (sensitiveRoutes.some((route) => pathname.startsWith(route))) {
+      if (!token.ageVerified && token.role !== 'ADMIN') {
+        const url = new URL('/', request.url);
+        url.searchParams.set('verify', 'true');
+        return NextResponse.redirect(url);
+      }
+    }
+
     // TIER CHECK FOR PREMIUM ROUTES (Zero-Leak Logic)
     if (token.role !== 'ADMIN') {
       let requiredTier = 0;
